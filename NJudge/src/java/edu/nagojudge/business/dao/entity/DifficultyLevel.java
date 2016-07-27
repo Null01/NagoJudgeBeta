@@ -1,0 +1,111 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package edu.nagojudge.business.dao.entity;
+
+import java.io.Serializable;
+import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+/**
+ *
+ * @author andresfelipegarciaduran
+ */
+@Entity
+@Table(name = "DIFFICULTY_LEVEL")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "DifficultyLevel.findAll", query = "SELECT d FROM DifficultyLevel d")})
+public class DifficultyLevel implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ID_DIFFICULTY")
+    private Long idDifficulty;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "NAME_DIFFICULTY")
+    private String nameDifficulty;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDifficulty", fetch = FetchType.LAZY)
+    private List<Problem> problemList;
+
+    public DifficultyLevel() {
+    }
+
+    public DifficultyLevel(Long idDifficulty) {
+        this.idDifficulty = idDifficulty;
+    }
+
+    public DifficultyLevel(Long idDifficulty, String nameDifficulty) {
+        this.idDifficulty = idDifficulty;
+        this.nameDifficulty = nameDifficulty;
+    }
+
+    public Long getIdDifficulty() {
+        return idDifficulty;
+    }
+
+    public void setIdDifficulty(Long idDifficulty) {
+        this.idDifficulty = idDifficulty;
+    }
+
+    public String getNameDifficulty() {
+        return nameDifficulty;
+    }
+
+    public void setNameDifficulty(String nameDifficulty) {
+        this.nameDifficulty = nameDifficulty;
+    }
+
+    @XmlTransient
+    public List<Problem> getProblemList() {
+        return problemList;
+    }
+
+    public void setProblemList(List<Problem> problemList) {
+        this.problemList = problemList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idDifficulty != null ? idDifficulty.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof DifficultyLevel)) {
+            return false;
+        }
+        DifficultyLevel other = (DifficultyLevel) object;
+        if ((this.idDifficulty == null && other.idDifficulty != null) || (this.idDifficulty != null && !this.idDifficulty.equals(other.idDifficulty))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "edu.nagojudge.business.db.entity.DifficultyLevel[ idDifficulty=" + idDifficulty + " ]";
+    }
+    
+}
