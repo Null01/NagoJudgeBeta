@@ -1,0 +1,45 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui" >
+
+    <div id="panelMySubmitsContest" class="panel panel-default">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <h:form id="formPanelMySubmitsContest" class="form-horizontal" enctype="multipart/form-data">
+                    <p:spacer/>
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="nameProblem" class="col-md-1 control-label">Problema</label>
+                            <div class="col-md-3">
+                                <p:inputText id="nameProblem" styleClass="form-control"  readonly="true"
+                                             value="#{utilBean.formatIdProblem(submitBean.problemView.idProblem)} - #{submitBean.problemView.nameProblem}"/>
+                            </div>
+                            <label for="select-2" class="col-md-1 control-label">Lenguaje</label>
+                            <div class="col-md-2">
+                                <p:selectOneMenu id="select-2" styleClass="form-control" style="width: 100%;" converter="languageProgrammingConvertJSF"
+                                                 value="#{submitBean.languageProgrammingView}"  required="true" >
+                                    <f:selectItems value="#{languageBean.listLanguageProgrammingItems}" />                                               
+                                </p:selectOneMenu>
+                            </div>
+                            <label for="problemSolve" class="col-md-1 control-label">Codigo Fuente</label>
+                            <div class="col-md-3">
+                                <h:inputFile id="problemSolve" styleClass="form-control center-block" value="#{submitBean.codeSolutionFile}" required="true"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <p:spacer/>
+                    <div class="col-md-12">
+                        <p:commandButton ajax="false" styleClass="btn btn-default btn-sm center-block text-center col-md-12"
+                                         value="Enviar" actionListener="#{submitBean.actionSubmitSolution}"/>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>
+

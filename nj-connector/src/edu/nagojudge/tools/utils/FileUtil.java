@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.tools.utils;
 
+import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -248,16 +249,16 @@ public class FileUtil implements Serializable {
         }
     }
 
-    public boolean compareFilesByCheckSumSHA(byte[] content, String checkSum, String TYPE_SHA) throws NoSuchAlgorithmException {
+    public boolean compareFilesByCheckSumSHA(byte[] content, String checkSum, TypeSHAEnum TYPE_SHA) throws NoSuchAlgorithmException {
         String checkSumOfFile = generateChechSum(content, TYPE_SHA);
         return checkSumOfFile.compareTo(checkSum) == 0;
     }
 
-    public String generateCheckSum(String pathFile, String nameFile, String TYPE_SHA) throws IOException, NoSuchAlgorithmException {
+    public String generateCheckSum(String pathFile, String nameFile, TypeSHAEnum TYPE_SHA) throws IOException, NoSuchAlgorithmException {
         String pathComplete = (nameFile != null) ? pathFile + java.io.File.separatorChar + nameFile : pathFile;
         FileInputStream fileInputStream = null;
         try {
-            MessageDigest md = MessageDigest.getInstance(TYPE_SHA);
+            MessageDigest md = MessageDigest.getInstance(TYPE_SHA.getTypeSha());
             fileInputStream = new FileInputStream(pathComplete);
             byte[] content = new byte[DEFAULT_BUFFER_SIZE];
             int nread;
@@ -278,9 +279,9 @@ public class FileUtil implements Serializable {
         }
     }
 
-    private String generateChechSum(byte[] content, String TYPE_SHA) throws NoSuchAlgorithmException {
+    public String generateChechSum(byte[] content, TypeSHAEnum TYPE_SHA) throws NoSuchAlgorithmException {
         try {
-            MessageDigest md = MessageDigest.getInstance(TYPE_SHA);
+            MessageDigest md = MessageDigest.getInstance(TYPE_SHA.getTypeSha());
             return convertArrayByteToHex(md.digest(content));
         } catch (NoSuchAlgorithmException ex) {
             throw ex;

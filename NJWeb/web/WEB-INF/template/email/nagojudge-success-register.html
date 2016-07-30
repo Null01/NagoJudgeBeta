@@ -1,0 +1,762 @@
+<body>
+    <link rel="icon" type="image/ico" href="img/logo-icon.png"/>
+    <link href='https://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+
+        /* BEGIN MY STYLE */
+
+        .title-main{
+            color: #000000;
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 25px;
+        }
+
+        body{
+            background: #1e1e1e;
+        }
+
+        .socket{
+            width: 200px;
+            position: absolute;
+            left: 50%;
+            margin-left: -105px;
+            top: 50%;
+            margin-top: -175px;
+        }
+
+        .hex-brick{
+            background: #ABF8FF;
+            width: 30px;
+            height: 17px;
+            position: absolute;
+            top: 5px;
+            animation-name: fade;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            -webkit-animation-name: fade;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+        }
+
+        .h2{
+            transform: rotate(60deg);
+            -webkit-transform: rotate(60deg);
+        }
+
+        .h3{
+            transform: rotate(-60deg);
+            -webkit-transform: rotate(-60deg);
+        }
+
+        .gel{
+            height: 30px;
+            width: 30px;
+            transition: all .3s;
+            -webkit-transition: all .3s;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .center-gel{
+            margin-left: -15px;
+            margin-top: -15px;
+
+            animation-name: pulse;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            -webkit-animation-name: pulse;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+        }
+
+        .c1{
+            margin-left: -47px;
+            margin-top: -15px;
+        }
+
+        .c2{
+            margin-left: -31px;
+            margin-top: -43px;
+        }
+
+        .c3{
+            margin-left: 1px;
+            margin-top: -43px;
+        }
+
+        .c4{
+            margin-left: 17px;
+            margin-top: -15px;
+        }
+        .c5{
+            margin-left: -31px;
+            margin-top: 13px;
+        }
+
+        .c6{
+            margin-left: 1px;
+            margin-top: 13px;
+        }
+
+        .c7{
+            margin-left: -63px;
+            margin-top: -43px;
+        }
+
+        .c8{
+            margin-left: 33px;
+            margin-top: -43px;
+        }
+
+        .c9{
+            margin-left: -15px;
+            margin-top: 41px;
+        }
+
+        .c10{
+            margin-left: -63px;
+            margin-top: 13px;
+        }
+
+        .c11{
+            margin-left: 33px;
+            margin-top: 13px;
+        }
+
+        .c12{
+            margin-left: -15px;
+            margin-top: -71px;
+        }
+
+        .c13{
+            margin-left: -47px;
+            margin-top: -71px;
+        }
+
+        .c14{
+            margin-left: 17px;
+            margin-top: -71px;
+        }
+
+        .c15{
+            margin-left: -47px;
+            margin-top: 41px;
+        }
+
+        .c16{
+            margin-left: 17px;
+            margin-top: 41px;
+        }
+
+        .c17{
+            margin-left: -79px;
+            margin-top: -15px;
+        }
+
+        .c18{
+            margin-left: 49px;
+            margin-top: -15px;
+        }
+
+        .c19{
+            margin-left: -63px;
+            margin-top: -99px;
+        }
+
+        .c20{
+            margin-left: 33px;
+            margin-top: -99px;
+        }
+
+        .c21{
+            margin-left: 1px;
+            margin-top: -99px;
+        }
+
+        .c22{
+            margin-left: -31px;
+            margin-top: -99px;
+        }
+
+        .c23{
+            margin-left: -63px;
+            margin-top: 69px;
+        }
+
+        .c24{
+            margin-left: 33px;
+            margin-top: 69px;
+        }
+
+        .c25{
+            margin-left: 1px;
+            margin-top: 69px;
+        }
+
+        .c26{
+            margin-left: -31px;
+            margin-top: 69px;
+        }
+
+        .c27{
+            margin-left: -79px;
+            margin-top: -15px;
+        }
+
+        .c28{
+            margin-left: -95px;
+            margin-top: -43px;
+        }
+
+        .c29{
+            margin-left: -95px;
+            margin-top: 13px;
+        }
+
+        .c30{
+            margin-left: 49px;
+            margin-top: 41px;
+        }
+
+        .c31{
+            margin-left: -79px;
+            margin-top: -71px;
+        }
+
+        .c32{
+            margin-left: -111px;
+            margin-top: -15px;
+        }
+
+        .c33{
+            margin-left: 65px;
+            margin-top: -43px;
+        }
+
+        .c34{
+            margin-left: 65px;
+            margin-top: 13px;
+        }
+
+        .c35{
+            margin-left: -79px;
+            margin-top: 41px;
+        }
+
+        .c36{
+            margin-left: 49px;
+            margin-top: -71px;
+        }
+
+        .c37{
+            margin-left: 81px;
+            margin-top: -15px;
+        }
+
+        .r1{
+            animation-name: pulse;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-delay: .2s;
+            -webkit-animation-name: pulse;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-delay: .2s;
+        }
+
+        .r2{
+            animation-name: pulse;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-delay: .4s;
+            -webkit-animation-name: pulse;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-delay: .4s;
+        }
+
+        .r3{
+            animation-name: pulse;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-delay: .6s;
+            -webkit-animation-name: pulse;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-delay: .6s;
+        }
+
+        .r1 > .hex-brick{
+            animation-name: fade;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-delay: .2s;
+            -webkit-animation-name: fade;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-delay: .2s;
+        }
+
+        .r2 > .hex-brick{
+            animation-name: fade;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-delay: .4s;
+            -webkit-animation-name: fade;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-delay: .4s;
+        }
+
+        .r3 > .hex-brick{
+            animation-name: fade;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            animation-delay: .6s;
+            -webkit-animation-name: fade;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-delay: .6s;
+        }
+
+
+        @keyframes pulse{
+            0%{
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+
+            50%{
+                -webkit-transform: scale(0.01);
+                transform: scale(0.01);
+            }
+
+            100%{
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fade{
+            0%{
+                background: #ABF8FF;
+            }
+
+            50%{
+                background: #90BBBF;
+            }
+
+            100%{
+                background: #ABF8FF;
+            }
+        }
+
+        @-webkit-keyframes pulse{
+            0%{
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+
+            50%{
+                -webkit-transform: scale(0.01);
+                transform: scale(0.01);
+            }
+
+            100%{
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+        }
+
+        @-webkit-keyframes fade{
+            0%{
+                background: #ABF8FF;
+            }
+
+            50%{
+                background: #389CA6;
+            }
+
+            100%{
+                background: #ABF8FF;
+            }
+        }
+
+
+
+        .container {
+            /*position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -64.5px;
+            margin-top: -85.5px;*/
+        }
+
+        .ghost {
+            animation: float 3s ease-out infinite;
+        }
+
+        @keyframes float {
+            50% {
+                transform: translate(0, 20px);
+            }
+        }
+        .shadowFrame {
+            width: 130px;
+            margin-top: 15px;
+        }
+        .shadow {
+            animation: shrink 3s ease-out infinite;
+            transform-origin: center center;
+            ellipse {
+                transform-origin: center center;
+            }
+        }
+
+        @keyframes shrink {
+            0% {
+                width: 90%;
+                margin: 0 5%;
+            }
+            50% {
+                width: 60%;
+                margin: 0 18%;
+            }
+            100% {
+                width: 90%;
+                margin: 0 5%;
+            }
+        }
+
+        /* END MY STYLE*/
+
+        #outlook a{
+            padding:0;
+        }
+        body{
+            margin:0;
+            padding:0;
+        }
+        img{
+            border:none;
+            outline:none;
+            text-decoration:none;
+        }
+        #container{
+            background-color:#FFFFFF;
+            height:100%;
+            margin:0;
+            padding:0;
+            width:100%;
+        }
+        /*
+        @tab Page
+        @section primary heading style
+        @tip Primary headings in your message body. Make them big and easy to read.
+        @theme title
+        */
+        .title{
+            /*@editable*/color:#000000;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:28px;
+            /*@editable*/font-weight:bold;
+            /*@editable*/line-height:100%;
+        }
+        /*
+        @tab Page
+        @section secondary heading style
+        @tip Secondary headings in your message body. Make these smaller than your primary titles, but bigger than your content text.
+        @theme subtitle
+        */
+        .subTitle{
+            /*@editable*/color:#FF0000;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:18px;
+            /*@editable*/font-weight:bold;
+            /*@editable*/line-height:100%;
+        }
+        /*
+        @tab Header
+        @section email date text
+        @tip  The styling for your email's email date text. Make it a color and size that is easy to read.
+        */
+        #dateDay,#dateMonth{
+            /*@editable*/color:#4290C8;
+            /*@editable*/font-family:"American Typewriter","Courier New",Courier,monospace;
+            /*@editable*/font-size:14px;
+            /*@editable*/line-height:100%;
+        }
+        /*
+        @tab Header
+        @section event name heading
+        @tip The styling for your email's event name heading text. Make it a color and size that is easy to read.
+        */
+        #eventHeading{
+            /*@editable*/color:#689A68;
+            /*@editable*/font-family:"American Typewriter","Courier New",Courier,monospace;
+            /*@editable*/font-size:12px;
+            /*@editable*/line-height:150%;
+        }
+        /*
+        @tab Header
+        @section event name text
+        @tip The styling for your email's event name text. Make it a color and size that is easy to read.
+        */
+        #eventName{
+            /*@editable*/color:#FF0000;
+            /*@editable*/font-family:"American Typewriter","Courier New",Courier,monospace;
+            /*@editable*/font-size:20px;
+            /*@editable*/font-weight:normal;
+            /*@editable*/line-height:150%;
+        }
+        /*
+        @tab Body
+        @section message heading style
+        @tip The styling for your email's message heading text. Make it a color and size that is easy to read.
+        */
+        #messageHeading{
+            /*@editable*/color:#000000;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:28px;
+            /*@editable*/font-weight:bold;
+            /*@editable*/line-height:100%;
+        }
+        #eventImage{
+            display:inline;
+            height:auto;
+            max-width:360px !important;
+        }
+        /*
+        @tab Body
+        @section text style
+        @tip The styling for your email's main content text. Make it a color and size that is easy to read.
+        */
+        #content,#eventDate,#eventLocation{
+            /*@editable*/color:#000000;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:12px;
+            /*@editable*/line-height:150%;
+        }
+        /*
+        @tab Body
+        @section link style
+        @tip The styling for your email's main content hyperlinks. Make it a color that stands out from the rest of your text.
+        */
+        #content a:link,#content a:visited,#eventDate a:link,#eventDate a:visited,#eventLocation a:link,#eventLocation a:visited{
+            /*@editable*/color:#4290C8;
+            /*@editable*/font-weight:normal;
+            /*@editable*/text-decoration:none;
+        }
+        /*
+        @tab Body
+        @section event detail heading
+        @tip The styling for your email's event detail heading text. Make it a color and size that is easy to read.
+        */
+        .sectionHeading{
+            /*@editable*/color:#689A68;
+            /*@editable*/font-family:"American Typewriter","Courier New",Courier,monospace;
+            /*@editable*/font-size:12px;
+            /*@editable*/line-height:150%;
+        }
+        #buttonCenter{
+            background-color:#FF0000;
+            max-height:72px !important;
+            text-align:center;
+        }
+        #buttonText{
+            background-color:#FF0000;
+        }
+        /*
+        @tab Body
+        @section button style
+        @tip The styling for your email's button text.
+        */
+        #buttonText,#buttonText a:link,#buttonText a:visited{
+            /*@editable*/color:#FFFFFF;
+            /*@editable*/font-family:"American Typewriter","Courier New",Courier,monospace;
+            /*@editable*/font-size:14px;
+            /*@editable*/font-weight:normal;
+            /*@editable*/line-height:125%;
+            text-decoration:none;
+        }
+        /*
+        @tab Footer
+        @section text style
+        @tip The styling for your email's footer text. Make it a color and size that is easy to read.
+        */
+        #footerContent,#rewards{
+            /*@editable*/color:#000000;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:12px;
+            /*@editable*/line-height:150%;
+        }
+        /*
+        @tab Footer
+        @section link style
+        @tip The styling for your email's footer hyperlinks. Make it a color that stands out from the rest of your text.
+        */
+        #footerContent a:link,#footerContent a:visited,#rewards a:link,#rewards a:visited{
+            /*@editable*/color:#4290C8;
+            /*@editable*/font-weight:normal;
+            /*@editable*/text-decoration:none;
+        }
+        /*
+        @tab Footer
+        @section social text style
+        @tip The styling for your email's social block text. Make it a color and size that is easy to read.
+        */
+        .socialCell{
+            /*@editable*/color:#000000;
+            /*@editable*/font-family:Helvetica;
+            /*@editable*/font-size:12px;
+            /*@editable*/line-height:125%;
+        }
+        /*
+        @tab Footer
+        @section social link style
+        @tip The styling for your email's social block hyperlinks. Make it a color that stands out from the rest of your text.
+        */
+        .socialCell a:link,.socialCell a:visited{
+            /*@editable*/color:#4290C8;
+            /*@editable*/font-weight:normal;
+            /*@editable*/text-decoration:none;
+        }
+    </style>
+
+<center>
+    <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="container">
+        <tr>
+            <td align="center" valign="top">
+                <table border="0" cellpadding="0" cellspacing="0" width="600" style="width:600px;">
+                    <tr>
+
+                        <td align="center" valign="top" width="470">
+                            <br/>
+                            <table border="0" cellpadding="0" cellspacing="0" width="470">
+                                <!-- // Begin Template Header \\ -->
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="360" id="templateHeader">
+                                            <tr>
+                                                <td align="center" colspan="3" valign="middle">
+                                                    <div id="eventName" mc:edit="event_name"></div>
+                                                    <br/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" colspan="3" valign="middle">
+                                                    <img src="http://gallery.mailchimp.com/0d61bb2ec9002f0e9872b8c36/images/divider.jpg"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- // End Template Header \\ -->
+
+                                <!-- // Begin Template Body \\ -->
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="470" id="templateBody">
+                                            <tr>
+                                                <td rowspan="2" width="55">
+                                                    <br/>
+                                                </td>
+                                                <td align="center" valign="top" width="360">
+                                                    <br/>
+                                                </td>
+                                                <td rowspan="2" width="55">
+                                                    <br/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top" width="360">
+                                                    <div id="nagojudge-avatar">
+                                                        <tr>
+                                                            <td align="center" colspan="3" height="126" valign="top" width="470">
+                                                                <table align="center" border="0" cellpadding="0" cellspacing="0" height="126" width="126" id="eventButton">
+                                                                    <tr>
+                                                                        <td align="center" valign="top">
+                                                                            <img src="cid:nj-logo" alt="" width="280" height="350"  style="display: block;" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" colspan="3" valign="top" width="470">
+                                                    <br/>
+                                                    <div id="content" mc:edit="main">
+                                                        <span style="font-family:trebuchet ms,lucida grande,lucida sans unicode,lucida sans,tahoma,sans-serif">
+                                                            Hola <strong>->labelNickName</strong> te damos la bienvenida a NagoJudge, quizas tengas muchas preguntas, sobre lo que hacemos y que pretendemos, poco a poco lo ver&aacute;s. Por ahora empieza ingresando a la plataforma y revisa la guia que proponemos para ir perdiendo el miedo.....
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" colspan="3" height="126" valign="top" width="470">
+                                                    <table align="center" border="0" cellpadding="0" cellspacing="0" height="126" width="126" id="eventButton">
+                                                        <tr>
+                                                            <td align="center" valign="top">
+                                                                <img src="cid:code-qr" alt="" width="200" height="200"  style="display: block;" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" colspan="3" valign="top" width="470">
+                                                    <br/>
+                                                    <div id="content" mc:edit="main">
+                                                        <span style="font-family:trebuchet ms,lucida grande,lucida sans unicode,lucida sans,tahoma,sans-serif">
+                                                            Te adjuntamos un codigo con un tu contrase&ntilde;a, esta sera unica y exclusiva, si por alguna razon llegas a olvidarla, te recomendamos envies un
+                                                            correo electronico a ->labelCorreoSoporte all&iacute; te ayudaran. Exitos!
+                                                            <br/> <br/>
+                                                            <strong>#NagoJudgeTeam.</strong>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- // End Template Body \\ -->
+                                <!-- // Begin Template Footer \\ -->
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="360" id="templateFooter">
+                                            <tr>
+                                                <td align="center" colspan="3" valign="middle">
+                                                    <div id="eventName" mc:edit="event_name"></div>
+                                                    <br/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="middle">
+                                                    <br/>
+                                                    <img src="http://gallery.mailchimp.com/0d61bb2ec9002f0e9872b8c36/images/divider.jpg"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <br/>
+                                                    <div id="rewards" mc:edit="rewards"></div>
+                                                    <br/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- // End Template Footer \\ -->
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>

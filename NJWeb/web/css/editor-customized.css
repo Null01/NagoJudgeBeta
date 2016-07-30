@@ -1,0 +1,93 @@
+
+.ui-editor {
+    background: #ffffff none repeat scroll 0 0;
+}
+.ui-editor iframe {
+    border: 1px solid #cccccc;
+    margin: 0;
+    padding: 0;
+}
+/*
+    @autor Andres Garcia
+    @Since 19-06-2015
+    @Description Normalizacion de estilos para un textArea
+*/
+.ui-editor textarea {
+    border: medium none;
+    font: 10pt Arial,Verdana;
+    margin: 0;
+    outline: medium none;
+    overflow-y: scroll;
+    padding: 0;
+    resize: none;
+}
+.ui-editor-toolbar {
+    background: rgba(0, 0, 0, 0) url("/NagoJudge/faces/javax.faces.resource/editor/images/toolbar.gif?ln=primefaces&v=5.0") repeat scroll 0 0;
+}
+.ui-editor-group {
+    float: left;
+    height: 26px;
+}
+.ui-editor-button {
+    background: rgba(0, 0, 0, 0) url("/NagoJudge/faces/javax.faces.resource/editor/images/buttons.gif?ln=primefaces&v=5.0") repeat scroll 0 0;
+    float: left;
+    height: 24px;
+    margin: 1px 0;
+    width: 24px;
+}
+.ui-editor-disabled {
+    opacity: 0.3;
+}
+.ui-editor-divider {
+    background: #ccc none repeat scroll 0 0;
+    float: left;
+    height: 23px;
+    margin: 1px 0;
+    width: 1px;
+}
+.ui-editor-popup {
+    background-color: white;
+    border: 1px solid #999;
+    cursor: default;
+    font: 10pt Arial,Verdana;
+    position: absolute;
+    z-index: 10000;
+}
+.ui-editor-list div {
+    padding: 2px 4px;
+}
+.ui-editor-list p, .ui-editor-list h1, .ui-editor-list h2, .ui-editor-list h3, .ui-editor-list h4, .ui-editor-list h5, .ui-editor-list h6, .ui-editor-list font {
+    background-color: Transparent;
+    margin: 0;
+    padding: 0;
+}
+.ui-editor-color {
+    padding: 1px 0 0 1px;
+    width: 150px;
+}
+.ui-editor-color div {
+    float: left;
+    height: 14px;
+    margin: 0 1px 1px 0;
+    width: 14px;
+}
+.ui-editor-prompt {
+    background-color: #f6f7f9;
+    font-size: 8.5pt;
+    padding: 4px;
+}
+.ui-editor-prompt input, .ui-editor-prompt textarea {
+    font: 8.5pt Arial,Verdana;
+}
+.ui-editor-message {
+    background-color: #fdfcee;
+    font-size: 8.5pt;
+    padding: 4px;
+    width: 150px;
+}
+.ui-overlay-hidden .ui-editor iframe {
+    display: none !important;
+}
+.ui-overlay-visible .ui-editor iframe {
+    display: inline !important;
+}

@@ -1,0 +1,215 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+    <ui:define name="content">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Hola, #{profileBean.accountView.nickname}</div>
+            <div class="panel-body">
+                <div class="well bs-component">
+                    <p:accordionPanel id="panel">
+                        <p:tab title="Datos Generales" id="myData">
+                            <h:form id="form-panel-data-user" class="form-horizontal">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label for="nameChallenge" class="col-md-1 control-label">
+                                            <img id="img-user" src="/go/to/img/users/default-user.png" width="70" height="70" />
+                                        </label>
+                                        <label for="firstName" class="col-md-1 control-label">#{common['general.user.label.firstName']}</label>
+                                        <div class="col-md-2">
+                                            <p:inputText id="firstName" styleClass="form-control" value="#{profileBean.userView.firstName}" readonly="true" />
+                                        </div>
+                                        <label for="lastName" class="col-md-1 control-label">#{common['general.user.label.lastName']}</label>
+                                        <div class="col-md-2">
+                                            <p:inputText id="lastName" styleClass="form-control" value="#{profileBean.userView.lastName}" readonly="true" />
+                                        </div>
+                                        <label for="email" class="col-md-1 control-label">#{common['general.user.label.email']}</label>
+                                        <div class="col-md-2">
+                                            <p:inputText id="email" styleClass="form-control" value="#{profileBean.userView.idEmail}" readonly="true" />
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                            </h:form>
+                        </p:tab>
+
+                        <p:tab title="... Mi Avance!" id="myProgres">
+                            <p:tabView id="tab">
+                                <p:tab title="Ejercicios Intentados" id="view01">
+                                    <h:form id="form-panel-static-01" class="form-horizontal">
+                                        <h:panelGrid columns="2" cellpadding="10">
+                                            <div class="form-group">
+
+                                                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                                                <p:dataTable id="table-echo" var="p" widgetVar="coWidgetVar1" tableStyleClass="table table-striped table-hover"
+                                                             value="#{profileBean.listProblemsTry}" styleClass="center-block"
+                                                             selectionMode="single" selection="#{profileBean.problemView}"
+                                                             rowKey="#{p.idProblem}" filteredValue="#{profileBean.filteredProblemsTry}">
+
+                                                    <p:ajax event="rowSelect" listener="#{profileBean.actionOnRowSelectProblemTry}" update="@form" />
+
+                                                    <f:facet name="header">
+                                                        <p:outputPanel>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                                                                    </span>
+                                                                    <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('coWidgetVar1').filter();" placeholder="Parametros de busqueda" value="#{profileBean.searchParameter}"/>
+                                                                </div>
+                                                            </div>
+                                                        </p:outputPanel>
+                                                    </f:facet>
+                                                    <p:column headerText="Id Problem" width="110" filterBy="#{p.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
+                                                    </p:column>
+                                                    <p:column headerText="Problema" width="250" filterBy="#{p.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText  value="#{p.nameProblem}" />
+                                                    </p:column>
+                                                    <p:column headerText="Categoria" width="300" filterBy="#{p.idCategory.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{p.idCategory.nameCategory}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                                <p:chart id="pie-static" type="pie" model="#{profileBean.pieChartModelStatistics}" style="width:350px;height:250px" />                                            
+                                            </div>
+                                        </h:panelGrid>
+                                    </h:form>
+                                </p:tab>
+
+                                <p:tab title="Ejercicios Resueltos" id="view02">
+                                    <h:form id="form-panel-static-02" class="form-horizontal">
+                                        <h:panelGrid columns="2" cellpadding="10">
+                                            <div class="form-group">
+
+                                                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                                                <p:dataTable id="table-echo" var="p" widgetVar="coWidgetVar2" tableStyleClass="table table-striped table-hover"
+                                                             value="#{profileBean.listProblemsTrySolve}" styleClass="center-block"
+                                                             selectionMode="single" selection="#{profileBean.problemView}"
+                                                             rowKey="#{p.idProblem}" filteredValue="#{profileBean.filteredProblemsTrySolve}">
+
+                                                    <p:ajax event="rowSelect" listener="#{profileBean.actionOnRowSelectProblemSolve}" update="@form" />
+
+                                                    <f:facet name="header">
+                                                        <p:outputPanel>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                                                                    </span>
+                                                                    <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('coWidgetVar2').filter();" placeholder="Parametros de busqueda" value="#{profileBean.searchParameter}"/>
+                                                                </div>
+                                                            </div>
+                                                        </p:outputPanel>
+                                                    </f:facet>
+                                                    <p:column headerText="Id Problem" width="110" filterBy="#{p.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
+                                                    </p:column>
+                                                    <p:column headerText="Problema" width="250" filterBy="#{p.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText  value="#{p.nameProblem}" />
+                                                    </p:column>
+                                                    <p:column headerText="Categoria" width="300" filterBy="#{p.idCategory.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{p.idCategory.nameCategory}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                                <p:chart id="pie-static" type="pie" model="#{profileBean.pieChartModelStatistics}" style="width:350px;height:250px" />                                            
+                                            </div>
+                                        </h:panelGrid>
+                                    </h:form>
+                                </p:tab>
+
+                                <p:tab title="Mis Envios" id="view03">
+                                    <h:form id="form-panel-static-03" class="form-horizontal">
+                                        <h:panelGrid columns="2" cellpadding="10">
+                                            <div class="form-group">
+
+                                                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                                                <p:dataTable id="table-mysubmit" widgetVar="coWidgetVar3" tableStyleClass="table table-striped table-hover"
+                                                             rowStyleClass="#{s.statusSubmit eq 'ACCEPTED'?
+                                                                              'success': (s.statusSubmit eq 'WRONG ANSWER'?
+                                                                              'danger': (s.statusSubmit eq 'TIME LIMIT'?
+                                                                              'warning': (s.statusSubmit eq 'RUNTIME ERROR'?
+                                                                              'info': (s.statusSubmit eq 'COMPILATION ERROR'?
+                                                                              'warning': null)))) }"
+                                                             value="#{profileBean.listSubmitsByAccount}"  filteredValue="#{profileBean.filterListSubmitsByAccount}"
+                                                             var="s" editable="true"  rowKey="#{s.idSubmit}"  styleClass="center-block" >
+
+                                                    <p:ajax event="rowEdit" listener="#{profileBean.onRowEditMySubmit}" update="@this" />
+
+                                                    <f:facet name="header">
+                                                        <p:outputPanel>
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                                                                    </span>
+                                                                    <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('coWidgetVar3').filter();" placeholder="Parametros de busqueda" value="#{profileBean.searchParameter}"/>
+                                                                </div>
+                                                            </div>
+                                                        </p:outputPanel>
+                                                    </f:facet>
+
+                                                    <p:column headerText="Id Submit" width="100" filterBy="#{s.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
+                                                    </p:column>
+                                                    <p:column headerText="Problem" width="200" filterBy="#{s.idProblem.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem.idProblem)} - #{s.idProblem.nameProblem}" action="#{problemsBean.actionRedirectView}">
+                                                            <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem.idProblem}" />
+                                                        </h:commandLink>
+                                                    </p:column>
+                                                    <p:column headerText="Account" width="120" filterBy="#{s.idAccount.nickname}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{s.idAccount.nickname}" />
+                                                    </p:column>
+                                                    <p:column headerText="Status" styleClass="bold-font" width="150" filterBy="#{s.statusSubmit}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{s.statusSubmit}" />
+                                                    </p:column>
+                                                    <p:column headerText="Language" width="60" filterBy="#{s.idLanguage.nameLanguage}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{s.idLanguage.nameLanguage}" />
+                                                    </p:column>
+                                                    <p:column headerText="Date Submit" width="170" filterBy="#{s.dateSubmit}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{s.dateSubmit}" >
+                                                            <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Date Judge" width="170" filterBy="#{s.dateJudge}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <h:outputText value="#{s.dateJudge}" >
+                                                            <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="View" width="120" filterBy="#{s.visibleWeb}" filterStyle="display:none;" filterMatchMode="contains">
+                                                        <p:cellEditor>
+                                                            <f:facet name="output">
+                                                                <h:commandLink styleClass="glyphicon glyphicon-eye-close" type="button" disabled="true"
+                                                                               rendered="#{s.visibleWeb eq 'PRI'}"/>
+                                                                <h:commandLink styleClass="glyphicon glyphicon-eye-open" type="button" disabled="true"
+                                                                               rendered="#{s.visibleWeb eq 'PUB'}"/>
+                                                            </f:facet>
+                                                            <f:facet name="input">
+                                                                <h:selectOneMenu value="#{profileBean.submitView.visibleWeb}" 
+                                                                                 style="width:100%; color: black !important; font-weight: bold !important;">
+                                                                    <f:selectItems value="#{profileBean.listStatusVisibleWeb}"  var="visible" itemLabel="#{visible}" itemValue="#{visible}" />
+                                                                </h:selectOneMenu>
+                                                            </f:facet>
+                                                        </p:cellEditor>
+                                                    </p:column>
+                                                    <p:column width="30">
+                                                        <p:rowEditor />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </div>
+                                        </h:panelGrid>
+                                    </h:form>
+                                </p:tab>
+
+                            </p:tabView>
+                        </p:tab>
+                    </p:accordionPanel>
+
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

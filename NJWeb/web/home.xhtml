@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <ui:include src="commons/header.xhtml"/>
+        </h:head>
+        <h:body id="main-body-home">
+            <ui:include src="commons/navegation-user.xhtml"/>
+            <ui:insert name="content">
+                <ui:include src="commons/default.xhtml"/>
+            </ui:insert>
+            <ui:include src="commons/footer.xhtml"/>
+        </h:body>
+    </f:view>
+</html>

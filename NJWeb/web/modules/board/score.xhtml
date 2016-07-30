@@ -1,0 +1,103 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+    <ui:define name="content">
+        <link href="/go/to/tools/frameworks/codemirror/lib/codemirror.css" rel="stylesheet"/>
+        <link href="/go/to/tools/frameworks/codemirror/addon/dialog/dialog.css" rel="stylesheet"/>
+        <script src="/go/to/tools/frameworks/codemirror/lib/codemirror.js"/>
+        <script src="/go/to/tools/frameworks/codemirror/mode/clike/clike.js"/>
+        <script src="/go/to/tools/frameworks/codemirror/keymap/emacs.js"/>
+        <script src="/go/to/tools/frameworks/codemirror/addon/edit/matchbrackets.js"/>
+        <script src="/go/to/tools/frameworks/codemirror/addon/comment/comment.js"/>
+        <script src="/go/to/tools/frameworks/codemirror/addon/dialog/dialog.js"/>
+        <script src="/go/to/tools/frameworks/codemirror/addon/search/searchcursor.js"/>
+        <script src="/go/to/tools/frameworks/codemirror/addon/search/search.js"/>
+
+        <div id="panelMyScoreContest" class="panel panel-default">
+            <h:form id="formRemoteCommandMyScoreContest">
+                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                <p:remoteCommand id="remoteCommandRefreshBoardMyScoreContest" update="tableMyScoreContest" process="@this" name="refreshBoardNow"
+                                 actionListener="#{submitBean.actionAjaxRefreshBoard}" />
+
+                <!-- Table -->
+                <p:dataTable id="tableMyScoreContest" widgetVar="tableMyScoreContest" tableStyleClass="table table-striped table-hover"
+                             rowStyleClass="#{s.statusSubmit eq 'ACCEPTED'?
+                                              'success': (s.statusSubmit eq 'WRONG ANSWER'?
+                                              'danger': (s.statusSubmit eq 'TIME LIMIT'?
+                                              'warning': (s.statusSubmit eq 'RUNTIME ERROR'?
+                                              'info': (s.statusSubmit eq 'COMPILATION ERROR'?
+                                              'warning': null)))) }"
+                             value="#{submitBean.submitsAll}" var="s" >
+
+                    <p:column headerText="Id Submit" width="80">
+                        <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
+                    </p:column>
+                    <p:column headerText="Problem" width="200">
+                        <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem.idProblem)} - #{s.idProblem.nameProblem}" action="#{problemsBean.actionRedirectView}">
+                            <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem.idProblem}" />
+                        </h:commandLink>
+                    </p:column>
+                    <p:column headerText="Account" width="120">
+                        <h:commandLink value="#{s.idAccount.nickname}" action="#{problemsBean.actionRedirectViewToProfile}">
+                            <f:setPropertyActionListener target="#{problemsBean.accountView.idAccount}" value="#{s.idAccount.idAccount}" />
+                        </h:commandLink>
+                    </p:column>
+                    <p:column headerText="Status" styleClass="bold-font" width="150">
+                        <h:outputText value="#{s.statusSubmit}" />
+                    </p:column>
+                    <p:column headerText="Language" width="60">
+                        <h:outputText value="#{s.idLanguage.nameLanguage}" />
+                    </p:column>
+                    <p:column headerText="Date Submit" width="120">
+                        <h:outputText value="#{s.dateSubmit}" >
+                            <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Date Judge" width="120">
+                        <h:outputText value="#{s.dateJudge}" >
+                            <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="View" width="40">
+                        <p:commandLink styleClass="glyphicon glyphicon-paperclip"  oncomplete="PF('dlg-view-code').show();"
+                                       action="#{problemsBean.actionViewCode(s.idSubmit)}" update=":form-dlg-view-code"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <h:form id="form-dlg-view-code">
+                <p:dialog id="dlg-view-code" widgetVar="dlg-view-code" modal="true" resizable="false" width="90%" style="width: 90% !important;">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Codigo Fuente</div>
+                        <div class="panel-body" style="cursor: pointer !important;">
+                            <p:inputTextarea id="text-area-view-code" value="#{problemsBean.textCode}" readonly="true"
+                                             style="width: 90% !important; cursor: pointer !important;" />
+                        </div>
+                    </div>
+                </p:dialog>
+                <script>
+                    var editor = CodeMirror.fromTextArea(document.getElementById("form-dlg-view-code:text-area-view-code"), {
+                        lineNumbers: false,
+                        mode: "text/x-java",
+                        keyMap: "emacs",
+                        styleActiveLine: true,
+                        matchBrackets: true,
+                        readOnly: true
+                    });
+                    //var theme = 'xq-light';
+                    //editor.setOption("theme", theme);
+                </script>
+
+            </h:form>
+        </div>
+        <script type="text/javascript">
+            setInterval(refreshBoardLastSubmit, 20000);
+            function refreshBoardLastSubmit() {
+                refreshBoardNow();
+            }
+        </script>
+    </ui:define>
+</ui:composition>

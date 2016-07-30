@@ -1,0 +1,101 @@
+/* 
+    Created on : 14-jun-2015, 13:15:20
+    Author     : andresfelipegarciaduran
+*/
+body {
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    -webkit-padding-start: 20px;
+    -webkit-padding-end:20px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+textarea{
+    border: 1px solid #cccccc !important;
+    resize: none;
+    padding-top: 10px !important;
+}
+
+.button-colum-table{
+    height: 30px !important;
+    width: 40px !important;
+}
+
+.selected-list{
+    border-radius: 0 !important;
+    padding-top: 7px !important;
+}
+
+/*
+    @autor Andres Garcia
+    @Since 19-06-2015
+    @Description Normalizacion de estilos css primefaces default
+*/
+
+.ui-datatable table {
+    border-collapse: collapse !important;
+    table-layout: auto !important;
+    width: 100% !important;
+}
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td {
+    border-style: none !important;
+    border-width: 1px !important;
+    overflow: hidden !important;
+    padding: 4px 10px !important;
+    text-align: left !important;
+}
+.ui-inputfield {
+    border-radius: 0 !important;
+    padding-left: 15px !important;
+    text-align: left !important;
+}
+.ui-inputfield:focus{
+    border-color: #66afe9 !important;
+}
+
+
+input[type="text"], input[type="file"]{
+    height: 43px !important;
+}
+
+.ui-messages-info-icon, .ui-messages-warn-icon, .ui-messages-error-icon, .ui-messages-fatal-icon,
+.ui-message-info-icon, .ui-message-warn-icon, .ui-message-error-icon, .ui-message-fatal-icon {
+    background: none !important;
+}
+
+.ui-button {
+    padding: inherit !important;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 1px solid #cccccc;    
+}
+
+.ui-state-hover {
+    // background: #85b2cb -moz-linear-gradient(center top , rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)) repeat scroll 0 0;
+    border: 1px solid #7096ab;
+}
+.ui-selectonemenu-trigger{
+    padding: 0px 0px !important;
+}
+
+/*
+    @autor Andres Garcia
+    @Since 19-06-2015
+    @Description Normalizacion de estilos css Bootstrap.
+*/
+
+.nav{
+    padding-top: 5px !important;
+}
+.navbar-header{
+    padding-top: 5px !important;
+}
+
+.bold-font{
+    font-weight: bold;
+}

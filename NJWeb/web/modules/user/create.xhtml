@@ -1,0 +1,84 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+    <ui:define name="content">
+        <div class="well bs-component">
+            <h:form id="form-create-user" class="form-horizontal" enctype="multipart/form-data">
+                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                <fieldset>
+                    <div class="form-group">
+                        <label for="nameUser" class="col-md-1 control-label">Nombre</label>
+                        <div class="col-md-3">
+                            <p:inputText id="nameUser" styleClass="form-control" placeholder="Nombre"
+                                         value="#{userBean.userView.firstName}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="lastName" class="col-md-1 control-label">Apellidos</label>
+                        <div class="col-md-3">
+                            <p:inputText id="lastName" styleClass="form-control" placeholder="Nombre del autor"
+                                         value="#{userBean.userView.lastName}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="emailUser" class="col-md-1 control-label">Correo Electronico</label>
+                        <div class="col-md-3">
+                            <p:inputText id="emailUser" styleClass="form-control" placeholder="Correo Electronico"
+                                         value="#{userBean.userView.idEmail}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="photoUser" class="col-md-1 control-label">Imagen</label>
+                        <div class="col-md-3">
+                            <h:inputFile id="photoUser" styleClass="form-control" 
+                                         value="#{userBean.imageUserFile}" />
+                        </div>
+                        <label for="dateBirthday" class="col-md-1 control-label">Fecha Nacimiento</label>
+                        <div class="col-md-3">
+                            <p:calendar id="dateBirthday" yearRange="c-50:c+5" navigator="true" pattern="MM/dd/yyyy" placeholder="02/05/2015"
+                                        value="#{userBean.userView.dateBirthday}" required="true"/>
+                        </div>
+                        <label for="typeUser" class="col-md-1 control-label">Categoria</label>
+                        <div class="col-md-3">
+                            <p:selectOneMenu id="typeUser" styleClass="selected-list form-control" style="width: 100%;" converter="typeUserConvertJSF"
+                                             value="#{userBean.typeUserView}"  required="true" >
+                                <f:selectItems value="#{userBean.typeUserItems}" />                                               
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname" class="col-md-1 control-label">Nickname</label>
+                        <div class="col-md-3">
+                            <p:inputText id="nickname" styleClass="form-control" placeholder="Nickname"
+                                         value="#{userBean.accountView.nickname}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="password" class="col-md-1 control-label">Password</label>
+                        <div class="col-md-3">
+                            <p:inputText id="password" styleClass="form-control" placeholder="Password" readonly="true"
+                                         value="#{userBean.userView.keyUser}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <p:commandButton id="btn-create-user" update="@form" styleClass="btn btn-default" ajax="false"
+                                         value="Crear ususario" actionListener="#{userBean.actionCreateUser}"/>
+                    </div>
+                </fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

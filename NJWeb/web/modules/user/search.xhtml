@@ -1,0 +1,63 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+    <ui:define name="content">
+        <div class="well">
+            <fieldset>
+                <div class="form-group">
+                    <h:form id="formSearchUserAll" class="form-horizontal">
+                        <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                        <p:dataTable id="tableUsersContest" var="u" widgetVar="usWidgetVar" tableStyleClass="table table-striped table-hover" 
+                                     value="#{userBean.listUsers}" filteredValue="#{userBean.filteredUsers}"  styleClass="center-block"
+                                     rowKey="#{u.idEmail}" paginator="true" paginatorPosition="bottom" >
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                                            </span>
+                                            <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('usWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{userBean.searchParameter}"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column headerText="Id Account" width="80" filterBy="#{u.idAccount.idAccount}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{utilBean.formatIdAccount(u.idAccount.idAccount)}" />
+                            </p:column>
+                            <p:column headerText="Nickname" width="120" filterBy="#{u.idAccount.nickname}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:commandLink value="#{u.idAccount.nickname}" action="#{userBean.actionRedirectViewToProfile}">
+                                    <f:setPropertyActionListener target="#{userBean.accountView.idAccount}" value="#{u.idAccount.idAccount}" />
+                                </h:commandLink>                            
+                            </p:column>
+                            <p:column headerText="Email" width="160" filterBy="#{u.idEmail}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{u.idEmail}" />
+                            </p:column>
+                            <p:column headerText="Type User" width="100" filterBy="#{u.idType.nameType}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{u.idType.nameType}" />
+                            </p:column>
+                            <p:column headerText="First Name" width="100" filterBy="#{u.firstName}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{u.firstName}" />
+                            </p:column>
+                            <p:column headerText="Last Name" width="100" filterBy="#{u.lastName}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{u.lastName}" />
+                            </p:column>
+                            <p:column headerText="Date Birthday" width="100" filterBy="#{u.dateBirthday}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{u.dateBirthday}" >
+                                    <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+
+
+                    </h:form>
+                </div>
+            </fieldset> 
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,130 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+    <ui:define name="content">
+        <link rel="stylesheet" href="../../../tools//frameworks/codemirror/codemirror.css"/>
+        <script src="../../../tools/frameworks/codemirror/codemirror.js"></script>
+        <div class="well bs-component">
+            <h:form id="form-create-problem" class="form-horizontal" enctype="multipart/form-data">
+                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                <fieldset>
+                    <div class="form-group">
+                        <label for="nameProblem" class="col-md-1 control-label">Nombre Problema</label>
+                        <div class="col-md-3">
+                            <p:inputText id="nameProblem" styleClass="form-control" placeholder="Nombre del problema"
+                                         value="#{problemsBean.problemView.nameProblem}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="nameAuthor" class="col-md-1 control-label">Nombre autor</label>
+                        <div class="col-md-3">
+                            <p:inputText id="nameAuthor" styleClass="form-control" placeholder="Nombre del autor"
+                                         value="#{problemsBean.problemView.author}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="categoryProblem" class="col-md-1 control-label">Categoria</label>
+                        <div class="col-md-3">
+                            <p:selectOneMenu id="categoryProblem" styleClass="selected-list form-control" style="width: 100%;" converter="categoryProblemConvertJSF"
+                                             value="#{problemsBean.categoryProblemView}"  required="true" >
+                                <f:selectItems value="#{categoryBean.categoryProblemItems}" />                                               
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileProblem" class="col-md-1 control-label">Enunciado</label>
+                        <div class="col-md-3">
+                            <h:inputFile id="problemFile" styleClass="form-control" 
+                                         value="#{problemsBean.problemFile}"
+                                         required="true"/>
+                        </div>
+                        <label for="difficultyLevel" class="col-md-1 control-label">Dificultad</label>
+                        <div class="col-md-3">
+                            <p:selectOneMenu id="difficultyLevel" styleClass="selected-list form-control" style="width: 100%;" converter="difficultyLevelConvertJSF"
+                                             value="#{problemsBean.difficultyLevel}"  required="true" >
+                                <f:selectItems value="#{difficultyLevelBean.difficultyLevelItems}" />                                               
+                            </p:selectOneMenu>
+                        </div>
+                        <label for="timeProblem" class="col-md-1 control-label">Tiempo Juzgamiento</label>
+                        <div class="col-md-3">
+                            <p:spinner id="timeProblem" stepFactor="1" min="1" max="6"  placeholder="1"
+                                       value="#{problemsBean.problemView.timeLimitSeg}"
+                                       required="true" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descriptionProblem" class="col-md-1 control-label">Obervaciones</label>
+                        <div class="col-md-11">
+                            <p:inputTextarea id="descriptionProblem" rows="5" style="width: 100%;" autoResize="false" placeholder="Observaciones y/o inquietudes"
+                                             value="#{problemsBean.problemView.description}"
+                                             required="true" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Sample Input</div>
+                                <div class="panel-body">
+                                    <!--
+                                    <h:panelGroup id="panel-tex-input">
+                                        <p:inputTextarea id="s-i-t"  rows="9" style="width: 100%;" autoResize="false"
+                                                        />
+                                    </h:panelGroup>
+                                    -->
+                                    <div class="form-group">                                        
+                                        <div class="col-md-12">
+                                            <h:inputFile id="fileInput" styleClass="form-control" 
+                                                         value="#{problemsBean.inputFile}"
+                                                         required="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Sample Output</div>
+                                <div class="panel-body">
+                                    <!--
+                                    <h:panelGroup id="panel-tex-output">
+                                        <p:inputTextarea id="s-o-t" rows="9" style="width: 100%;" autoResize="false"
+                                                          />
+                                    </h:panelGroup>
+                                    -->
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <h:inputFile id="fileOutput" styleClass="form-control" 
+                                                         value="#{problemsBean.outputFile}"
+                                                         required="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <p:commandButton id="btn-create-problem" update="@form" ajax="false" styleClass="btn btn-default"
+                                         value="Crear problema" actionListener="#{problemsBean.actionCreateOneProblem}"/>
+                    </div>
+                </fieldset>
+            </h:form>
+        </div>
+        <script>
+            var textAreaSimpleInput = document.getElementById("form-create-problem:s-i-t");
+            var codeEditorInput = CodeMirror.fromTextArea(textAreaSimpleInput, {
+                lineNumbers: true
+            });
+            var textAreaSimpleOutput = document.getElementById("form-create-problem:s-o-t");
+            var codeEditorOutput = CodeMirror.fromTextArea(textAreaSimpleOutput, {
+                lineNumbers: true
+            });
+        </script>
+    </ui:define>
+</ui:composition>

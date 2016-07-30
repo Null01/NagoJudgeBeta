@@ -1,0 +1,34 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+
+    <ui:define name="content">
+
+        <ui:fragment rendered="#{problemsBean.problemView.idProblem != 0}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title text-center">##{problemsBean.problemView.idProblem } - #{problemsBean.problemView.nameProblem}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <h:form>
+                            <p:messages id="msgs" />
+                            <iframe src="#{problemsBean.pathSourceProblem}" style="width: 100%;" height="600" ></iframe>
+                            <p:spacer/>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+
+            <ui:include src="../../board/submit.xhtml" />
+
+        </ui:fragment>
+    </ui:define>
+</ui:composition>
+
+
+

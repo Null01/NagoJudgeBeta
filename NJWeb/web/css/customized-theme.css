@@ -1,0 +1,46 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12-ene-2016, 0:47:58
+    Author     : andresfelipegarciaduran
+*/
+.ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_616161_256x240.png?ln=primefaces-aristo");
+    height: 16px;
+    width: 16px;
+}
+.ui-widget-content .ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_616161_256x240.png?ln=primefaces-aristo");
+}
+.ui-widget-header .ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_898989_256x240.png?ln=primefaces-aristo");
+}
+.ui-state-default .ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_38667f_256x240.png?ln=primefaces-aristo");
+}
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_38667f_256x240.png?ln=primefaces-aristo");
+}
+.ui-state-active .ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_38667f_256x240.png?ln=primefaces-aristo");
+}
+.ui-state-highlight .ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_2e83ff_256x240.png?ln=primefaces-aristo");
+}
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {
+    background-image: url("/go/to/javax.faces.resource/images/ui-icons_cd0a0a_256x240.png?ln=primefaces-aristo");
+}
+.ui-widget-overlay {
+    background: #2d5972 url("/go/to/javax.faces.resource/images/ui-bg_flat_0_2d5972_40x100.png?ln=primefaces-aristo") repeat-x scroll 50% 50%;
+    opacity: 0.3;
+}
+.ui-widget-shadow {
+    background: #4f4f4f url("/go/to/javax.faces.resource/images/ui-bg_flat_0_4f4f4f_40x100.png?ln=primefaces-aristo") repeat-x scroll 50% 50%;
+    border-radius: 8px;
+    margin: -8px 0 0 -8px;
+    opacity: 0.3;
+    padding: 8px;
+}
