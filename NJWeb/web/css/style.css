@@ -99,3 +99,15 @@ input[type="text"], input[type="file"]{
 .bold-font{
     font-weight: bold;
 }
+
+/*
+    Componente JSF - Primefaces
+*/
+.ui-panel {
+    padding: 0em !important;
+}
+.ui-panel .ui-panel-content {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0 !important;
+    border: 0 none !important;
+    padding: 0em !important;
+}

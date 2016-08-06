@@ -59,8 +59,11 @@ public class NavigationBean implements Serializable {
         this.treeNavigation = treeNavigation;
     }
 
-    public String actionRedirect(String urlRedirect) {
-        return urlRedirect + "?faces-redirect=true";
+    public void actionRedirect(Object function) {
+        logger.debug("Start actionRedirect()");
+        FunctionUser redirect = (FunctionUser) function;
+        logger.debug("urlRedirect [" + redirect.getNameFunction() + " / " + redirect.getUrlFunction() + "]");
+        //return redirect.getUrlFunction() + "?faces-redirect=true";
     }
 
     private TreeNode buildTreeNavigation() {

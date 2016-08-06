@@ -3,7 +3,8 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui">
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <nav class="navbar navbar-default">
         <h:form>
@@ -21,25 +22,13 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">                                
                     <ul class="nav navbar-nav">
-                        <ui:repeat var="level1" value="#{navigationBean.treeNavigation.children}" >
-                            <ui:fragment rendered="#{level1.children != null}">
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#{level1.data.nameFunction}<span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        <ui:repeat var="level2" value="#{level1.children}" >
-                                            <li>
-                                                <h:commandLink value="#{level2.data.nameFunction}" action="#{navigationBean.actionRedirect(level2.data.urlFunction)}"/>                  
-                                            </li>
-                                        </ui:repeat>
-                                    </ul>
-                                </li>
-                            </ui:fragment>
-                            <h:commandLink value="#{level1.data.nameFunction}" action="#{consoleTrainerHomeBean.actionRedirect(level1.data.urlFunction)}" rendered="#{level1.children == null}"/>
-                        </ui:repeat>
+                        <p:treeNode 
+                        #{navigationBean.treeNavigation}
                     </ul>
                     <ul class="nav navbar-nav navbar-right ">
                         <li>
-                            <h:commandLink  id="btn-logout" styleClass="glyphicon glyphicon-off btn-lg"
+                            <h:commandLink  id="btn-logout"
+                                            styleClass="glyphicon glyphicon-off btn-lg"
                                             action="#{logInOutBean.actionLogoutUser}"/>
                         </li>
                     </ul>

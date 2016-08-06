@@ -10,6 +10,7 @@ import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -28,11 +29,12 @@ public class LogInOutBean implements Serializable {
     @EJB
     private UserFacadeComplex userDaoComplex;
 
-    private final Logger LOGGER = Logger.getLogger(LogInOutBean.class);
+    private final Logger logger = Logger.getLogger(LogInOutBean.class);
 
     private String username = "agarciad1@ucentral.edu.co", password;
 
-    private final String TARGET_PATH = "/go/to/home.xhtml";
+    private final String TARGET_PATH_LOGIN = "/go/to/home.xhtml";
+    private final String TARGET_PATH_LOGOUT = "/go/";
 
     /**
      * Creates a new instance of LogInOutBean
@@ -43,19 +45,25 @@ public class LogInOutBean implements Serializable {
     public void actionLoginUser() {
         try {
             userDaoComplex.loginCompleteUser(username, password);
-            FacesUtil.getFacesUtil().redirect(TARGET_PATH);
+            FacesUtil.getFacesUtil().redirect(TARGET_PATH_LOGIN);
         } catch (NagoJudgeException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } catch (IOException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
     }
 
     public void actionLogoutUser() {
-        HttpSession session = FacesUtil.getFacesUtil().getSession(true);
-        session.invalidate();
+        try {
+            HttpSession session = FacesUtil.getFacesUtil().getSession(true);
+            session.invalidate();
+            FacesUtil.getFacesUtil().redirect(TARGET_PATH_LOGOUT);
+        } catch (IOException ex) {
+            logger.error(ex);
+            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        }
     }
 
     public String getUsername() {

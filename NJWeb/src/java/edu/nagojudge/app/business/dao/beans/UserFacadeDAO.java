@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -20,6 +21,8 @@ import javax.persistence.Query;
  */
 @Stateless
 public class UserFacadeDAO extends AbstractFacade<User> {
+
+    private final Logger logger = Logger.getLogger(UserFacadeDAO.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -52,7 +55,6 @@ public class UserFacadeDAO extends AbstractFacade<User> {
 
     public void validateFieldsUnique(String email) throws NagoJudgeException {
         EntityManager em = getEntityManager();
-
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT COUNT(0) FROM USER WHERE LOWER(ID_EMAIL) = LOWER('").append(email).append("')");
         Query query = em.createNativeQuery(sb.toString());
@@ -66,7 +68,6 @@ public class UserFacadeDAO extends AbstractFacade<User> {
     public User findUserByIdAccount(long idAccount) {
         EntityManager em = getEntityManager();
         User outcome = null;
-
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT p FROM ").append(User.class.getSimpleName()).append(" p WHERE p.idAccount.idAccount = :idAccount ");
         Query query = em.createQuery(sb.toString()).setParameter("idAccount", idAccount);

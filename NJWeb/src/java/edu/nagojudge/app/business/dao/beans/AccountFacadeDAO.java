@@ -33,16 +33,13 @@ public class AccountFacadeDAO extends AbstractFacade<Account> {
 
     public void validateFieldsUnique(String nickname) throws NagoJudgeException {
         EntityManager em = getEntityManager();
-        try {
-            StringBuilder sb = new StringBuilder();
-            sb.append(" SELECT COUNT(0) FROM ACCOUNT WHERE LOWER(NICKNAME) = LOWER('").append(nickname).append("')");
-            Query query = em.createNativeQuery(sb.toString());
-            int count = Integer.parseInt(query.getSingleResult().toString());
-            if (count >= 1) {
-                throw new NagoJudgeException(" EL NICKNAME " + nickname + " YA ESTA REGISTRADO. ");
-            }
-        } finally {
-            em.close();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT COUNT(0) FROM ACCOUNT WHERE LOWER(NICKNAME) = LOWER('").append(nickname).append("')");
+        Query query = em.createNativeQuery(sb.toString());
+        int count = Integer.parseInt(query.getSingleResult().toString());
+        if (count >= 1) {
+            throw new NagoJudgeException(" EL NICKNAME " + nickname + " YA ESTA REGISTRADO. ");
         }
     }
 

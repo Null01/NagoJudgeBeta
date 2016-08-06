@@ -39,33 +39,26 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> {
 
     private List<Problem> findProblemEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Problem.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Problem.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
         }
+        return q.getResultList();
+
     }
 
     public Map<String, Long> findStatisticsStatus(long idProblem) {
         EntityManager em = getEntityManager();
         Map<String, Long> mapStatisticsStatus = new HashMap<String, Long>();
-        try {
-            StringBuilder sb = new StringBuilder();
-            sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? GROUP BY STATUS_SUBMIT ");
-            Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem);
-            List<Object[]> resultList = query.getResultList();
-            for (Object[] r : resultList) {
-                mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
-            }
-        } finally {
-            em.close();
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? GROUP BY STATUS_SUBMIT ");
+        Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem);
+        List<Object[]> resultList = query.getResultList();
+        for (Object[] r : resultList) {
+            mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
         }
         return mapStatisticsStatus;
     }
@@ -73,16 +66,12 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> {
     public Map<String, Long> findStatisticsStatusByAccount(long idProblem, long idAccount) {
         EntityManager em = getEntityManager();
         Map<String, Long> mapStatisticsStatus = new HashMap<String, Long>();
-        try {
-            StringBuilder sb = new StringBuilder();
-            sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? AND ID_ACCOUNT = ? GROUP BY STATUS_SUBMIT ");
-            Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem).setParameter(2, idAccount);
-            List<Object[]> resultList = query.getResultList();
-            for (Object[] r : resultList) {
-                mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
-            }
-        } finally {
-            em.close();
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? AND ID_ACCOUNT = ? GROUP BY STATUS_SUBMIT ");
+        Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem).setParameter(2, idAccount);
+        List<Object[]> resultList = query.getResultList();
+        for (Object[] r : resultList) {
+            mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
         }
         return mapStatisticsStatus;
     }
@@ -90,21 +79,18 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> {
     public List<ProblemPojo> findProblemEntitiesPojo() {
         Map<Long, Map<String, Long>> map = new HashMap<Long, Map<String, Long>>();
         EntityManager em = getEntityManager();
-        try {
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT S.ID_PROBLEM, S.STATUS_SUBMIT, COUNT(0) FROM SUBMIT S GROUP BY S.ID_PROBLEM, S.STATUS_SUBMIT ORDER BY S.ID_PROBLEM DESC");
-            List<Object[]> resultList = em.createNativeQuery(sql.toString()).getResultList();
-            for (Object[] objects : resultList) {
-                long idProblem = Long.parseLong(String.valueOf(objects[0]));
-                if (map.get(idProblem) == null) {
-                    map.put(idProblem, new HashMap<String, Long>());
-                }
-                String status = String.valueOf(objects[1]);
-                long value = Long.parseLong(String.valueOf(objects[2]));
-                map.get(idProblem).put(status, value);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT S.ID_PROBLEM, S.STATUS_SUBMIT, COUNT(0) FROM SUBMIT S GROUP BY S.ID_PROBLEM, S.STATUS_SUBMIT ORDER BY S.ID_PROBLEM DESC");
+        List<Object[]> resultList = em.createNativeQuery(sql.toString()).getResultList();
+        for (Object[] objects : resultList) {
+            long idProblem = Long.parseLong(String.valueOf(objects[0]));
+            if (map.get(idProblem) == null) {
+                map.put(idProblem, new HashMap<String, Long>());
             }
-        } finally {
-            em.close();
+            String status = String.valueOf(objects[1]);
+            long value = Long.parseLong(String.valueOf(objects[2]));
+            map.get(idProblem).put(status, value);
         }
 
         List<ProblemPojo> problemPojos = new ArrayList<ProblemPojo>();
@@ -148,27 +134,21 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> {
 
     public List<Problem> findProblemTryEntities(long idAccount) {
         EntityManager em = getEntityManager();
-        try {
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT WHERE  ID_ACCOUNT = ").append(idAccount).append(")");
-            List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
-            return resultList;
-        } finally {
-            em.close();
-        }
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT WHERE  ID_ACCOUNT = ").append(idAccount).append(")");
+        List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
+        return resultList;
+
     }
 
     public List<Problem> findProblemTrySolveEntities(long idAccount) {
         EntityManager em = getEntityManager();
-        try {
-            StringBuilder sql = new StringBuilder();
-            sql.append(" SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT ");
-            sql.append(" WHERE STATUS_SUBMIT = '").append(TypeStateJudgeEnum.AC.getValue()).append("' AND ID_ACCOUNT = ").append(idAccount).append(")");
-            List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
-            return resultList;
-        } finally {
-            em.close();
-        }
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT ");
+        sql.append(" WHERE STATUS_SUBMIT = '").append(TypeStateJudgeEnum.AC.getValue()).append("' AND ID_ACCOUNT = ").append(idAccount).append(")");
+        List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
+        return resultList;
+
     }
 
 }

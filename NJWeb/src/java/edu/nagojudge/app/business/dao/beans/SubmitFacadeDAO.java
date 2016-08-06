@@ -36,24 +36,18 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> {
         int TOP = 100;
         sql.append("SELECT * FROM SUBMIT ORDER BY DATE_SUBMIT DESC LIMIT ").append(TOP);
         EntityManager em = getEntityManager();
-        try {
-            Query query = em.createNativeQuery(sql.toString(), Submit.class);
-            return query.getResultList();
-        } finally {
-            em.close();
-        }
+        Query query = em.createNativeQuery(sql.toString(), Submit.class);
+        return query.getResultList();
+
     }
 
     public List<Submit> findSubmitEntitiesByAccount(long idAccount) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM SUBMIT WHERE ID_ACCOUNT = ? ORDER BY DATE_SUBMIT ");
         EntityManager em = getEntityManager();
-        try {
-            Query query = em.createNativeQuery(sql.toString(), Submit.class).setParameter(1, idAccount);
-            return query.getResultList();
-        } finally {
-            em.close();
-        }
+        Query query = em.createNativeQuery(sql.toString(), Submit.class).setParameter(1, idAccount);
+        return query.getResultList();
+
     }
 
 }

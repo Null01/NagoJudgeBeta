@@ -35,20 +35,14 @@ public class FunctionUserFacadeDAO extends AbstractFacade<FunctionUser> {
     public List<FunctionUser> findFunctionsAccessByRole(Long idType) throws Exception {
         EntityManager em = getEntityManager();
         List<FunctionUser> outcome = null;
-        try {
-            em.clear();
-            StringBuilder sql = new StringBuilder();
-            sql.append(" SELECT t FROM ").append(TypeUser.class.getSimpleName()).append(" t JOIN t.functionUserList f ");
-            sql.append(" WHERE t.idType = :idType ");
-            Query query = em.createQuery(sql.toString()).setParameter("idType", idType);
-            List<TypeUser> typeUsers = (List<TypeUser>) query.getResultList();
-            if (!typeUsers.isEmpty()) {
-                outcome = typeUsers.get(0).getFunctionUserList();
-            }
-        } finally {
-            if (em.isOpen()) {
-                em.close();
-            }
+        em.clear();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT t FROM ").append(TypeUser.class.getSimpleName()).append(" t JOIN t.functionUserList f ");
+        sql.append(" WHERE t.idType = :idType ");
+        Query query = em.createQuery(sql.toString()).setParameter("idType", idType);
+        List<TypeUser> typeUsers = (List<TypeUser>) query.getResultList();
+        if (!typeUsers.isEmpty()) {
+            outcome = typeUsers.get(0).getFunctionUserList();
         }
         return outcome;
     }
