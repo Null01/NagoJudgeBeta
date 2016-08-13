@@ -45,24 +45,24 @@
                 <div class="well">
                     <fieldset>
                         <div class="form-group">
-                            <label for="username" class="col-lg-4 control-label">#{common['general.appweb.signin.user.label']}</label>
+                            <label for="username" class="col-lg-4 control-label">#{msg['general.appweb.signin.user.label']}</label>
                             <div class="col-lg-8">
                                 <p:inputText id="username"
                                              styleClass="form-control"
-                                             placeholder="#{common['general.appweb.signin.user.placeholder']}"
+                                             placeholder="#{msg['general.appweb.signin.user.placeholder']}"
                                              required="true"
                                              value="#{logInOutBean.username}"
-                                             validatorMessage="#{common['validacion.formato.email']}">
+                                             validatorMessage="#{msg['validacion.formato.email']}">
                                     <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                                 </p:inputText>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="col-lg-4 control-label">#{common['general.appweb.signin.password.label']}</label>
+                            <label for="password" class="col-lg-4 control-label">#{msg['general.appweb.signin.password.label']}</label>
                             <div class="col-lg-8">
                                 <p:password id="password"
                                             styleClass="form-control"
-                                            placeholder="#{common['general.appweb.signin.password.placeholder']}"
+                                            placeholder="#{msg['general.appweb.signin.password.placeholder']}"
                                             required="true"
                                             value="#{logInOutBean.password}">
                                     <f:validateLength minimum="3" maximum="15" />
@@ -72,7 +72,7 @@
                         <div class="form-group text-center">
                             <p:commandButton id="btn-login"
                                              styleClass="btn btn-default"
-                                             value="#{common['general.appweb.signin.btn']}"
+                                             value="#{msg['general.appweb.signin.btn']}"
                                              action="#{logInOutBean.actionLoginUser}"
                                              update="panel-login">
                                 <p:resetInput target="@form" />

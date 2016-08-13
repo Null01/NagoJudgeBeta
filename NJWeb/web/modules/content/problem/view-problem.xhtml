@@ -4,7 +4,9 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
-    template="/home.xhtml">
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    template="/home.xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <ui:define name="content">
 
@@ -15,7 +17,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <h:form>
+                        <h:form rendered="#{problemsBean.pathSourceProblem != null}">
                             <p:messages id="msgs" />
                             <iframe src="#{problemsBean.pathSourceProblem}" style="width: 100%;" height="600" ></iframe>
                             <p:spacer/>
@@ -27,6 +29,7 @@
             <ui:include src="../../board/submit.xhtml" />
 
         </ui:fragment>
+
     </ui:define>
 </ui:composition>
 

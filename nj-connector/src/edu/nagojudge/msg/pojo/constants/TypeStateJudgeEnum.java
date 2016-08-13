@@ -27,4 +27,32 @@ public enum TypeStateJudgeEnum {
         this.value = value;
     }
 
+    public static TypeStateJudgeEnum getAC() {
+        return AC;
+    }
+
+    public static TypeStateJudgeEnum getWR() {
+        return WR;
+    }
+
+    public static TypeStateJudgeEnum getTL() {
+        return TL;
+    }
+
+    public static TypeStateJudgeEnum getCE() {
+        return CE;
+    }
+
+    public static TypeStateJudgeEnum getRE() {
+        return RE;
+    }
+
+    public static TypeStateJudgeEnum getCS() {
+        return CS;
+    }
+
+    public static TypeStateJudgeEnum getIP() {
+        return IP;
+    }
+
 }

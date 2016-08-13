@@ -59,11 +59,9 @@ public class NavigationBean implements Serializable {
         this.treeNavigation = treeNavigation;
     }
 
-    public void actionRedirect(Object function) {
-        logger.debug("Start actionRedirect()");
+    public String actionRedirect(Object function) {
         FunctionUser redirect = (FunctionUser) function;
-        logger.debug("urlRedirect [" + redirect.getNameFunction() + " / " + redirect.getUrlFunction() + "]");
-        //return redirect.getUrlFunction() + "?faces-redirect=true";
+        return redirect.getUrlFunction() + "?faces-redirect=true";
     }
 
     private TreeNode buildTreeNavigation() {

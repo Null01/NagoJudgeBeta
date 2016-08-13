@@ -40,9 +40,12 @@
                     <div class="form-group">
                         <label for="fileProblem" class="col-md-1 control-label">Enunciado</label>
                         <div class="col-md-3">
-                            <h:inputFile id="problemFile" styleClass="form-control" 
-                                         value="#{problemsBean.problemFile}"
-                                         required="true"/>
+                            <p:fileUpload id="problemFile"
+                                          styleClass="form-control" 
+                                          value="#{problemsBean.problemFile}"
+                                          mode="simple"
+                                          required="true"
+                                          allowTypes="/(\.|\/)(pdf)$/" />
                         </div>
                         <label for="difficultyLevel" class="col-md-1 control-label">Dificultad</label>
                         <div class="col-md-3">
@@ -79,9 +82,12 @@
                                     -->
                                     <div class="form-group">                                        
                                         <div class="col-md-12">
-                                            <h:inputFile id="fileInput" styleClass="form-control" 
-                                                         value="#{problemsBean.inputFile}"
-                                                         required="true"/>
+                                            <p:fileUpload id="fileInput"
+                                                          styleClass="form-control" 
+                                                          value="#{problemsBean.inputFile}"
+                                                          mode="simple"
+                                                          required="true"
+                                                          allowTypes="/(\.|\/)(|in|out|txt)$/" />
                                         </div>
                                     </div>
                                 </div>
@@ -99,9 +105,12 @@
                                     -->
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <h:inputFile id="fileOutput" styleClass="form-control" 
-                                                         value="#{problemsBean.outputFile}"
-                                                         required="true"/>
+                                            <p:fileUpload id="fileOutput"
+                                                          styleClass="form-control" 
+                                                          value="#{problemsBean.outputFile}"
+                                                          mode="simple"
+                                                          required="true"
+                                                          allowTypes="/(\.|\/)(|in|out|txt)$/" />
                                         </div>
                                     </div>
                                 </div>

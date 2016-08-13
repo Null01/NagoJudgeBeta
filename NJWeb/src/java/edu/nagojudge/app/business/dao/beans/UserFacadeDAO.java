@@ -8,6 +8,7 @@ package edu.nagojudge.app.business.dao.beans;
 import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
+import java.io.Serializable;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,7 +21,7 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class UserFacadeDAO extends AbstractFacade<User> {
+public class UserFacadeDAO extends AbstractFacade<User> implements Serializable{
 
     private final Logger logger = Logger.getLogger(UserFacadeDAO.class);
 

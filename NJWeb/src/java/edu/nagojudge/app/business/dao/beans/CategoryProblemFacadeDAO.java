@@ -6,6 +6,7 @@
 package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.CategoryProblem;
+import java.io.Serializable;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +16,7 @@ import javax.persistence.PersistenceContext;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class CategoryProblemFacadeDAO extends AbstractFacade<CategoryProblem> {
+public class CategoryProblemFacadeDAO extends AbstractFacade<CategoryProblem> implements Serializable{
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
 

@@ -8,6 +8,7 @@ package edu.nagojudge.app.business.dao.beans;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ import javax.persistence.criteria.CriteriaQuery;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class ProblemFacadeDAO extends AbstractFacade<Problem> {
+public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Serializable{
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;

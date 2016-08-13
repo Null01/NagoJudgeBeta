@@ -7,6 +7,7 @@ package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
+import java.io.Serializable;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,7 +18,7 @@ import javax.persistence.Query;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class AccountFacadeDAO extends AbstractFacade<Account> {
+public class AccountFacadeDAO extends AbstractFacade<Account> implements Serializable{
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;

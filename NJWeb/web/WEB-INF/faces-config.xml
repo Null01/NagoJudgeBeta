@@ -9,7 +9,7 @@
         </locale-config>
         <resource-bundle>
             <base-name>edu.nagojudge.web.utils.resources.msgs.general</base-name>
-            <var>common</var>
+            <var>msg</var>
         </resource-bundle>
     </application>
 </faces-config>

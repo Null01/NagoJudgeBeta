@@ -20,21 +20,31 @@
                             </div>
                             <label for="select-2" class="col-md-1 control-label">Lenguaje</label>
                             <div class="col-md-2">
-                                <p:selectOneMenu id="select-2" styleClass="form-control" style="width: 100%;" converter="languageProgrammingConvertJSF"
-                                                 value="#{submitBean.languageProgrammingView}"  required="true" >
+                                <p:selectOneMenu id="select-2"
+                                                 styleClass="form-control"
+                                                 style="width: 100%;"
+                                                 converter="languageProgrammingConvertJSF"
+                                                 value="#{submitBean.languageProgrammingView}"
+                                                 required="true" >
                                     <f:selectItems value="#{languageBean.listLanguageProgrammingItems}" />                                               
                                 </p:selectOneMenu>
                             </div>
                             <label for="problemSolve" class="col-md-1 control-label">Codigo Fuente</label>
                             <div class="col-md-3">
-                                <h:inputFile id="problemSolve" styleClass="form-control center-block" value="#{submitBean.codeSolutionFile}" required="true"/>
+                                <p:fileUpload id="problemSolve"
+                                              mode="simple"
+                                              styleClass="form-control center-block" 
+                                              value="#{submitBean.codeSourceFile}"                                              
+                                              required="true"
+                                              allowTypes="/(\.|\/)(txt|java|cpp|c)$/" />
                             </div>
                         </div>
                     </fieldset>
                     <p:spacer/>
                     <div class="col-md-12">
-                        <p:commandButton ajax="false" styleClass="btn btn-default btn-sm center-block text-center col-md-12"
-                                         value="Enviar" actionListener="#{submitBean.actionSubmitSolution}"/>
+                        <p:commandButton styleClass="btn btn-default btn-sm center-block text-center col-md-12"
+                                         value="Enviar"
+                                         action="#{submitBean.actionSubmitSolution}"/>
                     </div>
                 </h:form>
             </div>

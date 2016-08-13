@@ -22,8 +22,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
-import javax.servlet.http.Part;
 import org.apache.log4j.Logger;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -41,7 +41,7 @@ public class SubmitBean implements Serializable {
 
     private final String TARGET_PATH = "/go/to/modules/board/score.xhtml";
 
-    private final Logger LOGGER = Logger.getLogger(SubmitBean.class);
+    private final Logger logger = Logger.getLogger(SubmitBean.class);
 
     private List<Submit> submitsAll;
 
@@ -51,7 +51,7 @@ public class SubmitBean implements Serializable {
     private Submit submitView = new Submit();
     private LanguageProgramming languageProgrammingView = new LanguageProgramming();
 
-    private Part codeSourceFile;
+    private UploadedFile codeSourceFile;
 
     /**
      * Creates a new instance of SubmitBean
@@ -71,13 +71,16 @@ public class SubmitBean implements Serializable {
         this.submitsAll = new ArrayList<Submit>(submitFacade.findLast100Results());
     }
 
-    public void actionSubmitSolution(ActionEvent actionEvent) {
+    public void actionSubmitSolution() {
         try {
-            submitDaoComplex.createSubmitSolve(submitView, problemView, languageProgrammingView, codeSourceFile);
+            logger.debug("Incia metdo - actionSubmitSolution()");
+            submitDaoComplex.createSubmitSolve(submitView, problemView, languageProgrammingView, codeSourceFile.getContents());
             FacesUtil.getFacesUtil().redirect(TARGET_PATH);
         } catch (IOException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        } finally {
+            logger.debug("Finaliza metdo - actionSubmitSolution()");
         }
     }
 
@@ -113,12 +116,12 @@ public class SubmitBean implements Serializable {
         this.submitsAll = submitsAll;
     }
 
-    public Part getCodeSolutionFile() {
+    public UploadedFile getCodeSourceFile() {
         return codeSourceFile;
     }
 
-    public void setCodeSolutionFile(Part codeSolutionFile) {
-        this.codeSourceFile = codeSolutionFile;
+    public void setCodeSourceFile(UploadedFile codeSourceFile) {
+        this.codeSourceFile = codeSourceFile;
     }
 
 }

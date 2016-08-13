@@ -30,6 +30,7 @@ import javax.faces.model.SelectItem;
 import javax.mail.MessagingException;
 import javax.servlet.http.Part;
 import org.apache.log4j.Logger;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -61,7 +62,7 @@ public class UserBean implements Serializable {
     private List<SelectItem> typeUserItems;
 
     private String searchParameter;
-    private Part imageUserFile;
+    private UploadedFile imageUserFile;
 
     public UserBean() {
     }
@@ -130,11 +131,11 @@ public class UserBean implements Serializable {
         this.typeUserView = typeUserView;
     }
 
-    public Part getImageUserFile() {
+    public UploadedFile getImageUserFile() {
         return imageUserFile;
     }
 
-    public void setImageUserFile(Part imageUserFile) {
+    public void setImageUserFile(UploadedFile imageUserFile) {
         this.imageUserFile = imageUserFile;
     }
 

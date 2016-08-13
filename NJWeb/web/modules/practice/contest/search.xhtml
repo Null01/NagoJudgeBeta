@@ -12,8 +12,16 @@
                 <div class="form-group">
                     <h:form id="formChallengeAll" class="form-horizontal">
                         <p:messages id="msgs" autoUpdate="true" closable="true"/>
-                        <p:dataTable id="tableMyProblemsContest" var="p" widgetVar="coWidgetVar" tableStyleClass="table table-striped table-hover"  styleClass="center-block"
-                                     filteredValue="#{problemsBean.filteredProblems}" rowKey="#{p.idProblem}" paginator="true" paginatorPosition="bottom" >
+                        <p:dataTable id="tableMyProblemsContest"
+                                     var="p"
+                                     widgetVar="coWidgetVar"
+                                     tableStyleClass="table table-striped table-hover" 
+                                     styleClass="center-block"
+                                     filteredValue="#{problemsBean.filteredProblems}"
+                                     rowKey="#{p.idProblem}"
+                                     paginator="true"
+                                     paginatorPosition="bottom"
+                                     emptyMessage="#{msg['general.table.noinfo']}">
                             <f:facet name="header">
                                 <p:outputPanel>
                                     <div class="form-group">
@@ -21,29 +29,31 @@
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-search" aria-hidden="true" />
                                             </span>
-                                            <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('coWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{problemsBean.searchParameter}"/>
+                                            <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('coWidgetVar').filter();"
+                                                         placeholder="Parametros de busqueda"
+                                                         value="#{problemsBean.searchParameter}"/>
                                         </div>
                                     </div>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column headerText="Id Problem" width="130" filterBy="#{p.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="#{msg['problem.label.idProblem']}" width="130" filterBy="#{p.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
                             </p:column>
-                            <p:column headerText="Problem" width="200">
+                            <p:column headerText="#{msg['problem.label.nameProblem']}" width="200">
                                 <h:commandLink value="#{p.nameProblem}" action="#{problemsBean.actionRedirectView}">
                                     <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{p.idProblem}" />
                                 </h:commandLink>
                             </p:column>
-                            <p:column headerText="Autor" width="240" filterBy="#{p.author}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="#{msg['problem.label.nameAutor']}" width="240" filterBy="#{p.author}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.author}" />
                             </p:column>
                             <p:column headerText="TL" width="40" filterBy="#{p.timeLimitSeg}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.timeLimitSeg}" />
                             </p:column>
-                            <p:column headerText="Categoria" width="200" sortBy="#{p.nameCategory}"  filterBy="#{p.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="#{msg['problem.lable.nameCategory']}" width="200" sortBy="#{p.nameCategory}"  filterBy="#{p.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.nameCategory}" />
                             </p:column>
-                            <p:column headerText="Descripcion" width="300">
+                            <p:column headerText="#{msg['problem.label.nameDescripcion']}" width="300">
                                 <h:outputText value="#{p.description}" />
                             </p:column>
                             <p:column headerText="AC" width="30" style="text-align: center !important;">

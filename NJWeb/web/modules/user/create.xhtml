@@ -39,8 +39,12 @@
                     <div class="form-group">
                         <label for="photoUser" class="col-md-1 control-label">Imagen</label>
                         <div class="col-md-3">
-                            <h:inputFile id="photoUser" styleClass="form-control" 
-                                         value="#{userBean.imageUserFile}" />
+                            <p:fileUpload id="photoUser"
+                                          styleClass="form-control" 
+                                          value="#{userBean.imageUserFile}"
+                                          mode="simple"
+                                          required="true"
+                                          allowTypes="/(\.|\/)(png|jpg|gif)$/" />
                         </div>
                         <label for="dateBirthday" class="col-md-1 control-label">Fecha Nacimiento</label>
                         <div class="col-md-3">

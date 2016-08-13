@@ -5,11 +5,13 @@
  */
 package edu.nagojudge.app.business.dao.pojo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author andresfelipegarciaduran
  */
-public class ProblemPojo {
+public class ProblemPojo implements Serializable{
 
     private Long idProblem;
     private String nameProblem;

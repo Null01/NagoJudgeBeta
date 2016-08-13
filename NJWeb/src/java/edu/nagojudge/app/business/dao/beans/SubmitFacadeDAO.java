@@ -6,6 +6,7 @@
 package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.Submit;
+import java.io.Serializable;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,7 +18,7 @@ import javax.persistence.Query;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class SubmitFacadeDAO extends AbstractFacade<Submit> {
+public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializable{
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;

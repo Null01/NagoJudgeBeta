@@ -7,6 +7,7 @@ package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.FunctionUser;
 import edu.nagojudge.app.business.dao.entities.TypeUser;
+import java.io.Serializable;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -18,7 +19,7 @@ import javax.persistence.Query;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class FunctionUserFacadeDAO extends AbstractFacade<FunctionUser> {
+public class FunctionUserFacadeDAO extends AbstractFacade<FunctionUser> implements Serializable{
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;

@@ -2,6 +2,7 @@ package edu.nagojudge.business.logic.java;
 
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
+import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,7 +51,7 @@ public class JudgeServiceJava {
             byte[] outputFileUser = FileUtil.getInstance().parseFromInputStreamToArrayByte(process.getInputStream());
             //FileUtil.getFileUtil().createFileAccordingToByteArrayToFile(outputFileUser, pathSourceCode + java.io.File.separatorChar + "temp_out");
             LOGGER.debug("WRITER @ECHO");
-            boolean judge = FileUtil.getInstance().compareFilesByCheckSumSHA(outputFileUser, checkSumOuputServer, TYPE_MODE_SHA);
+            boolean judge = FileUtil.getInstance().compareFilesByCheckSumSHA(outputFileUser, checkSumOuputServer, TypeSHAEnum.SHA256);
             LOGGER.debug("COMPARE_BYTES_FILES @ECHO");
             LOGGER.debug("RULING_COMPARE_FILES_INPUT_OUTPUT=" + judge);
             if (process.exitValue() != 0) {

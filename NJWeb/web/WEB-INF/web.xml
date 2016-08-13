@@ -7,6 +7,18 @@
         <param-value>Development</param-value>
     </context-param>
     <context-param>
+        <param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.CLIENT_SIDE_VALIDATION</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>auto|native|commons</param-value>
+    </context-param>
+    <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>none</param-value>
     </context-param>
@@ -22,6 +34,14 @@
         <description>InitializeAppListener</description>
         <listener-class>edu.nagojudge.web.listeners.InitializeAppListener</listener-class>
     </listener>
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class> org.primefaces.webapp.filter.FileUploadFilter </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>

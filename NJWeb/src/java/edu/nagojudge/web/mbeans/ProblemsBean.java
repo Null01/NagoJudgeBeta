@@ -16,6 +16,7 @@ import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
+import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import edu.nagojudge.web.utils.dtos.FilePart;
 import java.io.IOException;
@@ -32,6 +33,7 @@ import javax.faces.context.Flash;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.Part;
 import org.apache.log4j.Logger;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -65,9 +67,9 @@ public class ProblemsBean implements Serializable {
     private Account accountView = new Account();
 
     private String pathSourceProblem;
-    private Part problemFile;
-    private Part inputFile;
-    private Part outputFile;
+    private UploadedFile problemFile;
+    private UploadedFile inputFile;
+    private UploadedFile outputFile;
     private String textCode;
 
     public ProblemsBean() {
@@ -106,16 +108,15 @@ public class ProblemsBean implements Serializable {
         try {
             boolean validateTypeFile_I_O = validateTypeFile_I_O();
             if (validateTypeFile_I_O) {
-                byte[] contentProblem = FileUtil.getInstance().parseFromInputStreamToArrayByte(problemFile.getInputStream());
-                FilePart problem = new FilePart(problemFile.getName(), problemFile.getContentType(), problemFile.getSize(), contentProblem);
 
-                byte[] contentInput = FileUtil.getInstance().parseFromInputStreamToArrayByte(inputFile.getInputStream());
-                FilePart input = new FilePart(inputFile.getName(), inputFile.getContentType(), inputFile.getSize(), contentInput);
+                byte[] contentProblem = problemFile.getContents();
+                FilePart problem = new FilePart(problemFile.getFileName(), problemFile.getContentType(), problemFile.getSize(), contentProblem);
 
-                byte[] contentOutput = FileUtil.getInstance().parseFromInputStreamToArrayByte(outputFile.getInputStream());
-                FilePart output = new FilePart(outputFile.getName(), outputFile.getContentType(), outputFile.getSize(), contentOutput);
-                //FilePart input = new FilePart("INPUT", "text/plain", inputFileText.length(), inputFileText.getBytes(Charset.forName("UTF-8")));
-                //FilePart output = new FilePart("OUTPUT", "text/plain", outputFileText.length(), outputFileText.getBytes(Charset.forName("UTF-8")));
+                byte[] contentInput = inputFile.getContents();
+                FilePart input = new FilePart(inputFile.getFileName(), inputFile.getContentType(), inputFile.getSize(), contentInput);
+
+                byte[] contentOutput = outputFile.getContents();
+                FilePart output = new FilePart(outputFile.getFileName(), outputFile.getContentType(), outputFile.getSize(), contentOutput);
 
                 String idProblemCreated = problemFacadeComplex.createProblem(problemView, categoryProblemView, difficultyLevel, problem, input, output);
                 clearObjects();
@@ -164,14 +165,6 @@ public class ProblemsBean implements Serializable {
         this.pathSourceProblem = pathSourceProblem;
     }
 
-    public Part getProblemFile() {
-        return problemFile;
-    }
-
-    public void setProblemFile(Part problemFile) {
-        this.problemFile = problemFile;
-    }
-
     public Problem getProblemView() {
         return problemView;
     }
@@ -194,22 +187,6 @@ public class ProblemsBean implements Serializable {
 
     public void setCategoryProblemView(CategoryProblem categoryProblemView) {
         this.categoryProblemView = categoryProblemView;
-    }
-
-    public Part getInputFile() {
-        return inputFile;
-    }
-
-    public void setInputFile(Part inputFile) {
-        this.inputFile = inputFile;
-    }
-
-    public Part getOutputFile() {
-        return outputFile;
-    }
-
-    public void setOutputFile(Part outputFile) {
-        this.outputFile = outputFile;
     }
 
     public Account getAccountView() {
@@ -257,6 +234,38 @@ public class ProblemsBean implements Serializable {
 
     private void clearObjects() {
         this.problemView = new Problem();
+    }
+
+    public ProblemFacadeComplex getProblemFacadeComplex() {
+        return problemFacadeComplex;
+    }
+
+    public void setProblemFacadeComplex(ProblemFacadeComplex problemFacadeComplex) {
+        this.problemFacadeComplex = problemFacadeComplex;
+    }
+
+    public UploadedFile getProblemFile() {
+        return problemFile;
+    }
+
+    public void setProblemFile(UploadedFile problemFile) {
+        this.problemFile = problemFile;
+    }
+
+    public UploadedFile getInputFile() {
+        return inputFile;
+    }
+
+    public void setInputFile(UploadedFile inputFile) {
+        this.inputFile = inputFile;
+    }
+
+    public UploadedFile getOutputFile() {
+        return outputFile;
+    }
+
+    public void setOutputFile(UploadedFile outputFile) {
+        this.outputFile = outputFile;
     }
 
 }
