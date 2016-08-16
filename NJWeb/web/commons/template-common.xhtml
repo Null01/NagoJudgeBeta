@@ -9,8 +9,11 @@
         <h:head>
             <ui:include src="header.xhtml"/>
         </h:head>
-        <h:body id="main-body">
+        <h:body id="main-body-template">
             <div class="container">
+                
+                <ui:insert name="metadata"/>
+                
                 <ui:include src="navigation.xhtml"/>
 
                 <ui:insert name="content" >

@@ -13,6 +13,7 @@ import edu.nagojudge.app.business.dao.entities.Submit;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.constants.IKeysApplication;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
+import edu.nagojudge.msg.pojo.ResponseMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
@@ -22,12 +23,11 @@ import edu.nagojudge.web.utils.resources.clients.ClientService;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
-import javax.xml.ws.Service;
-import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.log4j.Logger;
 
 /**
@@ -50,6 +50,7 @@ public class SubmitDaoComplex implements Serializable {
             HttpSession session = FacesUtil.getFacesUtil().getSession(true);
             Object accountObject = session.getAttribute(IKeysApplication.KEY_DATA_USER_ACCOUNT);
             Object email = session.getAttribute(IKeysApplication.KEY_DATA_USER_EMAIL);
+
             submitView.setIdAccount((Account) accountObject);
             submitView.setIdProblem(problemView);
             submitView.setIdLanguage(languageProgrammingView);
@@ -64,8 +65,10 @@ public class SubmitDaoComplex implements Serializable {
             FileUtil.getInstance().createFile(contentCodeSource, pathFile, nameFile);
 
             String path = "submit/evaluate/{email}/{idSubmit}";
-            Object objects[] = {String.valueOf(email), String.valueOf(submitView.getIdSubmit()), TOKEN};
-            Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, null);
+            Object objects[] = {String.valueOf(email), String.valueOf(submitView.getIdSubmit())};
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("token", TOKEN);
+            Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, params, ResponseMessage.class);
             logger.debug("outcome [" + callRestfulGet + "]");
             return String.valueOf(submitView.getIdSubmit());
         } catch (IOException ex) {
@@ -80,8 +83,10 @@ public class SubmitDaoComplex implements Serializable {
         try {
             logger.debug("INICIA METODO - findAttachmentSubmit()");
             String path = "submit/codeSource/{idSubmit}";
-            Object objects[] = {idSubmit, TOKEN};
-            Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, null);
+            Object objects[] = {idSubmit};
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("token", TOKEN);
+            Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, params, ResponseMessage.class);
             logger.debug("outcome [" + callRestfulGet + "]");
             return String.valueOf(callRestfulGet);
         } finally {

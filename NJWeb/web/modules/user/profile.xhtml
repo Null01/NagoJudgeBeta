@@ -156,7 +156,7 @@
                                                         <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
                                                     </p:column>
                                                     <p:column headerText="Problem" width="200" filterBy="#{s.idProblem.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
-                                                        <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem.idProblem)} - #{s.idProblem.nameProblem}" action="#{problemsBean.actionRedirectView}">
+                                                        <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem.idProblem)} - #{s.idProblem.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
                                                             <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem.idProblem}" />
                                                         </h:commandLink>
                                                     </p:column>

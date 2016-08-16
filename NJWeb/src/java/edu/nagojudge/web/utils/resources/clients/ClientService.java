@@ -7,7 +7,10 @@ package edu.nagojudge.web.utils.resources.clients;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
+import org.apache.cxf.Bus;
+import org.apache.cxf.BusFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.log4j.Logger;
 
@@ -30,29 +33,35 @@ public class ClientService {
         return instance;
     }
 
-    public Object callRestfulGet(String path, Object[] objects, Class t) {
+    public Object callRestfulGet(String path, Object[] objects, Map<String, Object> params, Class t) {
         try {
             logger.debug("Inicia metodo - callRestfulGet()");
             logger.debug("path [" + path + "]");
             logger.debug("objects [" + Arrays.toString(objects) + "]");
+            logger.debug("params [" + params + "]");
             logger.debug("class [" + t.getName() + "]");
-            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL)
+            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL, false)
                     .path(path, objects)
                     .accept(MediaType.APPLICATION_JSON)
                     .type(MediaType.APPLICATION_JSON);
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                client.query(entry.getKey(), entry.getValue());
+            }
             return client.get(t);
         } finally {
             logger.debug("Finaliza metodo - callRestfulGet()");
         }
     }
 
-    public Collection callRestfulGetList(String path, Object[] objects, Class t) {
+    public Collection callRestfulGetList(String path, Object[] objects, Map<String, Object> params, Class t) {
         try {
             logger.debug("Inicia metodo - callRestfulGetList()");
             logger.debug("path [" + path + "]");
             logger.debug("objects [" + Arrays.toString(objects) + "]");
             logger.debug("class [" + t.getName() + "]");
-            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL)
+            logger.debug("params [" + params + "]");
+
+            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL,false)
                     .path(path, objects)
                     .accept(MediaType.APPLICATION_JSON)
                     .type(MediaType.APPLICATION_JSON);
@@ -61,5 +70,17 @@ public class ClientService {
             logger.debug("Finaliza metodo - callRestfulGetList()");
         }
     }
-
+    /*
+     public static void main(String args[]) {
+     String email = "agarcia@ucentral.edu.co";
+     int submitView = 1;
+     String TOKEN = "asd";
+     String path = "submit/evaluate/{email}/{idSubmit}";
+     Object objects[] = {String.valueOf(email), String.valueOf(submitView)};
+     Map<String, Object> params = new HashMap<String, Object>();
+     params.put("token", TOKEN);
+     Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, params, ResponseMessage.class);
+     System.out.println(callRestfulGet);
+     }
+     */
 }

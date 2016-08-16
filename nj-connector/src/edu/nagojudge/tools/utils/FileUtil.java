@@ -194,6 +194,7 @@ public class FileUtil implements Serializable {
             while ((n = input.read(buffer)) != -1) {
                 output.write(buffer, 0, n);
             }
+            output.flush();
         } catch (IOException ex) {
             throw ex;
         } finally {

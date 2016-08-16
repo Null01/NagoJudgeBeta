@@ -9,17 +9,19 @@
         <div class="panel panel-default">
             <div class="panel-heading"></div>
             <div class="panel-body">
-                <h:form id="formPanelMySubmitsContest" class="form-horizontal" enctype="multipart/form-data">
-                    <p:spacer/>
+                <h:form id="formPanelMySubmitsContest" class="form-horizontal">
+
                     <fieldset>
                         <div class="form-group">
                             <label for="nameProblem" class="col-md-1 control-label">Problema</label>
-                            <div class="col-md-3">
-                                <p:inputText id="nameProblem" styleClass="form-control"  readonly="true"
+                            <div class="col-md-5">
+                                <p:inputText id="nameProblem"
+                                             styleClass="form-control"
+                                             readonly="true"
                                              value="#{utilBean.formatIdProblem(submitBean.problemView.idProblem)} - #{submitBean.problemView.nameProblem}"/>
                             </div>
                             <label for="select-2" class="col-md-1 control-label">Lenguaje</label>
-                            <div class="col-md-2">
+                            <div class="col-md-5">
                                 <p:selectOneMenu id="select-2"
                                                  styleClass="form-control"
                                                  style="width: 100%;"
@@ -30,22 +32,40 @@
                                 </p:selectOneMenu>
                             </div>
                             <label for="problemSolve" class="col-md-1 control-label">Codigo Fuente</label>
-                            <div class="col-md-3">
-                                <p:fileUpload id="problemSolve"
-                                              mode="simple"
-                                              styleClass="form-control center-block" 
-                                              value="#{submitBean.codeSourceFile}"                                              
-                                              required="true"
-                                              allowTypes="/(\.|\/)(txt|java|cpp|c)$/" />
+                            <div class="col-md-5">
+                                <p:fileUpload id="problemSolve"                                             
+                                              styleClass="form-control center-block"
+                                              fileUploadListener="#{submitBean.handleFileUpload}"
+                                              value="#{submitBean.codeSourceFile}"
+                                              allowTypes="/(\.|\/)(java|cpp|c)$/"
+                                              skinSimple="true"
+                                              required="false"
+                                              auto="true"
+                                              label="#{msg['general.label.archivo.upload']}"
+                                              dragDropSupport="false"
+                                              update="messages, @form">
+                                </p:fileUpload>
                             </div>
+                            <div class="col-md-1">
+                                <p:outputLabel id="labelFileName" styleClass="control-label"
+                                               rendered="#{submitBean.codeSourceFile != null}" value="#{submitBean.codeSourceFile.fileName}" />                                
+                            </div>
+
                         </div>
-                    </fieldset>
-                    <p:spacer/>
-                    <div class="col-md-12">
+
                         <p:commandButton styleClass="btn btn-default btn-sm center-block text-center col-md-12"
                                          value="Enviar"
-                                         action="#{submitBean.actionSubmitSolution}"/>
-                    </div>
+                                         action="#{submitBean.actionSubmitSolution}" 
+                                         update="messages, @form"/>
+
+                    </fieldset>
+
+
+
+                    <p:messages id="messages"
+                                autoUpdate="true"
+                                closable="true"/>
+
                 </h:form>
             </div>
         </div>

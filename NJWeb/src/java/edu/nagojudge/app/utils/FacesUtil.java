@@ -47,7 +47,7 @@ public class FacesUtil {
     }
 
     public String getRealPath() {
-        return FacesContext.getCurrentInstance().getExternalContext() .getRealPath("/");
+        return FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
     }
 
     public String getContextPath() {
@@ -88,8 +88,8 @@ public class FacesUtil {
         return request.getSession(state);
     }
 
-    public String getResourceBundle(String key, String pathPackage) {
-        ResourceBundle text = ResourceBundle.getBundle(pathPackage, Locale.ENGLISH);
+    public String getResourceBundle(String key, String basename) {
+        ResourceBundle text = ResourceBundle.getBundle(basename, FacesContext.getCurrentInstance().getViewRoot().getLocale());
         return text.getString(key);
     }
 

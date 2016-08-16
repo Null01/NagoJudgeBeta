@@ -14,6 +14,8 @@ public interface IKeysApplication {
     public final String KEY_DATA_USER_EMAIL = "data-user-email";
     public final String KEY_DATA_USER_ACCOUNT = "data-user-account";
     public final String KEY_DATA_TYPE_USER = "data-user-type";
-    
+
     public final String KEY_PUBLIC_LABEL_TEAM = "#NagoJudgeTeam";
+
+    public final String KEY_PUBLIC_MSG_RESOURCES = "edu.nagojudge.web.utils.resources.msgs.general";
 }

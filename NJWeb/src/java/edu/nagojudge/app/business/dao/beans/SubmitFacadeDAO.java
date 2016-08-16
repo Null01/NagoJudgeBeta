@@ -12,13 +12,16 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializable{
+public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializable {
+
+    private Logger logger = Logger.getLogger(SubmitFacadeDAO.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -36,18 +39,20 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
         StringBuilder sql = new StringBuilder();
         int TOP = 100;
         sql.append("SELECT * FROM SUBMIT ORDER BY DATE_SUBMIT DESC LIMIT ").append(TOP);
-        EntityManager em = getEntityManager();
         Query query = em.createNativeQuery(sql.toString(), Submit.class);
-        return query.getResultList();
-
+        List<Submit> resultList = query.getResultList();
+        /*for (Submit submit : resultList) {
+         logger.debug(submit.getIdProblem().getIdProblem());
+         }*/
+        return resultList;
     }
 
     public List<Submit> findSubmitEntitiesByAccount(long idAccount) {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM SUBMIT WHERE ID_ACCOUNT = ? ORDER BY DATE_SUBMIT ");
-        EntityManager em = getEntityManager();
         Query query = em.createNativeQuery(sql.toString(), Submit.class).setParameter(1, idAccount);
-        return query.getResultList();
+        List<Submit> resultList = query.getResultList();
+        return resultList;
 
     }
 
