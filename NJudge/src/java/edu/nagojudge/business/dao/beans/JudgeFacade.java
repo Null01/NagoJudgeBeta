@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.business.dao.beans;
 
+import edu.nagojudge.business.dao.entity.Account;
 import edu.nagojudge.business.dao.entity.Attachments;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.logic.java.JudgeServiceJava;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,7 +31,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class JudgeFacade {
 
-    private final Logger LOGGER = Logger.getLogger(JudgeFacade.class);
+    private final Logger logger = Logger.getLogger(JudgeFacade.class);
 
     public final String PATH_SAVE_CODE_SOURCE = getPathWorkspaceNJ();
     public final String PATH_SAVE_INPUT_SOURCE = getPathWorkspaceNJInputs();
@@ -43,31 +45,32 @@ public class JudgeFacade {
         return em;
     }
 
-    public void startJudge(String idSubmit, String email) throws BusinessException {
-        LOGGER.debug("STARTING JUDGE - startJudge()");
+    public Submit startJudge(String idSubmit, String email) throws BusinessException {
+        logger.debug("STARTING JUDGE - startJudge()");
         TypeStateJudgeEnum stateJudge = TypeStateJudgeEnum.CS;
         EntityManager em = null;
         try {
             em = getEntityManager();
-            LOGGER.debug("EVALUATE ID_SUBMIT=" + idSubmit + " @ECHO");
+            logger.debug("EVALUATE ID_SUBMIT=" + idSubmit + " @ECHO");
             Submit submit = em.find(Submit.class, new Long(idSubmit));
             if (submit == null) {
                 throw new BusinessException("ID_PROBLEM [" + idSubmit + "] NO EXISTE.");
             }
 
-            LOGGER.debug("getIdSubmit()=" + submit.getIdSubmit());
-            LOGGER.debug("getIdLanguage()=" + submit.getIdLanguage());
-            LOGGER.debug("getStatusSubmit()=" + submit.getStatusSubmit());
-            LOGGER.debug("getIdProblem()=" + submit.getIdProblem());
+            logger.debug("getIdSubmit()=" + submit.getIdSubmit());
+            logger.debug("getIdSubmit()=" + submit.getIdAccount());
+            logger.debug("getIdLanguage()=" + submit.getIdLanguage());
+            logger.debug("getStatusSubmit()=" + submit.getStatusSubmit());
+            logger.debug("getIdProblem()=" + submit.getIdProblem());
             String pathFileCodeSource = PATH_SAVE_CODE_SOURCE + java.io.File.separatorChar + String.valueOf(email)
                     + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
             String nameFileCodeSource = FormatUtil.getInstance().buildZerosToLeft(submit.getIdSubmit(), 7) + "." + submit.getIdLanguage().getExtension();
             String fullPathInputFile = PATH_SAVE_INPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
             String fullPathOutputFile = PATH_SAVE_OUTPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            LOGGER.debug("pathFileCodeSource=" + pathFileCodeSource);
-            LOGGER.debug("nameFileCodeSource=" + nameFileCodeSource);
-            LOGGER.debug("fullPathInputFile=" + fullPathInputFile);
-            LOGGER.debug("fullPathOutputFile=" + fullPathOutputFile);
+            logger.debug("pathFileCodeSource=" + pathFileCodeSource);
+            logger.debug("nameFileCodeSource=" + nameFileCodeSource);
+            logger.debug("fullPathInputFile=" + fullPathInputFile);
+            logger.debug("fullPathOutputFile=" + fullPathOutputFile);
 
             String checkSumOutputFile = findCheckSumOfFile(submit.getIdProblem().getAttachmentsList(), TypeFilesEnum.TYPE_FILE_OUT.getExtension());
 
@@ -75,28 +78,29 @@ public class JudgeFacade {
                 try {
                     JudgeServiceJava judgeServiceJava = new JudgeServiceJava();
                     stateJudge = judgeServiceJava.judgeProblemProcess(pathFileCodeSource, nameFileCodeSource, fullPathInputFile, checkSumOutputFile);
-                } catch (IOException ex) {
-                    LOGGER.error(ex);
-                    stateJudge = TypeStateJudgeEnum.RE;
                 } catch (NoSuchAlgorithmException ex) {
-                    LOGGER.error(ex);
+                    logger.error(ex);
                     stateJudge = TypeStateJudgeEnum.RE;
                 } catch (InterruptedException ex) {
-                    LOGGER.error(ex);
+                    logger.error(ex);
+                    stateJudge = TypeStateJudgeEnum.RE;
+                } catch (IOException ex) {
+                    logger.error(ex);
                     stateJudge = TypeStateJudgeEnum.RE;
                 }
             }
 
-            LOGGER.debug("JUDGE_FINALLY=" + stateJudge.getValue());
+            logger.debug("JUDGE_FINALLY=" + stateJudge.getValue());
             submit.setDateJudge(Calendar.getInstance().getTime());
             submit.setStatusSubmit(stateJudge.getValue());
             em.merge(submit);
 
+            return submit;
         } catch (BusinessException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             throw ex;
         } finally {
-            LOGGER.debug("ENDING JUDGE - startJudge()");
+            logger.debug("ENDING JUDGE - startJudge()");
         }
     }
 
@@ -122,7 +126,7 @@ public class JudgeFacade {
                 return attachment.getChecksum();
             }
         }
-        LOGGER.error("NO EXISTE NINGUN TYPE_FILE=" + TYPE_FILE);
+        logger.error("NO EXISTE NINGUN TYPE_FILE=" + TYPE_FILE);
         return null;
     }
 

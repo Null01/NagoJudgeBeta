@@ -5,7 +5,8 @@
  */
 package edu.nagojudge.web.listeners.push;
 
-import javax.faces.application.FacesMessage;
+import edu.nagojudge.msg.pojo.SubmitMessage;
+import org.apache.log4j.Logger;
 import org.primefaces.push.annotation.OnMessage;
 import org.primefaces.push.annotation.PushEndpoint;
 import org.primefaces.push.impl.JSONEncoder;
@@ -14,11 +15,18 @@ import org.primefaces.push.impl.JSONEncoder;
  *
  * @author andresfelipegarciaduran
  */
-@PushEndpoint("/notify")
+@PushEndpoint("/notifyBoardLive")
 public class NotifyResource {
 
+    private final Logger logger = Logger.getLogger(NotifyResource.class);
+
     @OnMessage(encoders = {JSONEncoder.class})
-    public FacesMessage onMessage(FacesMessage message) {
-        return message;
+    public SubmitMessage onMessage(SubmitMessage submitMessage) {
+        logger.debug("> request @echo");
+        logger.debug(submitMessage);
+        logger.debug(submitMessage.getIdAccount());
+        logger.debug(submitMessage.getIdSubmit());
+        logger.debug(submitMessage.getIdProblem());
+        return submitMessage;
     }
 }

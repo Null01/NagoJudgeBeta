@@ -8,8 +8,10 @@ package edu.nagojudge.business.servicios.restful;
 import edu.nagojudge.business.dao.beans.AttachmentsFacade;
 import edu.nagojudge.business.dao.beans.AuthenticationFacade;
 import edu.nagojudge.business.dao.beans.JudgeFacade;
+import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.ResponseMessage;
+import edu.nagojudge.msg.pojo.SubmitMessage;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.naming.AuthenticationException;
@@ -53,16 +55,15 @@ public class SubmitService {
      * existe, validaciones de negocio.
      */
     @GET
-    @Path("/evaluate/{email}/{idSubmit}")
-    public ResponseMessage judgmentOnLive(@PathParam("email") String email,
+    @Path("/verdict/{email}/{idSubmit}")
+    public SubmitMessage judgmentLiveOnlyVerdict(@PathParam("email") String email,
             @PathParam("idSubmit") String idSubmit,
             @QueryParam("token") String token) throws AuthenticationException, BusinessException {
         try {
-            logger.debug("INICIA SERVICIO - judgmentLive()");
-            ResponseMessage outcome = new ResponseMessage();
+            logger.debug("INICIA SERVICIO - judgmentLiveOnlyVerdict()");
             authenticationFacade.authentication(token);
-            judgeFacade.startJudge(idSubmit, email);
-            return outcome;
+            Submit startJudge = judgeFacade.startJudge(idSubmit, email);
+            return parseSubmitEntityToMessage(startJudge);
         } catch (AuthenticationException ex) {
             logger.error(ex);
             throw ex;
@@ -70,7 +71,7 @@ public class SubmitService {
             logger.error(ex);
             throw ex;
         } finally {
-            logger.debug("FINALIZA SERVICIO - judgmentLive()");
+            logger.debug("FINALIZA SERVICIO - judgmentLiveOnlyVerdict()");
         }
     }
 
@@ -111,6 +112,22 @@ public class SubmitService {
         } finally {
             logger.debug("FINALIZA SERVICIO - getCodeSourceByIdSubmit()");
         }
+    }
+
+    private SubmitMessage parseSubmitEntityToMessage(Submit submit) {
+        SubmitMessage submitMessage = new SubmitMessage();
+        submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
+        submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
+        submitMessage.setIdAccount(submit.getIdAccount().getIdAccount());
+        submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
+        submitMessage.setIdSubmit(submit.getIdSubmit());
+        submitMessage.setMsgJudge(submit.getMsgJudge());
+        submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
+        submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
+        submitMessage.setNickname(submit.getIdAccount().getNickname());
+        submitMessage.setStatusSubmit(submit.getStatusSubmit());
+        submitMessage.setVisibleWeb(submit.getVisibleWeb());
+        return submitMessage;
     }
 
 }
