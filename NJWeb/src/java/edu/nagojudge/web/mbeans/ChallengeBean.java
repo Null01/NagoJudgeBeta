@@ -5,8 +5,8 @@
  */
 package edu.nagojudge.web.mbeans;
 
+import edu.nagojudge.app.business.dao.beans.ChallengeFacadeDAO;
 import edu.nagojudge.app.business.dao.beans.ProblemFacadeDAO;
-import edu.nagojudge.app.business.dao.complex.ChallengeFacadeComplex;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
 import edu.nagojudge.app.utils.FacesUtil;
@@ -35,10 +35,10 @@ import org.apache.log4j.Logger;
 public class ChallengeBean implements Serializable {
 
     @EJB
-    private ProblemFacadeDAO problemFacade;
+    private ChallengeFacadeDAO challengeFacade;
 
     @EJB
-    private ChallengeFacadeComplex challengeFacadeComplex;
+    private ProblemFacadeDAO problemFacade;
 
     private final Logger logger = Logger.getLogger(ChallengeBean.class);
 
@@ -68,9 +68,9 @@ public class ChallengeBean implements Serializable {
     public void init() {
 
         this.listProblems = problemFacade.findProblemEntitiesPojo();
-        this.listTimesStarted = challengeFacadeComplex.obtenerListaHorasInicioCompetencias();
-        this.listDurationsStarted = challengeFacadeComplex.obtenerListaDuracionCompetencias();
-        this.listQuantityProblems = challengeFacadeComplex.obtenerListaNumeroEnunciados();
+        this.listTimesStarted = challengeFacade.obtenerListaHorasInicioCompetencias();
+        this.listDurationsStarted = challengeFacade.obtenerListaDuracionCompetencias();
+        this.listQuantityProblems = challengeFacade.obtenerListaNumeroEnunciados();
         for (ProblemPojo problemPojo : listProblems) {
             mapProblemsSelected.put(problemPojo.getIdProblem(), Boolean.FALSE);
             mapProblemsSelectedObject.put(problemPojo.getIdProblem(), problemPojo);
@@ -103,7 +103,7 @@ public class ChallengeBean implements Serializable {
             challengeView.setDurationMin(FormatUtil.getInstance().parseTimeToMinutes(duracionStartSelected));
             challengeView.setDateChallenge(FormatUtil.getInstance().addTimeToDate(challengeView.getDateChallenge(), timeStartSelected));
             challengeView.setQuantityProblems(Short.parseShort(quantityProblemsStartSelected));
-            String idChallengeCreated = challengeFacadeComplex.createChallenge(challengeView, listProblemsSelectedFinally);
+            String idChallengeCreated = challengeFacade.createChallenge(challengeView, listProblemsSelectedFinally);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Competencia #" + idChallengeCreated);
             FacesUtil.getFacesUtil().redirect(TARGET_PATH);
         } catch (ParseException ex) {

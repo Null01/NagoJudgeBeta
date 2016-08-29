@@ -13,18 +13,15 @@ import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.Submit;
 import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.utils.FacesUtil;
-import edu.nagojudge.app.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.Flash;
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -45,10 +42,11 @@ public class ProfileBean implements Serializable {
     @EJB
     private UserFacadeDAO userFacade;
 
-    private final Logger LOGGER = Logger.getLogger(ProfileBean.class);
+    private final Logger logger = Logger.getLogger(ProfileBean.class);
 
     private final String KEYS_REQUEST[] = {"idAccount"};
 
+    private boolean showPieChartModel = false;
     private PieChartModel pieChartModelStatistics = new PieChartModel();
 
     private Account accountView = new Account();
@@ -74,65 +72,56 @@ public class ProfileBean implements Serializable {
         listStatusVisibleWeb.add(TypeStateEnum.PRIVATE.name());
     }
 
-    public ProfileBean() {
-    }
-
-    @PostConstruct
-    public void init() {
-        Flash flash = FacesUtil.getFacesUtil().getFlash();
-        long idAccount = 0;
-        if (flash.get(KEYS_REQUEST[0]) != null) {
-            idAccount = (Long) flash.get(KEYS_REQUEST[0]);
-        } else {
-            Account account = (Account) FacesUtil.getFacesUtil().getSessionMap().get(IKeysApplication.KEY_DATA_USER_ACCOUNT);
-            if (account == null) {
-                LOGGER.error("NO EXISTE UN IDACCOUNT VINCULADO A LA SESION");
-            }
-
-            idAccount = account.getIdAccount();
-        }
-
-        User findUserByIdAccount = userFacade.findUserByIdAccount(idAccount);
-        this.userView = findUserByIdAccount;
-        this.accountView = findUserByIdAccount.getIdAccount();
-        this.listProblemsTry = problemFacade.findProblemTryEntities(idAccount);
-        this.filteredProblemsTry = new ArrayList<Problem>(this.listProblemsTry);
-
-        this.listProblemsTrySolve = problemFacade.findProblemTrySolveEntities(idAccount);
-        this.filteredProblemsTrySolve = new ArrayList<Problem>(this.listProblemsTrySolve);
-
-        this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(idAccount);
-        this.filterListSubmitsByAccount = new ArrayList<Submit>(this.listSubmitsByAccount);
-
-    }
-
     public void actionOnRowSelectProblemTry(SelectEvent event) {
-        LOGGER.debug("INICIA METODO actionOnRowSelectProblem()");
+        logger.debug("INICIA METODO actionOnRowSelectProblem()");
         Problem problemSelected = ((Problem) event.getObject());
         createPieModelGraphStatisticsStatus(problemSelected);
-        LOGGER.debug("FINALIZA METODO actionOnRowSelectProblem()");
+        this.showPieChartModel = true;
+        logger.debug("FINALIZA METODO actionOnRowSelectProblem()");
     }
 
     public void actionOnRowSelectProblemSolve(SelectEvent event) {
-        LOGGER.debug("INICIA METODO actionOnRowSelectProblem()");
+        logger.debug("INICIA METODO actionOnRowSelectProblem()");
         Problem problemSelected = ((Problem) event.getObject());
         createPieModelGraphStatisticsStatusSolve(problemSelected);
-        LOGGER.debug("FINALIZA METODO actionOnRowSelectProblem()");
+        logger.debug("FINALIZA METODO actionOnRowSelectProblem()");
     }
 
     public void onRowEditMySubmit(RowEditEvent event) {
         try {
-            LOGGER.debug("INICIA METODO onRowEditMySubmit()");
+            logger.debug("INICIA METODO onRowEditMySubmit()");
             Submit submit = (Submit) event.getObject();
             submit.setVisibleWeb(TypeStateEnum.valueOf(this.submitView.getVisibleWeb()).getType());
-            LOGGER.debug("STATE_VISIBLE_WEB=" + submit.getVisibleWeb());
+            logger.debug("STATE_VISIBLE_WEB=" + submit.getVisibleWeb());
             submitFacade.edit(submit);
             this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(this.accountView.getIdAccount());
             this.filterListSubmitsByAccount = new ArrayList<Submit>(this.listSubmitsByAccount);
-            LOGGER.debug("FINALIZA METODO onRowEditMySubmit()");
+            logger.debug("FINALIZA METODO onRowEditMySubmit()");
         } catch (Exception ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        }
+    }
+
+    public void actionPreRenderViewToProfile() {
+        logger.debug("getIdAccount [" + accountView.getIdAccount() + "]");
+        if (accountView.getIdAccount() != null) {
+
+            User findUser = userFacade.findUserByIdAccount(accountView.getIdAccount());
+            if (findUser != null) {
+
+                long idAccount = accountView.getIdAccount();
+                this.userView = findUser;
+                this.accountView = findUser.getIdAccount();
+                this.listProblemsTry = problemFacade.findProblemTryEntities(idAccount);
+                this.filteredProblemsTry = new ArrayList<Problem>(this.listProblemsTry);
+
+                this.listProblemsTrySolve = problemFacade.findProblemTrySolveEntities(idAccount);
+                this.filteredProblemsTrySolve = new ArrayList<Problem>(this.listProblemsTrySolve);
+
+                this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(idAccount);
+                this.filterListSubmitsByAccount = new ArrayList<Submit>(this.listSubmitsByAccount);
+            }
         }
     }
 
@@ -236,6 +225,14 @@ public class ProfileBean implements Serializable {
         this.filterListSubmitsByAccount = filterListSubmitsByAccount;
     }
 
+    public boolean isShowPieChartModel() {
+        return showPieChartModel;
+    }
+
+    public void setShowPieChartModel(boolean showPieChartModel) {
+        this.showPieChartModel = showPieChartModel;
+    }
+
     public String statusView(String viewWeb) {
         for (TypeStateEnum v : TypeStateEnum.values()) {
             if (v.getType().compareTo(viewWeb) == 0) {
@@ -246,8 +243,8 @@ public class ProfileBean implements Serializable {
     }
 
     private void createPieModelGraphStatisticsStatus(Problem problem) {
-        LOGGER.debug("INICIA METODO - createPieModelGraphStatisticsStatus()");
-        LOGGER.debug("getIdProblem()=" + problem.getIdProblem());
+        logger.debug("INICIA METODO - createPieModelGraphStatisticsStatus()");
+        logger.debug("getIdProblem()=" + problem.getIdProblem());
         Map<String, Long> mapStatisticsStatus = problemFacade.findStatisticsStatus(problem.getIdProblem());
         pieChartModelStatistics = new PieChartModel();
         if (!mapStatisticsStatus.isEmpty()) {
@@ -260,12 +257,12 @@ public class ProfileBean implements Serializable {
         pieChartModelStatistics.setShowDataLabels(true);
         pieChartModelStatistics.setTitle("Estadisticas!");
         pieChartModelStatistics.setLegendPosition("w");
-        LOGGER.debug("FINALIZA METODO - createPieModelGraphStatisticsStatus()");
+        logger.debug("FINALIZA METODO - createPieModelGraphStatisticsStatus()");
     }
 
     private void createPieModelGraphStatisticsStatusSolve(Problem problem) {
-        LOGGER.debug("INICIA METODO - createPieModelGraphStatisticsStatusSolve()");
-        LOGGER.debug("getIdProblem()=" + problem.getIdProblem());
+        logger.debug("INICIA METODO - createPieModelGraphStatisticsStatusSolve()");
+        logger.debug("getIdProblem()=" + problem.getIdProblem());
         Map<String, Long> mapStatisticsStatus = problemFacade.findStatisticsStatusByAccount(problem.getIdProblem(), accountView.getIdAccount());
 
         pieChartModelStatistics = new PieChartModel();
@@ -277,7 +274,7 @@ public class ProfileBean implements Serializable {
         pieChartModelStatistics.setShowDataLabels(true);
         pieChartModelStatistics.setTitle("Estadisticas!");
         pieChartModelStatistics.setLegendPosition("w");
-        LOGGER.debug("FINALIZA METODO - createPieModelGraphStatisticsStatusSolve()");
+        logger.debug("FINALIZA METODO - createPieModelGraphStatisticsStatusSolve()");
     }
 
 }

@@ -8,18 +8,16 @@ package edu.nagojudge.web.mbeans;
 import com.google.zxing.WriterException;
 import edu.nagojudge.app.business.dao.beans.TypeUserFacadeDAO;
 import edu.nagojudge.app.business.dao.beans.UserFacadeDAO;
-import edu.nagojudge.app.business.dao.complex.UserFacadeComplex;
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.TypeUser;
 import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.UserMessage;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -28,7 +26,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.mail.MessagingException;
-import javax.servlet.http.Part;
 import org.apache.log4j.Logger;
 import org.primefaces.model.UploadedFile;
 
@@ -41,21 +38,18 @@ import org.primefaces.model.UploadedFile;
 public class UserBean implements Serializable {
 
     @EJB
-    private UserFacadeComplex userFacadeComplex;
-
-    @EJB
     private TypeUserFacadeDAO typeUserFacade;
 
     @EJB
     private UserFacadeDAO userFacade;
 
-    private final Logger LOGGER = Logger.getLogger(UserBean.class);
+    private final Logger logger = Logger.getLogger(UserBean.class);
 
     private final String TARGET_PATH = "/go/to/modules/user/search.xhtml";
     private final String KEYS_REQUEST[] = {"idProblem", "idAccount"};
 
-    private List<User> listUsers = new ArrayList<User>();
-    private List<User> filteredUsers;
+    private List<UserMessage> listUsers = new ArrayList<UserMessage>();
+    private List<UserMessage> filteredUsers = new ArrayList<UserMessage>();
     private User userView = new User();
     private Account accountView = new Account();
     private TypeUser typeUserView = new TypeUser();
@@ -69,74 +63,58 @@ public class UserBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        this.listUsers = userFacade.findAll();
-        if (typeUserItems == null) {
-
-            this.typeUserItems = parceToSelectItemTypeUsers(typeUserFacade.findAll());
-        }
-        userView.setKeyUser(userFacadeComplex.autoGenerateString());
+        this.listUsers = userFacade.findAllUsersMessage();
+        this.typeUserItems = parceToSelectItemTypeUsers(typeUserFacade.findAll());
+        userView.setKeyUser(userFacade.autoGenerateString());
     }
 
     public void actionCreateUser(ActionEvent event) {
 
         try {
             userView.setIdType(typeUserView);
-            String idUserAccount = userFacadeComplex.createUserCommon(userView, accountView);
-            clearObjects();
+            String idUserAccount = userFacade.createUserCommon(userView, accountView);
+
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. UserAccount #" + idUserAccount);
             FacesUtil.getFacesUtil().redirect(TARGET_PATH);
         } catch (NagoJudgeException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } catch (WriterException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } catch (IOException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } catch (MessagingException ex) {
-            LOGGER.error(ex);
+            logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
 
     }
 
     public String actionRedirectViewToProfile() {
-        LOGGER.debug("REDIRECT_ACCOUNT_VIEW=" + accountView.getIdAccount());
-        FacesUtil.getFacesUtil().getFlash().put(KEYS_REQUEST[1], accountView.getIdAccount());
-        return "/modules/user/profile.xhtml?faces-redirect=true";
+        logger.debug("getIdAccount [" + accountView.getIdAccount() + "]");
+        return "/modules/user/profile.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
-    public Account getAccountView() {
-        return accountView;
+    public void actionChangePasswordGenerate(ActionEvent actionEvent) {
+        userView.setKeyUser(userFacade.autoGenerateString());
     }
 
-    public void setAccountView(Account accountView) {
-        this.accountView = accountView;
+    public List<UserMessage> getListUsers() {
+        return listUsers;
     }
 
-    public List<SelectItem> getTypeUserItems() {
-        return typeUserItems;
+    public void setListUsers(List<UserMessage> listUsers) {
+        this.listUsers = listUsers;
     }
 
-    public void setTypeUserItems(List<SelectItem> typeUserItems) {
-        this.typeUserItems = typeUserItems;
+    public List<UserMessage> getFilteredUsers() {
+        return filteredUsers;
     }
 
-    public TypeUser getTypeUserView() {
-        return typeUserView;
-    }
-
-    public void setTypeUserView(TypeUser typeUserView) {
-        this.typeUserView = typeUserView;
-    }
-
-    public UploadedFile getImageUserFile() {
-        return imageUserFile;
-    }
-
-    public void setImageUserFile(UploadedFile imageUserFile) {
-        this.imageUserFile = imageUserFile;
+    public void setFilteredUsers(List<UserMessage> filteredUsers) {
+        this.filteredUsers = filteredUsers;
     }
 
     public User getUserView() {
@@ -147,6 +125,30 @@ public class UserBean implements Serializable {
         this.userView = userView;
     }
 
+    public Account getAccountView() {
+        return accountView;
+    }
+
+    public void setAccountView(Account accountView) {
+        this.accountView = accountView;
+    }
+
+    public TypeUser getTypeUserView() {
+        return typeUserView;
+    }
+
+    public void setTypeUserView(TypeUser typeUserView) {
+        this.typeUserView = typeUserView;
+    }
+
+    public List<SelectItem> getTypeUserItems() {
+        return typeUserItems;
+    }
+
+    public void setTypeUserItems(List<SelectItem> typeUserItems) {
+        this.typeUserItems = typeUserItems;
+    }
+
     public String getSearchParameter() {
         return searchParameter;
     }
@@ -155,20 +157,12 @@ public class UserBean implements Serializable {
         this.searchParameter = searchParameter;
     }
 
-    public List<User> getFilteredUsers() {
-        return filteredUsers;
+    public UploadedFile getImageUserFile() {
+        return imageUserFile;
     }
 
-    public void setFilteredUsers(List<User> filteredUsers) {
-        this.filteredUsers = filteredUsers;
-    }
-
-    public List<User> getListUsers() {
-        return listUsers;
-    }
-
-    public void setListUsers(List<User> listUsers) {
-        this.listUsers = listUsers;
+    public void setImageUserFile(UploadedFile imageUserFile) {
+        this.imageUserFile = imageUserFile;
     }
 
     private List<SelectItem> parceToSelectItemTypeUsers(List<TypeUser> findTypeUserEntities) {
@@ -177,11 +171,6 @@ public class UserBean implements Serializable {
             outcome.add(new SelectItem(s, s.getNameType()));
         }
         return outcome;
-    }
-
-    private void clearObjects() {
-        userView = new User();
-        accountView = new Account();
     }
 
 }

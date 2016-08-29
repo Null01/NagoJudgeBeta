@@ -7,19 +7,15 @@ package edu.nagojudge.web.mbeans;
 
 import edu.nagojudge.app.business.dao.beans.ProblemFacadeDAO;
 import edu.nagojudge.app.business.dao.beans.SubmitFacadeDAO;
-import edu.nagojudge.app.business.dao.complex.ProblemFacadeComplex;
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.CategoryProblem;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
-import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
-import edu.nagojudge.web.utils.dtos.FilePart;
 import java.io.IOException;
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -40,9 +36,6 @@ public class ProblemsBean implements Serializable {
 
     @EJB
     private SubmitFacadeDAO submitFacadeDAO;
-
-    @EJB
-    private ProblemFacadeComplex problemFacadeComplex;
 
     @EJB
     private ProblemFacadeDAO problemFacade;
@@ -84,40 +77,40 @@ public class ProblemsBean implements Serializable {
     }
 
     public String actionRedirectViewToProfile() {
-        logger.debug("REDIRECT_ACCOUNT_VIEW=" + accountView.getIdAccount());
-        FacesUtil.getFacesUtil().getFlash().put(KEYS_REQUEST[1], accountView.getIdAccount());
-        return "/modules/user/profile.xhtml?faces-redirect=true";
+        logger.debug("getIdAccount=" + accountView.getIdAccount());
+        return "/modules/user/profile.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public void actionCreateOneProblem(ActionEvent event) {
-        try {
-            boolean validateTypeFile_I_O = validateTypeFile_I_O();
-            if (validateTypeFile_I_O) {
+        /*try {
+         boolean validateTypeFile_I_O = validateTypeFile_I_O();
+         if (validateTypeFile_I_O) {
 
-                byte[] contentProblem = problemFile.getContents();
-                FilePart problem = new FilePart(problemFile.getFileName(), problemFile.getContentType(), problemFile.getSize(), contentProblem);
+         byte[] contentProblem = problemFile.getContents();
+         FilePart problem = new FilePart(problemFile.getFileName(), problemFile.getContentType(), problemFile.getSize(), contentProblem);
 
-                byte[] contentInput = inputFile.getContents();
-                FilePart input = new FilePart(inputFile.getFileName(), inputFile.getContentType(), inputFile.getSize(), contentInput);
+         byte[] contentInput = inputFile.getContents();
+         FilePart input = new FilePart(inputFile.getFileName(), inputFile.getContentType(), inputFile.getSize(), contentInput);
 
-                byte[] contentOutput = outputFile.getContents();
-                FilePart output = new FilePart(outputFile.getFileName(), outputFile.getContentType(), outputFile.getSize(), contentOutput);
+         byte[] contentOutput = outputFile.getContents();
+         FilePart output = new FilePart(outputFile.getFileName(), outputFile.getContentType(), outputFile.getSize(), contentOutput);
 
-                String idProblemCreated = problemFacadeComplex.createProblem(problemView, categoryProblemView, difficultyLevel, problem, input, output);
-                clearObjects();
-                FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Problema #" + idProblemCreated);
-                FacesUtil.getFacesUtil().redirect(TARGET_PATH);
-            }
-        } catch (IOException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (UtilNagoJudgeException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        }
+         String idProblemCreated = problemFacadeComplex.createProblem(problemView, categoryProblemView, difficultyLevel, problem, input, output);
+         clearObjects();
+         FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Problema #" + idProblemCreated);
+         FacesUtil.getFacesUtil().redirect(TARGET_PATH);
+         }
+         } catch (IOException ex) {
+         logger.error(ex);
+         FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+         } catch (NoSuchAlgorithmException ex) {
+         logger.error(ex);
+         FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+         } catch (UtilNagoJudgeException ex) {
+         logger.error(ex);
+         FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+         }
+         */
     }
 
     public void actionViewCode(Object idSubmit) {
@@ -235,14 +228,6 @@ public class ProblemsBean implements Serializable {
 
     private void clearObjects() {
         this.problemView = new Problem();
-    }
-
-    public ProblemFacadeComplex getProblemFacadeComplex() {
-        return problemFacadeComplex;
-    }
-
-    public void setProblemFacadeComplex(ProblemFacadeComplex problemFacadeComplex) {
-        this.problemFacadeComplex = problemFacadeComplex;
     }
 
     public UploadedFile getProblemFile() {

@@ -5,6 +5,15 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
     template="/home.xhtml">
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="idProblem" value="#{problemsBean.problemView.idProblem}"/>
+            <f:viewParam name="idAccount" value="#{problemsBean.accountView.idAccount}"/>
+        </f:metadata>
+    </ui:define>
+
+
     <ui:define name="content">
         <link href="/go/to/tools/frameworks/codemirror/lib/codemirror.css" rel="stylesheet"/>
         <link href="/go/to/tools/frameworks/codemirror/addon/dialog/dialog.css" rel="stylesheet"/>
@@ -17,11 +26,10 @@
         <script src="/go/to/tools/frameworks/codemirror/addon/search/searchcursor.js"/>
         <script src="/go/to/tools/frameworks/codemirror/addon/search/search.js"/>
 
-        <div id="panelMyScoreContest" class="panel panel-default">
+        <div id="panel-board-live" class="panel panel-default">
 
-            <p:growl widgetVar="growl" showDetail="true" />
+            <h:form id="form-board-live">
 
-            <h:form id="formRemoteCommandMyScoreContest">
                 <p:messages id="messages"
                             autoUpdate="true"
                             closable="true"/>
@@ -73,11 +81,7 @@
                                        action="#{problemsBean.actionViewCode(s.idSubmit)}" update=":form-dlg-view-code"/>
                     </p:column>
                 </p:dataTable>
-                <p:remoteCommand id="push-board"
-                                 name="push-board" 
-                                 process="@this"  
-                                 update="table-submit-live"
-                                 actionListener="#{submitBean.actionAjaxRefreshBoard}" />
+               
             </h:form>
 
             <h:form id="form-dlg-view-code">
@@ -108,26 +112,7 @@
 
         </div>
 
-        <p:socket onMessage="handleMessage"      channel="/notifyBoardLive" />
-
-        <script type="text/javascript">
-            function handleMessage(facesmessage) {
-                console.log(object);
-
-                var facesmessage;
-                facesmessage.severity = 'INFO';
-
-                PF('growl').show([facesmessage]);
-            }
-        </script>
-        <!--
-                <script type="text/javascript">
-                    setInterval(refreshBoardLastSubmit, 20000);
-                    function refreshBoardLastSubmit() {
-                        refreshBoardNow();
-                    }
-                </script>
-        -->
+        <p:socket onMessage="pushBoard" channel="/notifyBoardLive" />
 
     </ui:define>
 </ui:composition>

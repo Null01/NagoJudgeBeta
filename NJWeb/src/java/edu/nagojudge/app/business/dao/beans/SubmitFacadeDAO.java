@@ -19,7 +19,6 @@ import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import edu.nagojudge.tools.utils.FormatUtil;
-import edu.nagojudge.web.listeners.push.AbstractNotifyResource;
 import edu.nagojudge.web.utils.resources.clients.ClientService;
 import java.io.IOException;
 import java.io.Serializable;
@@ -93,6 +92,7 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
                     + String.valueOf(email) + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submitView.getIdProblem().getIdProblem(), 7);
             String nameFile = FormatUtil.getInstance().buildZerosToLeft(submitView.getIdSubmit(), 7) + "." + languageProgrammingView.getExtension();
             FileUtil.getInstance().createFile(contentCodeSource, pathFile, nameFile);
+
             final Long idSubmit = submitView.getIdSubmit();
 
             final Thread thread = new Thread(new Runnable() {
@@ -110,7 +110,7 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
                     logger.debug(submitMessage.getIdProblem());
                     logger.debug(submitMessage.getIdAccount());
                     logger.debug(submitMessage.getNameLanguage());
-                    new AbstractNotifyResource().pushNotify(submitMessage);
+
                 }
             });
             thread.start();
@@ -175,7 +175,7 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
         }
     }
 
-    private final SubmitMessage parseSubmitEntityToMessage(Submit submit) {
+    private SubmitMessage parseSubmitEntityToMessage(Submit submit) {
         SubmitMessage submitMessage = new SubmitMessage();
         submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
         submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());

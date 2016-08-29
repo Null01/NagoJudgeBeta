@@ -5,26 +5,46 @@
  */
 package edu.nagojudge.app.business.dao.beans;
 
+import edu.nagojudge.app.business.dao.entities.Attachments;
+import edu.nagojudge.app.business.dao.entities.CategoryProblem;
+import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
+import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
+import edu.nagojudge.app.utils.ValidatorUtil;
+import edu.nagojudge.app.utils.constants.IResourcesPaths;
+import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
+import edu.nagojudge.tools.security.constants.TypeSHAEnum;
+import edu.nagojudge.tools.utils.FileUtil;
+import edu.nagojudge.tools.utils.FormatUtil;
+import java.io.IOException;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Serializable{
+public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Serializable {
+
+    @EJB
+    private AttachmentsFacadeDAO attachmentsFacadeDAO;
+
+    private final Logger logger = Logger.getLogger(ProblemFacadeDAO.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -138,6 +158,9 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT WHERE  ID_ACCOUNT = ").append(idAccount).append(")");
         List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
+        if (resultList != null && resultList.size() >= 1) {
+            logger.debug(resultList.get(0).getIdCategory());
+        }
         return resultList;
 
     }
@@ -150,6 +173,94 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
         List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
         return resultList;
 
+    }
+
+    public String createProblem(Problem problemView, CategoryProblem categoryProblemView, DifficultyLevel difficultyLevel, byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException {
+        try {
+            logger.debug("INICIA METODO - createProblem()");
+            problemView.setIdCategory(categoryProblemView);
+            logger.debug(" CAMPO getIdCategory=" + problemView.getIdCategory() + " @ECHO");
+            problemView.setIdDifficulty(difficultyLevel);
+            logger.debug(" CAMPO getIdDifficulty=" + problemView.getIdDifficulty() + " @ECHO");
+            ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getAuthor());
+            problemView.setAuthor(problemView.getAuthor());
+            logger.debug("VALACION CAMPO getAuthor=" + problemView.getAuthor() + " @ECHO");
+            ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getNameProblem());
+            problemView.setNameProblem(problemView.getNameProblem());
+            logger.debug("VALACION CAMPO getNameProblem=" + problemView.getNameProblem() + " @ECHO");
+            logger.debug(" CAMPO getDescription=" + problemView.getDescription() + " @ECHO");
+            logger.debug(" CAMPO getTimeLimitSeg=" + problemView.getTimeLimitSeg() + " @ECHO");
+
+            create(problemView);
+            logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problemView.getIdProblem() + " @ECHO");
+
+            String pathProblem = IResourcesPaths.PATH_ROOT_SAVE_PROBLEMS_WEB;
+            String nameFileProblem = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
+            logger.debug("PATH_PROBLEM=" + pathProblem);
+            logger.debug("NAME_FILE_PROBLEM=" + nameFileProblem);
+            FileUtil.getInstance().createFile(problem, pathProblem, nameFileProblem);
+
+            String pathProblemLocal = IResourcesPaths.PATH_SAVE_PROBLEMS_LOCAL;
+            String nameFileProblemLocal = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
+            logger.debug("PATH_PROBLEM_LOCAL=" + pathProblemLocal);
+            logger.debug("NAME_FILE_PROBLEM_LOCAL=" + nameFileProblemLocal);
+            FileUtil.getInstance().createFile(problem, pathProblemLocal, nameFileProblemLocal);
+
+            String pathInput = IResourcesPaths.PATH_SAVE_INPUT_LOCAL;
+            String nameFileInput = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7);
+            logger.debug("PATH_INPUT=" + pathInput);
+            logger.debug("NAME_FILE_INPUT=" + nameFileInput);
+            FileUtil.getInstance().createFile(input, pathInput, nameFileInput);
+
+            String pathOutput = IResourcesPaths.PATH_SAVE_OUTPUT_LOCAL;
+            String nameFileOutput = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7);
+            logger.debug("PATH_OUTPUT=" + pathOutput);
+            logger.debug("NAME_FILE_OUTPUT=" + nameFileOutput);
+            FileUtil.getInstance().createFile(output, pathOutput, nameFileOutput);
+
+            logger.debug("INIT - CREACION ATTACHMENTS @ECHO");
+
+            List<Attachments> attachmentses = new ArrayList<Attachments>();
+            Attachments attachment = new Attachments();
+            attachment.setChecksum(FileUtil.getInstance().generateChechSum(problem, TypeSHAEnum.SHA256));
+            attachment.setDateLoad(Calendar.getInstance().getTime());
+            attachment.setIdProblem(problemView);
+            attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension());
+            attachmentses.add(attachment);
+            attachmentsFacadeDAO.create(attachment);
+            logger.debug("CREACION ATTACHMENT_ID=" + attachment.getIdAttachment() + "  @ECHO");
+
+            attachment = new Attachments();
+            attachment.setChecksum(FileUtil.getInstance().generateChechSum(input, TypeSHAEnum.SHA256));
+            attachment.setDateLoad(Calendar.getInstance().getTime());
+            attachment.setIdProblem(problemView);
+            attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_IN.getExtension());
+            attachmentses.add(attachment);
+            attachmentsFacadeDAO.create(attachment);
+            logger.debug("CREACION ATTACHMENT_ID=" + attachment.getIdAttachment() + "  @ECHO");
+
+            attachment = new Attachments();
+            attachment.setChecksum(FileUtil.getInstance().generateChechSum(output, TypeSHAEnum.SHA256));
+            attachment.setDateLoad(Calendar.getInstance().getTime());
+            attachment.setIdProblem(problemView);
+            attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_OUT.getExtension());
+            attachmentses.add(attachment);
+            attachmentsFacadeDAO.create(attachment);
+            logger.debug("CREACION ATTACHMENT_ID=" + attachment.getIdAttachment() + "  @ECHO");
+
+            return String.valueOf(problemView.getIdProblem());
+        } catch (IOException ex) {
+            logger.error(ex);
+            throw ex;
+        } catch (NoSuchAlgorithmException ex) {
+            logger.error(ex);
+            throw ex;
+        } catch (UtilNagoJudgeException ex) {
+            logger.error(ex);
+            throw ex;
+        } finally {
+            logger.debug("FINALIZA METODO - createProblem()");
+        }
     }
 
 }

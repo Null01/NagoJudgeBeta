@@ -52,11 +52,10 @@ public class ActionsNavigationFilter implements Filter {
         }
 
         if (tokens[tokens.length - 1].endsWith(".xhtml")) {
-            if (createSession) {
-                chain.doFilter(request, response);
-            } else {
-                chain.doFilter(request, response);
+            if (!createSession) {
+                httpResponse.sendRedirect(indexURI);
             }
+            chain.doFilter(request, response);
         } else {
             chain.doFilter(request, response);
         }

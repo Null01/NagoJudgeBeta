@@ -5,12 +5,11 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.complex.UserFacadeComplex;
+import edu.nagojudge.app.business.dao.beans.UserFacadeDAO;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -27,7 +26,7 @@ import org.apache.log4j.Logger;
 public class LogInOutBean implements Serializable {
 
     @EJB
-    private UserFacadeComplex userDaoComplex;
+    private UserFacadeDAO userFacade;
 
     private final Logger logger = Logger.getLogger(LogInOutBean.class);
 
@@ -44,7 +43,7 @@ public class LogInOutBean implements Serializable {
 
     public void actionLoginUser() {
         try {
-            userDaoComplex.loginCompleteUser(username, password);
+            userFacade.loginCompleteUser(username, password);
             FacesUtil.getFacesUtil().redirect(TARGET_PATH_LOGIN);
         } catch (NagoJudgeException ex) {
             logger.error(ex);

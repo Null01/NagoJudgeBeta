@@ -25,6 +25,8 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+import org.primefaces.push.EventBus;
+import org.primefaces.push.EventBusFactory;
 
 /**
  *
@@ -38,6 +40,8 @@ public class SubmitBean implements Serializable {
     private SubmitFacadeDAO submitFacade;
 
     private final String TARGET_PATH = "/go/to/modules/board/score.xhtml";
+
+    private final String CHANNEL_BOARD_LIVE = "/notifyBoardLive";
 
     private final Logger logger = Logger.getLogger(SubmitBean.class);
 
@@ -65,7 +69,9 @@ public class SubmitBean implements Serializable {
     }
 
     public void actionAjaxRefreshBoard() {
+        logger.debug("INICIA METODO - actionAjaxRefreshBoard()");
         this.submitsAll = new ArrayList<SubmitMessage>(submitFacade.findLast100Results());
+        logger.debug("FINALIZA METODO - actionAjaxRefreshBoard()");
     }
 
     public void actionSubmitSolution() {
@@ -77,8 +83,8 @@ public class SubmitBean implements Serializable {
                         IKeysApplication.KEY_PUBLIC_MSG_RESOURCES);
                 throw new Exception(msg);
             } else {
-                submitFacade.createSubmitSolve(submitView, problemView, languageProgrammingView, codeSourceFile.getContents());
-
+                SubmitMessage submitMessage = submitFacade.createSubmitSolve(submitView, problemView, languageProgrammingView, codeSourceFile.getContents());
+                actionSendPushBoardLive(submitMessage);
                 logger.debug("redirect [" + TARGET_PATH + "]");
                 FacesUtil.getFacesUtil().redirect(TARGET_PATH);
             }
@@ -96,7 +102,6 @@ public class SubmitBean implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         this.codeSourceFile = event.getFile();
         logger.debug("getFileName() [" + codeSourceFile.getFileName() + "]");
-
     }
 
     public Problem getProblemView() {
@@ -137,6 +142,18 @@ public class SubmitBean implements Serializable {
 
     public void setCodeSourceFile(UploadedFile codeSourceFile) {
         this.codeSourceFile = codeSourceFile;
+    }
+
+    private void actionSendPushBoardLive(SubmitMessage submitMessage) {
+        try {
+            logger.debug("INICIA METODO - actionSendPushBoardLive()");
+            EventBus eventBus = EventBusFactory.getDefault().eventBus();
+            eventBus.publish(CHANNEL_BOARD_LIVE, submitMessage);
+        } catch (Exception ex) {
+            logger.error(ex);
+        } finally {
+            logger.debug("FINALIZA METODO - actionSendPushBoardLive()");
+        }
     }
 
 }
