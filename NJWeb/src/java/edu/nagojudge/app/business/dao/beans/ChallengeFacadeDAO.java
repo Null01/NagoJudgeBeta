@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,7 +40,7 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
         super(Challenge.class);
     }
 
-    public String createChallenge(Challenge challenge, List<ProblemPojo> problemPojos) {
+    public String createChallenge(Challenge challenge, List<ProblemPojo> problemPojos) throws Exception {
         try {
             logger.debug("INICIA METODO - createChallenge()");
             StringBuilder sb = new StringBuilder();
@@ -64,6 +65,9 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
             logger.debug("getDescription()=" + challenge.getDescription());
             create(challenge);
             return String.valueOf(challenge.getIdChallenge());
+        } catch (Exception ex) {
+            logger.error(ex);
+            throw ex;
         } finally {
             logger.debug("FINALIZA METODO - createChallenge()");
         }

@@ -150,6 +150,9 @@
                                                      editable="true"
                                                      rowKey="#{s.idSubmit}"
                                                      styleClass="center-block"
+                                                     rows="15"
+                                                     paginator="true"
+                                                     paginatorPosition="bottom"
                                                      emptyMessage="#{msg['general.table.noinfo']}">
 
                                             <p:ajax event="rowEdit" listener="#{profileBean.onRowEditMySubmit}" update="@this" />
@@ -170,19 +173,17 @@
                                             <p:column headerText="Id Submit" width="100" filterBy="#{s.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
                                                 <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
                                             </p:column>
-                                            <p:column headerText="Problem" width="200" filterBy="#{s.idProblem.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
-                                                <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem.idProblem)} - #{s.idProblem.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                                                    <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem.idProblem}" />
+                                            <p:column headerText="Problem" width="200" filterBy="#{s.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                                <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem)} - #{s.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
+                                                    <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem}" />
                                                 </h:commandLink>
                                             </p:column>
-                                            <p:column headerText="Account" width="120" filterBy="#{s.idAccount.nickname}" filterStyle="display:none;" filterMatchMode="contains">
-                                                <h:outputText value="#{s.idAccount.nickname}" />
-                                            </p:column>
+
                                             <p:column headerText="Status" styleClass="bold-font" width="150" filterBy="#{s.statusSubmit}" filterStyle="display:none;" filterMatchMode="contains">
                                                 <h:outputText value="#{s.statusSubmit}" />
                                             </p:column>
-                                            <p:column headerText="Language" width="60" filterBy="#{s.idLanguage.nameLanguage}" filterStyle="display:none;" filterMatchMode="contains">
-                                                <h:outputText value="#{s.idLanguage.nameLanguage}" />
+                                            <p:column headerText="Language" width="60" filterBy="#{s.nameLanguage}" filterStyle="display:none;" filterMatchMode="contains">
+                                                <h:outputText value="#{s.nameLanguage}" />
                                             </p:column>
                                             <p:column headerText="Date Submit" width="170" filterBy="#{s.dateSubmit}" filterStyle="display:none;" filterMatchMode="contains">
                                                 <h:outputText value="#{s.dateSubmit}" >
@@ -197,6 +198,7 @@
                                             <p:column headerText="View" width="120" filterBy="#{s.visibleWeb}" filterStyle="display:none;" filterMatchMode="contains">
                                                 <p:cellEditor>
                                                     <f:facet name="output">
+                                                        <h:outputText value="#{s.visibleWeb}" />
                                                         <h:commandLink styleClass="glyphicon glyphicon-eye-close" type="button" disabled="true"
                                                                        rendered="#{s.visibleWeb eq 'PRI'}"/>
                                                         <h:commandLink styleClass="glyphicon glyphicon-eye-open" type="button" disabled="true"

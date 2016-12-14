@@ -13,6 +13,7 @@ import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.Submit;
 import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -62,8 +63,8 @@ public class ProfileBean implements Serializable {
     private List<Problem> listProblemsTrySolve;
     private List<Problem> filteredProblemsTrySolve;
 
-    private List<Submit> listSubmitsByAccount;
-    private List<Submit> filterListSubmitsByAccount;
+    private List<SubmitMessage> listSubmitsByAccount;
+    private List<SubmitMessage> filterListSubmitsByAccount;
 
     private static final List<String> listStatusVisibleWeb = new ArrayList<String>();
 
@@ -90,16 +91,15 @@ public class ProfileBean implements Serializable {
     public void onRowEditMySubmit(RowEditEvent event) {
         try {
             logger.debug("INICIA METODO onRowEditMySubmit()");
-            Submit submit = (Submit) event.getObject();
-            submit.setVisibleWeb(TypeStateEnum.valueOf(this.submitView.getVisibleWeb()).getType());
-            logger.debug("STATE_VISIBLE_WEB=" + submit.getVisibleWeb());
-            submitFacade.edit(submit);
-            this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(this.accountView.getIdAccount());
-            this.filterListSubmitsByAccount = new ArrayList<Submit>(this.listSubmitsByAccount);
-            logger.debug("FINALIZA METODO onRowEditMySubmit()");
+            SubmitMessage submitMessage = (SubmitMessage) event.getObject();
+            submitMessage.setVisibleWeb(TypeStateEnum.valueOf(this.submitView.getVisibleWeb()).getType());
+            logger.debug("getVisibleWeb [" + submitMessage.getVisibleWeb() + "]");
+            submitFacade.editSubmitMessage(submitMessage);
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        } finally {
+            logger.debug("FINALIZA METODO onRowEditMySubmit()");
         }
     }
 
@@ -120,7 +120,7 @@ public class ProfileBean implements Serializable {
                 this.filteredProblemsTrySolve = new ArrayList<Problem>(this.listProblemsTrySolve);
 
                 this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(idAccount);
-                this.filterListSubmitsByAccount = new ArrayList<Submit>(this.listSubmitsByAccount);
+                this.filterListSubmitsByAccount = new ArrayList<SubmitMessage>(this.listSubmitsByAccount);
             }
         }
     }
@@ -209,19 +209,19 @@ public class ProfileBean implements Serializable {
         this.filteredProblemsTrySolve = filteredProblemsTrySolve;
     }
 
-    public List<Submit> getListSubmitsByAccount() {
+    public List<SubmitMessage> getListSubmitsByAccount() {
         return listSubmitsByAccount;
     }
 
-    public void setListSubmitsByAccount(List<Submit> listSubmitsByAccount) {
+    public void setListSubmitsByAccount(List<SubmitMessage> listSubmitsByAccount) {
         this.listSubmitsByAccount = listSubmitsByAccount;
     }
 
-    public List<Submit> getFilterListSubmitsByAccount() {
+    public List<SubmitMessage> getFilterListSubmitsByAccount() {
         return filterListSubmitsByAccount;
     }
 
-    public void setFilterListSubmitsByAccount(List<Submit> filterListSubmitsByAccount) {
+    public void setFilterListSubmitsByAccount(List<SubmitMessage> filterListSubmitsByAccount) {
         this.filterListSubmitsByAccount = filterListSubmitsByAccount;
     }
 

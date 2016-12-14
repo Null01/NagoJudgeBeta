@@ -12,7 +12,6 @@ import edu.nagojudge.app.business.dao.entities.Submit;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.constants.IKeysApplication;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
-import edu.nagojudge.msg.pojo.ResponseMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
@@ -27,6 +26,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -73,7 +74,7 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
         return outcome;
     }
 
-    public SubmitMessage createSubmitSolve(Submit submitView, Problem problemView, LanguageProgramming languageProgrammingView, byte[] contentCodeSource) throws IOException {
+    public SubmitMessage createSubmitSolve(Submit submitView, Problem problemView, LanguageProgramming languageProgrammingView, byte[] contentCodeSource) throws IOException, Exception {
         try {
             logger.debug("INICIA METODO - createSubmitSolve()");
             HttpSession session = FacesUtil.getFacesUtil().getSession(true);
@@ -105,12 +106,6 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
                     params.put("token", TOKEN);
                     SubmitMessage submitMessage = (SubmitMessage) ClientService.getInstance().callRestfulGet(path, objects, params, SubmitMessage.class);
                     logger.debug("outcome [" + submitMessage + "]");
-
-                    logger.debug(submitMessage.getIdSubmit());
-                    logger.debug(submitMessage.getIdProblem());
-                    logger.debug(submitMessage.getIdAccount());
-                    logger.debug(submitMessage.getNameLanguage());
-
                 }
             });
             thread.start();
@@ -119,18 +114,27 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
         } catch (IOException ex) {
             logger.error(ex);
             throw ex;
+        } catch (Exception ex) {
+            logger.error(ex);
+            throw ex;
         } finally {
             logger.debug("FINALIZA METODO - createSubmitSolve()");
         }
     }
 
-    public List<Submit> findSubmitEntitiesByAccount(long idAccount) {
+    public List<SubmitMessage> findSubmitEntitiesByAccount(long idAccount) {
+        List<SubmitMessage> outcome = new ArrayList<SubmitMessage>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM SUBMIT WHERE ID_ACCOUNT = ? ORDER BY DATE_SUBMIT ");
+        sql.append("SELECT * FROM SUBMIT WHERE ID_ACCOUNT = ? ORDER BY DATE_SUBMIT DESC");
         Query query = em.createNativeQuery(sql.toString(), Submit.class).setParameter(1, idAccount);
         List<Submit> resultList = query.getResultList();
-        return resultList;
-
+        if (resultList != null && !resultList.isEmpty()) {
+            for (Submit submit : resultList) {
+                SubmitMessage submitMessage = parseSubmitEntityToMessage(submit);
+                outcome.add(submitMessage);
+            }
+        }
+        return outcome;
     }
 
     public String findAttachmentSubmit(String idSubmit) {
@@ -140,7 +144,7 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
             Object objects[] = {idSubmit};
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("token", TOKEN);
-            Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, params, ResponseMessage.class);
+            Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, params, String.class);
             logger.debug("outcome [" + callRestfulGet + "]");
             return String.valueOf(callRestfulGet);
         } finally {
@@ -172,6 +176,20 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
             throw ex;
         } finally {
             logger.debug("FINALIZA METODO - getFullPathProblem()");
+        }
+    }
+
+    public void editSubmitMessage(SubmitMessage submitMessage) {
+        try {
+            logger.debug("INICIA METODO - editSubmitMessage()");
+            Submit submit = find(submitMessage.getIdSubmit());
+            submit.setVisibleWeb(submitMessage.getVisibleWeb());
+            edit(submit);
+            logger.debug("editSubmit @ECHO");
+        } catch (Exception ex) {
+            logger.error(ex);
+        } finally {
+            logger.debug("FINALIZA METODO - editSubmitMessage()");
         }
     }
 

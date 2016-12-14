@@ -29,8 +29,9 @@
                                      styleClass="center-block"
                                      filteredValue="#{problemsBean.filteredProblems}"
                                      rowKey="#{p.idProblem}"
+                                     rows="15"
                                      paginator="true"
-                                     paginatorPosition="bottom"
+                                     paginatorPosition="bottom"                                     
                                      emptyMessage="#{msg['general.table.noinfo']}">
                             <f:facet name="header">
                                 <p:outputPanel>

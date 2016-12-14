@@ -21,6 +21,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 /**
@@ -91,15 +92,13 @@ public class SubmitService {
      */
     @GET
     @Path("/codeSource/{idSubmit}")
-    public ResponseMessage getCodeSourceByIdSubmit(@PathParam("idSubmit") String idSubmit,
+    public String getCodeSourceByIdSubmit(@PathParam("idSubmit") String idSubmit,
             @QueryParam("token") String token) throws IOException, BusinessException, AuthenticationException {
         try {
             logger.debug("INICIA SERVICIO - getCodeSourceByIdSubmit()");
-            ResponseMessage outcome = new ResponseMessage();
             authenticationFacade.authentication(token);
             StringBuilder codeSource = attachmentsFacade.getCodeSource(idSubmit);
-            outcome.setObject(codeSource.toString());
-            return outcome;
+            return codeSource.toString();
         } catch (IOException ex) {
             logger.error(ex);
             throw ex;

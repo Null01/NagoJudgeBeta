@@ -17,6 +17,7 @@ import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -42,7 +43,6 @@ public class ProblemsBean implements Serializable {
 
     private final Logger logger = Logger.getLogger(ProblemsBean.class);
 
-    private final String TARGET_PATH = "/go/to/modules/content/problem/search.xhtml";
     private final String KEYS_REQUEST[] = {"idProblem", "idAccount"};
 
     private List<ProblemPojo> listProblems;
@@ -114,7 +114,7 @@ public class ProblemsBean implements Serializable {
     }
 
     public void actionViewCode(Object idSubmit) {
-        logger.debug("VIEW_CODE_SUBMIT_ID=" + idSubmit);
+        logger.debug("idSubmit [" + idSubmit + "]");
         String codeText = submitFacadeDAO.findAttachmentSubmit(String.valueOf(idSubmit));
         setTextCode(codeText);
     }
@@ -131,6 +131,10 @@ public class ProblemsBean implements Serializable {
                 }
             } catch (IOException ex) {
                 logger.error(ex);
+                FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+            } catch (Exception ex) {
+                logger.error(ex);
+                FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
             }
         }
     }

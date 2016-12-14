@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -175,7 +176,7 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
 
     }
 
-    public String createProblem(Problem problemView, CategoryProblem categoryProblemView, DifficultyLevel difficultyLevel, byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException {
+    public String createProblem(Problem problemView, CategoryProblem categoryProblemView, DifficultyLevel difficultyLevel, byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
         try {
             logger.debug("INICIA METODO - createProblem()");
             problemView.setIdCategory(categoryProblemView);
@@ -256,6 +257,9 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
             logger.error(ex);
             throw ex;
         } catch (UtilNagoJudgeException ex) {
+            logger.error(ex);
+            throw ex;
+        } catch (Exception ex) {
             logger.error(ex);
             throw ex;
         } finally {

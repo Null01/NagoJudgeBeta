@@ -77,18 +77,27 @@
                         </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg['general.label.view']}" width="40">
-                        <p:commandLink styleClass="glyphicon glyphicon-paperclip"  oncomplete="PF('dlg-view-code').show();"
-                                       action="#{problemsBean.actionViewCode(s.idSubmit)}" update=":form-dlg-view-code"/>
+                        <p:commandLink styleClass="glyphicon glyphicon-paperclip"
+                                       oncomplete="PF('dlg-view-code').show();"
+                                       action="#{problemsBean.actionViewCode(s.idSubmit)}" 
+                                       update=":form-dlg-view-code"
+                                       />
                     </p:column>
                 </p:dataTable>
-               
+
             </h:form>
 
             <h:form id="form-dlg-view-code">
-                <p:dialog id="dlg-view-code" widgetVar="dlg-view-code" modal="true" resizable="false" width="90%" style="width: 90% !important;">
+                <p:dialog id="dlg-view-code"
+                          widgetVar="dlg-view-code" 
+                          modal="true"
+                          resizable="false" 
+                          width="90%"
+                          onShow="refreshTextAreaViewCode()">
+
                     <div class="panel panel-default">
                         <div class="panel-heading">#{msg['general.label.codeSource']}</div>
-                        <div class="panel-body" style="cursor: pointer !important;">
+                        <div id="panel-body-dlg-view-code" class="panel-body" >
                             <p:inputTextarea id="text-area-view-code"
                                              value="#{problemsBean.textCode}"
                                              readonly="true"
@@ -109,10 +118,15 @@
                     </script>
                 </p:dialog>
             </h:form>
-
+            <script>
+                function refreshTextAreaViewCode() {
+                    var eventObject = document.createEvent('Events');
+                    eventObject.initEvent('click', true, false);
+                    document.getElementsByClassName('CodeMirror cm-s-default')[0].dispatchEvent(eventObject);
+                    document.getElementById("panel-body-dlg-view-code").dispatchEvent(eventObject);
+                    console.log('refreshTextAreaViewCode - @echo');
+                }
+            </script>
         </div>
-
-        <p:socket onMessage="pushBoard" channel="/notifyBoardLive" />
-
     </ui:define>
 </ui:composition>

@@ -23,19 +23,19 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public void create(T entity) {
+    public void create(T entity) throws Exception {
         getEntityManager().persist(entity);
     }
 
-    public void edit(T entity) {
+    public void edit(T entity) throws Exception {
         getEntityManager().merge(entity);
     }
 
-    public void remove(T entity) {
+    public void remove(T entity) throws Exception {
         getEntityManager().remove(getEntityManager().merge(entity));
     }
 
-    public T find(Object id) {
+    public T find(Object id) throws Exception {
         return getEntityManager().find(entityClass, id);
     }
 
@@ -45,7 +45,7 @@ public abstract class AbstractFacade<T> {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    public List<T> findRange(int[] range) {
+    public List<T> findRange(int[] range) throws Exception {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
         javax.persistence.Query q = getEntityManager().createQuery(cq);
@@ -54,7 +54,7 @@ public abstract class AbstractFacade<T> {
         return q.getResultList();
     }
 
-    public int count() {
+    public int count() throws Exception {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
