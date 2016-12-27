@@ -76,7 +76,9 @@ input[type="text"], input[type="file"]{
 }
 
 .ui-state-hover {
-    // background: #85b2cb -moz-linear-gradient(center top , rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)) repeat scroll 0 0;
+    /*
+    background: #85b2cb -moz-linear-gradient(center top , rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)) repeat scroll 0 0;
+    */
     border: 1px solid #7096ab;
 }
 .ui-selectonemenu-trigger{

@@ -7,8 +7,10 @@ a {
 }
 
 .ui-widget-header {
-    // background: #c4c4c4 -moz-linear-gradient(center top , rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0)) repeat scroll 0 0;
-    //border: 1px solid #a8a8a8;
+    /*
+    background: #c4c4c4 -moz-linear-gradient(center top , rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0)) repeat scroll 0 0;
+    border: 1px solid #a8a8a8;
+    */
     font-weight: bold;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
@@ -19,7 +21,9 @@ a {
     background: #ffffff;
 }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-    //background: #85b2cb -moz-linear-gradient(center top , rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)) repeat scroll 0 0;
+    /*
+    background: #85b2cb -moz-linear-gradient(center top , rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)) repeat scroll 0 0;
+    */
     border: 1px solid #7096ab;
     color: #1c4257;
 }

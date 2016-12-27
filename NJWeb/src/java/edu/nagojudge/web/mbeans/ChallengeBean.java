@@ -26,6 +26,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.Flash;
 import org.apache.log4j.Logger;
+import org.primefaces.event.FlowEvent;
 
 /**
  *
@@ -76,15 +77,9 @@ public class ChallengeBean implements Serializable {
             mapProblemsSelected.put(problemPojo.getIdProblem(), Boolean.FALSE);
             mapProblemsSelectedObject.put(problemPojo.getIdProblem(), problemPojo);
         }
-
-        Flash flash = FacesUtil.getFacesUtil().getFlash();
-        if (flash.get(KEYS_REQUEST[1]) != null) {
-            Integer numProblems = new Integer(String.valueOf(flash.get(KEYS_REQUEST[1])));
-            challengeView.setQuantityProblems(numProblems.shortValue());
-        }
     }
 
-    public void actionUpdateListProblemsSelected() {
+    public void actionUpdateListenerProblemsSelected() {
         listProblemsSelectedFinally.clear();
         for (Map.Entry<Long, Boolean> entry : mapProblemsSelected.entrySet()) {
             if (entry.getValue()) {
@@ -93,32 +88,8 @@ public class ChallengeBean implements Serializable {
         }
     }
 
-    public void actionSaveCompleteCompetition() {
-        try {
-            logger.debug("INICIA METODO - actionSaveCompleteCompetition()");
-            logger.debug("LIST_PROBLEMS_SELECTED=" + listProblemsSelectedFinally);
-            logger.debug("OBJ_CHALLENGE=" + challengeView);
-            logger.debug("duracionStartSelected=" + duracionStartSelected);
-            logger.debug("timeStartSelected=" + timeStartSelected);
-            logger.debug("quantityProblemsStartSelected=" + quantityProblemsStartSelected);
-            challengeView.setDurationMin(FormatUtil.getInstance().parseTimeToMinutes(duracionStartSelected));
-            challengeView.setDateChallenge(FormatUtil.getInstance().addTimeToDate(challengeView.getDateChallenge(), timeStartSelected));
-            challengeView.setQuantityProblems(Short.parseShort(quantityProblemsStartSelected));
-            String idChallengeCreated = challengeFacade.createChallenge(challengeView, listProblemsSelectedFinally);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Competencia #" + idChallengeCreated);
-            FacesUtil.getFacesUtil().redirect(TARGET_PATH);
-        } catch (ParseException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (IOException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } finally {
-            logger.debug("FINALIZA METODO - actionSaveCompleteCompetition()");
-        }
+    public String actionOnFlowProcessCreateChallenge(FlowEvent event) {
+        return event.getNewStep();
     }
 
     public Challenge getChallengeView() {
