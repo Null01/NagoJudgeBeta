@@ -1,0 +1,145 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    template="/home.xhtml">
+
+    <ui:define name="content">
+        <div id="panel-board-live" class="panel panel-default">
+            <h:form id="form-conf-parameters" class="form-horizontal">
+
+                <p:messages id="messages"
+                            autoUpdate="true"
+                            closable="true"/>
+
+                <div class="panel-body">
+                    <fieldset>
+                        <div class="form-group">
+
+                            <p:dataTable id="table-parametersNj"
+                                         var="parameter"
+                                         widgetVar="pWidgetVar"
+                                         tableStyleClass="table table-striped table-hover"
+                                         value="#{settingsGeneralBean.listParametersNJ}"
+                                         paginator="true"
+                                         paginatorPosition="bottom"
+                                         rowIndexVar="index"
+                                         emptyMessage="#{msg['general.table.noinfo']}">
+
+                                <p:column headerText="#{msg['settings.parameters.table.idParameter']}" width="120" sortBy="#{parameter.idParameter}" >
+                                    <h:outputText value="#{parameter.idParameter}" />
+                                </p:column>
+                                <p:column headerText="#{msg['settings.parameters.table.dateCreated']}" width="90" sortBy="#{parameter.dateCreated}" >
+                                    <h:outputText value="#{parameter.dateCreated}" >
+                                        <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{msg['settings.parameters.table.parameterBLOB']}" width="40" style="text-align: center !important;" >
+                                    <ui:fragment rendered="#{(not empty parameter.contentParameter)}">
+                                        <span class="glyphicon glyphicon-ok-sign"></span>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{(empty parameter.contentParameter)}">
+                                        <span class="glyphicon glyphicon-remove-sign"></span>
+                                    </ui:fragment>
+                                </p:column>
+                                <p:column headerText="#{msg['settings.parameters.table.description']}" width="300" >
+                                    <h:outputText value="#{parameter.description}" />
+                                </p:column>
+                                <p:column headerText="#{msg['settings.parameters.table.dateUpdated']}" width="90" sortBy="#{parameter.dateUpdated}" >
+                                    <h:outputText value="#{parameter.dateUpdated}" >
+                                        <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{msg['general.label.edit']}" width="40" style="text-align: center !important;" >
+                                    <p:commandLink styleClass="glyphicon glyphicon-edit"
+                                                   oncomplete="PF('wv-edit-parameter').show();"
+                                                   action="#{settingsGeneralBean.actionViewEditParameter(parameter)}"
+                                                   update=":form-dlg-edit-parameter"/>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </div>
+                    </fieldset>
+                </div>
+
+            </h:form>
+
+            <h:form id="form-dlg-edit-parameter" styleClass="form-horizontal">
+                <p:dialog id="dlg-edit-parameter"
+                          widgetVar="wv-edit-parameter"
+                          modal="true"
+                          resizable="false"
+                          width="50%">
+                    <p:ajax event="close" resetValues="true" update="panel-edit-parameter"/>
+                    <p:panel id="panel-edit-parameter">
+                        <div class="well">
+                            <p:messages id="messages-01"
+                                        autoUpdate="true"
+                                        closable="true" />
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="nameParameter" class="col-md-3 control-label">Nombre Parametro</label>
+                                    <div class="col-md-7">
+                                        <p:inputText id="nameParameter"
+                                                     styleClass="form-control"
+                                                     value="#{settingsGeneralBean.parametersNJView.idParameter}"
+                                                     required="true"
+                                                     readonly="true"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="strParameter" class="col-md-3 control-label">Contenido Parametro</label>
+                                    <div class="col-md-7">
+                                        <p:inputText id="strParameter"
+                                                     styleClass="form-control"
+                                                     value="#{settingsGeneralBean.parameterString}"
+                                                     rendered="#{!settingsGeneralBean.selectParameterBLOBvsStr}"/>
+
+                                        <p:fileUpload id="blobParameter"                                             
+                                                      styleClass="form-control center-block"
+                                                      value="#{settingsGeneralBean.uploadedFileParameterBLOB}"                                                        
+                                                      fileUploadListener="#{settingsGeneralBean.actionListerFileUpload}"
+                                                      skinSimple="true"
+                                                      auto="true"
+                                                      label="#{msg['general.label.archivo.upload']}"
+                                                      dragDropSupport="false"
+                                                      update="panel-edit-parameter"
+                                                      rendered="#{settingsGeneralBean.selectParameterBLOBvsStr}">
+                                        </p:fileUpload>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p:inputSwitch value="#{settingsGeneralBean.selectParameterBLOBvsStr}"
+                                                       style="border: 1px solid #cccccc;">
+                                            <p:ajax update="panel-edit-parameter" />
+                                        </p:inputSwitch>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descriptionParameter" class="col-md-3 control-label">Descripcion Parametro</label>
+                                    <div class="col-md-7">
+                                        <p:inputTextarea id="descriptionParameter"
+                                                         styleClass="form-control"
+                                                         value="#{settingsGeneralBean.parametersNJView.description}"
+                                                         required="true"/>
+                                    </div>
+                                </div>
+                                <div class="form-group text-center">
+                                    <p:commandButton id="btn-panel-edit-parameter"
+                                                     styleClass="btn btn-default"
+                                                     value="#{msg['general.label.edit']}"
+                                                     action="#{settingsGeneralBean.actionEditParameter}"
+                                                     update="panel-edit-parameter messages-01" />
+                                </div>
+                            </fieldset>
+                        </div>
+                    </p:panel>
+                </p:dialog>
+            </h:form>
+
+        </div>
+    </ui:define>
+</ui:composition>

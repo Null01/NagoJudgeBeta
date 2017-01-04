@@ -1,0 +1,88 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    template="/home.xhtml">
+
+    <ui:define name="content">
+
+        <div class="panel panel-default">
+
+            <p:accordionPanel id="accordion-panel-testing">
+
+                <p:tab id="tab-01" title="Email Administrator">
+                    <div class="well">
+
+                        <h:form id="form-test-email" class="form-horizontal" >
+                            <p:messages id="messages-01"
+                                        autoUpdate="true"
+                                        closable="true" />
+
+                            <div class="panel-body">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label for="sendSubject" class="col-md-1 control-label">#{msg['settings.test.label.sendSubject']}</label>
+                                        <div class="col-md-8">
+                                            <p:inputText id="sendSubject"
+                                                         styleClass="form-control"
+                                                         value="#{settingsTestingBean.sendSubject}"
+                                                         required="true"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p:commandButton id="btn-send-email"
+                                                             styleClass="btn btn-default"
+                                                             value="Send Email"
+                                                             action="#{settingsTestingBean.actionSendEmail}"
+                                                             update="@form" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sendTo" class="col-md-1 control-label">#{msg['settings.test.label.sentTo']}</label>
+                                        <div class="col-md-8">
+                                            <p:inputText id="sendTo"
+                                                         styleClass="form-control"
+                                                         value="#{settingsTestingBean.sendTo}"
+                                                         required="true">
+                                                <f:validateRegex
+                                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="text-area-send-composite" class="col-md-1 control-label">#{msg['settings.test.label.sendComposite']}</label>
+                                        <div class="col-md-8" style="height: 250px;">
+                                            <pe:ckEditor id="editor-send-composite"
+                                                         value="#{settingsTestingBean.sendComposite}"
+                                                         toolbar="[['Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo'], ['SpellChecker', 'Scayt'], ['Bold','Italic','Strike','-','RemoveFormat'], ['Styles','Format'], ['Source']]"
+                                                         defaultLanguage="es"
+                                                         width="100%" />
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </h:form>
+
+                    </div>
+                </p:tab>
+
+                <p:tab id="tab-02" title="">
+                    <div class="well">
+
+                    </div>
+                </p:tab>
+
+                <p:tab id="tab-03" title="">
+                    <div class="well">
+
+                    </div>
+                </p:tab>
+
+            </p:accordionPanel>
+
+        </div>
+    </ui:define>
+</ui:composition>

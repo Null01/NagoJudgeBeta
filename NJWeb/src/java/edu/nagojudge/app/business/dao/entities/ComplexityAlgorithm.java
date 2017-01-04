@@ -29,51 +29,51 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "CATEGORY_PROBLEM")
+@Table(name = "COMPLEXITY_ALGORITHM")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CategoryProblem.findAll", query = "SELECT c FROM CategoryProblem c")})
-public class CategoryProblem implements Serializable {
+    @NamedQuery(name = "ComplexityAlgorithm.findAll", query = "SELECT c FROM ComplexityAlgorithm c")})
+public class ComplexityAlgorithm implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "ID_CATEGORY")
-    private Integer idCategory;
+    @Column(name = "ID_COMPLEXITY_ALGORITHM")
+    private Integer idComplexityAlgorithm;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "NAME_CATEGORY")
-    private String nameCategory;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCategory", fetch = FetchType.LAZY)
+    @Column(name = "NAME_COMPLEXITY_ALGORITHM")
+    private String nameComplexityAlgorithm;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idComplexityAlgorithmMax", fetch = FetchType.LAZY)
     private List<Problem> problemList;
 
-    public CategoryProblem() {
+    public ComplexityAlgorithm() {
     }
 
-    public CategoryProblem(Integer idCategory) {
-        this.idCategory = idCategory;
+    public ComplexityAlgorithm(Integer idComplexityAlgorithm) {
+        this.idComplexityAlgorithm = idComplexityAlgorithm;
     }
 
-    public CategoryProblem(Integer idCategory, String nameCategory) {
-        this.idCategory = idCategory;
-        this.nameCategory = nameCategory;
+    public ComplexityAlgorithm(Integer idComplexityAlgorithm, String nameComplexityAlgorithm) {
+        this.idComplexityAlgorithm = idComplexityAlgorithm;
+        this.nameComplexityAlgorithm = nameComplexityAlgorithm;
     }
 
-    public Integer getIdCategory() {
-        return idCategory;
+    public Integer getIdComplexityAlgorithm() {
+        return idComplexityAlgorithm;
     }
 
-    public void setIdCategory(Integer idCategory) {
-        this.idCategory = idCategory;
+    public void setIdComplexityAlgorithm(Integer idComplexityAlgorithm) {
+        this.idComplexityAlgorithm = idComplexityAlgorithm;
     }
 
-    public String getNameCategory() {
-        return nameCategory;
+    public String getNameComplexityAlgorithm() {
+        return nameComplexityAlgorithm;
     }
 
-    public void setNameCategory(String nameCategory) {
-        this.nameCategory = nameCategory;
+    public void setNameComplexityAlgorithm(String nameComplexityAlgorithm) {
+        this.nameComplexityAlgorithm = nameComplexityAlgorithm;
     }
 
     @XmlTransient
@@ -88,18 +88,18 @@ public class CategoryProblem implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idCategory != null ? idCategory.hashCode() : 0);
+        hash += (idComplexityAlgorithm != null ? idComplexityAlgorithm.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CategoryProblem)) {
+        if (!(object instanceof ComplexityAlgorithm)) {
             return false;
         }
-        CategoryProblem other = (CategoryProblem) object;
-        if ((this.idCategory == null && other.idCategory != null) || (this.idCategory != null && !this.idCategory.equals(other.idCategory))) {
+        ComplexityAlgorithm other = (ComplexityAlgorithm) object;
+        if ((this.idComplexityAlgorithm == null && other.idComplexityAlgorithm != null) || (this.idComplexityAlgorithm != null && !this.idComplexityAlgorithm.equals(other.idComplexityAlgorithm))) {
             return false;
         }
         return true;
@@ -107,7 +107,7 @@ public class CategoryProblem implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.app.business.dao.entities.CategoryProblem[ idCategory=" + idCategory + " ]";
+        return "edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm[ idComplexityAlgorithm=" + idComplexityAlgorithm + " ]";
     }
     
 }

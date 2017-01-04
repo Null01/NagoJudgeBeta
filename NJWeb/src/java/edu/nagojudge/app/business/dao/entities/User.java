@@ -56,7 +56,7 @@ public class User implements Serializable {
     @Column(name = "LAST_NAME")
     private String lastName;
     @Column(name = "DATE_BIRTHDAY")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date dateBirthday;
     @JoinColumn(name = "ID_ACCOUNT", referencedColumnName = "ID_ACCOUNT")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

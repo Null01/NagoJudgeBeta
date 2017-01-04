@@ -7,6 +7,7 @@ package edu.nagojudge.web.listeners;
 
 import edu.nagojudge.app.utils.constants.IKeysApplication;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -25,24 +26,24 @@ import org.apache.log4j.Logger;
  */
 @WebFilter(filterName = "actionsNavigationFilter", urlPatterns = {"/*"})
 public class ActionsNavigationFilter implements Filter {
-
+    
     private final Logger logger = Logger.getLogger(ActionsNavigationFilter.class);
-
+    
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         logger.info("init - ActionsNavigationFilter");
     }
-
+    
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-
+        
         String requestURI = httpRequest.getRequestURI();
         String tokens[] = requestURI.split("/");
         HttpSession session = httpRequest.getSession(false);
         String indexURI = "/go/";
-
+        
         boolean createSession = false;
         if (session != null) {
             Object object = session.getAttribute(IKeysApplication.KEY_DATA_USER_EMAIL);
@@ -50,7 +51,7 @@ public class ActionsNavigationFilter implements Filter {
                 createSession = true;
             }
         }
-
+        
         if (tokens[tokens.length - 1].endsWith(".xhtml")) {
             if (!createSession) {
                 httpResponse.sendRedirect(indexURI);
@@ -59,12 +60,12 @@ public class ActionsNavigationFilter implements Filter {
         } else {
             chain.doFilter(request, response);
         }
-
+        
     }
-
+    
     @Override
     public void destroy() {
         logger.info("destroy - ActionsNavigationFilter");
     }
-
+    
 }

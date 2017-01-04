@@ -111,3 +111,8 @@ input[type="text"], input[type="file"]{
     border: 0 none !important;
     padding: 0em !important;
 }
+
+.font-generic{
+    font-family: "Source Sans Pro",Calibri,Candara,Arial,sans-serif !important;
+    font-size: 15px;
+}

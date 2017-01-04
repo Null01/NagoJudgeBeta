@@ -11,13 +11,12 @@ import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.CategoryProblem;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
-import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -45,8 +44,8 @@ public class ProblemsBean implements Serializable {
 
     private final String KEYS_REQUEST[] = {"idProblem", "idAccount"};
 
-    private List<ProblemPojo> listProblems;
-    private List<ProblemPojo> filteredProblems;
+    private List<ProblemMessage> listProblems;
+    private List<ProblemMessage> filteredProblems;
     private String searchParameter;
 
     private CategoryProblem categoryProblemView = new CategoryProblem();
@@ -139,19 +138,19 @@ public class ProblemsBean implements Serializable {
         }
     }
 
-    public List<ProblemPojo> getListProblems() {
+    public List<ProblemMessage> getListProblems() {
         return listProblems;
     }
 
-    public void setListProblems(List<ProblemPojo> listProblems) {
+    public void setListProblems(List<ProblemMessage> listProblems) {
         this.listProblems = listProblems;
     }
 
-    public List<ProblemPojo> getFilteredProblems() {
+    public List<ProblemMessage> getFilteredProblems() {
         return filteredProblems;
     }
 
-    public void setFilteredProblems(List<ProblemPojo> filteredProblems) {
+    public void setFilteredProblems(List<ProblemMessage> filteredProblems) {
         this.filteredProblems = filteredProblems;
     }
 

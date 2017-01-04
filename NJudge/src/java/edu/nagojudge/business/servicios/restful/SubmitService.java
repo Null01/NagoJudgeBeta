@@ -10,7 +10,6 @@ import edu.nagojudge.business.dao.beans.AuthenticationFacade;
 import edu.nagojudge.business.dao.beans.JudgeFacade;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
-import edu.nagojudge.msg.pojo.ResponseMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -21,7 +20,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 /**

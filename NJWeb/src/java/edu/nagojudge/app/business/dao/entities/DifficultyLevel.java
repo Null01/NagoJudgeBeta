@@ -12,6 +12,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,10 +36,10 @@ import javax.xml.bind.annotation.XmlTransient;
 public class DifficultyLevel implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "ID_DIFFICULTY")
-    private Long idDifficulty;
+    private Integer idDifficulty;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -49,20 +51,20 @@ public class DifficultyLevel implements Serializable {
     public DifficultyLevel() {
     }
 
-    public DifficultyLevel(Long idDifficulty) {
+    public DifficultyLevel(Integer idDifficulty) {
         this.idDifficulty = idDifficulty;
     }
 
-    public DifficultyLevel(Long idDifficulty, String nameDifficulty) {
+    public DifficultyLevel(Integer idDifficulty, String nameDifficulty) {
         this.idDifficulty = idDifficulty;
         this.nameDifficulty = nameDifficulty;
     }
 
-    public Long getIdDifficulty() {
+    public Integer getIdDifficulty() {
         return idDifficulty;
     }
 
-    public void setIdDifficulty(Long idDifficulty) {
+    public void setIdDifficulty(Integer idDifficulty) {
         this.idDifficulty = idDifficulty;
     }
 

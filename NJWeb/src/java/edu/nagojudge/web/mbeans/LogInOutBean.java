@@ -10,6 +10,7 @@ import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;

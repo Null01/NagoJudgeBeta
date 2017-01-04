@@ -71,12 +71,14 @@ public class Challenge implements Serializable {
     @Size(max = 65535)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Size(min = 1, max = 65535)
-    @Column(name = "IDS_PROBLEMS")
-    private String idsProblems;
+    @Column(name = "DATE_CREATED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated;
+    @JoinTable(name = "CHALLENGE_PROBLEM", joinColumns = {
+        @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")}, inverseJoinColumns = {
+        @JoinColumn(name = "ID_PROBLEM", referencedColumnName = "ID_PROBLEM")})
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Problem> problemList;
     @JoinTable(name = "CHALLENGE_USER", joinColumns = {
         @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")}, inverseJoinColumns = {
         @JoinColumn(name = "ID_TEAM_CONTEST", referencedColumnName = "ID_TEAM_CONTEST")})
@@ -90,14 +92,13 @@ public class Challenge implements Serializable {
         this.idChallenge = idChallenge;
     }
 
-    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, short quantityProblems, Date dateChallenge, int durationMin, String idsProblems) {
+    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, short quantityProblems, Date dateChallenge, int durationMin) {
         this.idChallenge = idChallenge;
         this.nameChallenge = nameChallenge;
         this.idAccountOrganizer = idAccountOrganizer;
         this.quantityProblems = quantityProblems;
         this.dateChallenge = dateChallenge;
         this.durationMin = durationMin;
-        this.idsProblems = idsProblems;
     }
 
     public Long getIdChallenge() {
@@ -156,12 +157,21 @@ public class Challenge implements Serializable {
         this.description = description;
     }
 
-    public String getIdsProblems() {
-        return idsProblems;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setIdsProblems(String idsProblems) {
-        this.idsProblems = idsProblems;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    @XmlTransient
+    public List<Problem> getProblemList() {
+        return problemList;
+    }
+
+    public void setProblemList(List<Problem> problemList) {
+        this.problemList = problemList;
     }
 
     @XmlTransient

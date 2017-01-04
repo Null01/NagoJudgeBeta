@@ -8,8 +8,8 @@ package edu.nagojudge.web.mbeans;
 import edu.nagojudge.app.business.dao.beans.ChallengeFacadeDAO;
 import edu.nagojudge.app.business.dao.beans.ProblemFacadeDAO;
 import edu.nagojudge.app.business.dao.entities.Challenge;
-import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.tools.utils.FormatUtil;
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,8 +48,8 @@ public class ChallengeBean implements Serializable {
 
     private Challenge challengeView = new Challenge();
     private Map<Long, Boolean> mapProblemsSelected = new HashMap<Long, Boolean>();
-    private Map<Long, ProblemPojo> mapProblemsSelectedObject = new HashMap<Long, ProblemPojo>();
-    private List<ProblemPojo> listProblemsSelectedFinally = new ArrayList<ProblemPojo>();
+    private Map<Long, ProblemMessage> mapProblemsSelectedObject = new HashMap<Long, ProblemMessage>();
+    private List<ProblemMessage> listProblemsSelectedFinally = new ArrayList<ProblemMessage>();
 
     private List<String> listTimesStarted = new ArrayList<String>();
     private String timeStartSelected;
@@ -58,8 +58,8 @@ public class ChallengeBean implements Serializable {
     private List<String> listQuantityProblems = new ArrayList<String>();
     private String quantityProblemsStartSelected;
 
-    private List<ProblemPojo> listProblems;
-    private List<ProblemPojo> filteredProblems;
+    private List<ProblemMessage> listProblems;
+    private List<ProblemMessage> filteredProblems;
     private String searchParameter;
 
     public ChallengeBean() {
@@ -72,7 +72,7 @@ public class ChallengeBean implements Serializable {
         this.listTimesStarted = challengeFacade.obtenerListaHorasInicioCompetencias();
         this.listDurationsStarted = challengeFacade.obtenerListaDuracionCompetencias();
         this.listQuantityProblems = challengeFacade.obtenerListaNumeroEnunciados();
-        for (ProblemPojo problemPojo : listProblems) {
+        for (ProblemMessage problemPojo : listProblems) {
             mapProblemsSelected.put(problemPojo.getIdProblem(), Boolean.FALSE);
             mapProblemsSelectedObject.put(problemPojo.getIdProblem(), problemPojo);
         }
@@ -137,19 +137,19 @@ public class ChallengeBean implements Serializable {
         this.mapProblemsSelected = mapProblemsSelected;
     }
 
-    public Map<Long, ProblemPojo> getMapProblemsSelectedObject() {
+    public Map<Long, ProblemMessage> getMapProblemsSelectedObject() {
         return mapProblemsSelectedObject;
     }
 
-    public void setMapProblemsSelectedObject(Map<Long, ProblemPojo> mapProblemsSelectedObject) {
+    public void setMapProblemsSelectedObject(Map<Long, ProblemMessage> mapProblemsSelectedObject) {
         this.mapProblemsSelectedObject = mapProblemsSelectedObject;
     }
 
-    public List<ProblemPojo> getListProblemsSelectedFinally() {
+    public List<ProblemMessage> getListProblemsSelectedFinally() {
         return listProblemsSelectedFinally;
     }
 
-    public void setListProblemsSelectedFinally(List<ProblemPojo> listProblemsSelectedFinally) {
+    public void setListProblemsSelectedFinally(List<ProblemMessage> listProblemsSelectedFinally) {
         this.listProblemsSelectedFinally = listProblemsSelectedFinally;
     }
 
@@ -201,19 +201,19 @@ public class ChallengeBean implements Serializable {
         this.quantityProblemsStartSelected = quantityProblemsStartSelected;
     }
 
-    public List<ProblemPojo> getListProblems() {
+    public List<ProblemMessage> getListProblems() {
         return listProblems;
     }
 
-    public void setListProblems(List<ProblemPojo> listProblems) {
+    public void setListProblems(List<ProblemMessage> listProblems) {
         this.listProblems = listProblems;
     }
 
-    public List<ProblemPojo> getFilteredProblems() {
+    public List<ProblemMessage> getFilteredProblems() {
         return filteredProblems;
     }
 
-    public void setFilteredProblems(List<ProblemPojo> filteredProblems) {
+    public void setFilteredProblems(List<ProblemMessage> filteredProblems) {
         this.filteredProblems = filteredProblems;
     }
 

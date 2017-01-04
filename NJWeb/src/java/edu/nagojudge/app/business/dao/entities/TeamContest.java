@@ -23,7 +23,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -43,8 +42,6 @@ public class TeamContest implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID_TEAM_CONTEST")
     private Long idTeamContest;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "DATE_REGISTER")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
@@ -59,11 +56,6 @@ public class TeamContest implements Serializable {
 
     public TeamContest(Long idTeamContest) {
         this.idTeamContest = idTeamContest;
-    }
-
-    public TeamContest(Long idTeamContest, Date dateRegister) {
-        this.idTeamContest = idTeamContest;
-        this.dateRegister = dateRegister;
     }
 
     public Long getIdTeamContest() {

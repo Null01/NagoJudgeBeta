@@ -44,7 +44,7 @@ public class Submit implements Serializable {
     private Long idSubmit;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 30)
     @Column(name = "STATUS_SUBMIT")
     private String statusSubmit;
     @Basic(optional = false)
@@ -61,7 +61,7 @@ public class Submit implements Serializable {
     private String msgJudge;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 10)
     @Column(name = "VISIBLE_WEB")
     private String visibleWeb;
     @JoinColumn(name = "ID_ACCOUNT", referencedColumnName = "ID_ACCOUNT")

@@ -32,6 +32,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 
 /**
@@ -70,20 +71,140 @@ public class BuildGenericEmail {
     public BuildGenericEmail(String fullPathFileProperties) throws IOException {
 
         this.message = loadProperties(fullPathFileProperties);
+    }
+
+    public void sendEmailHtml(final String to, final String subject, final StringBuilder contentTemplate, final List<MimeBodyPart> contentImages) throws MessagingException, Exception {
+        logger.debug("INICIA METODO - sendEmail()");
+        try {
+
+            validateEmail(to);
+
+            this.message.setFrom(new InternetAddress(from));
+            this.message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(to)});
+            this.message.setSubject(subject);
+            this.message.setSentDate(Calendar.getInstance().getTime());
+
+            Multipart multipart = new MimeMultipart("alternative");
+            MimeBodyPart html = new MimeBodyPart(); // Create the html part
+            html.setContent(contentTemplate.toString(), MediaType.TEXT_HTML + ";charset=utf-8");
+            multipart.addBodyPart(html);
+
+            if (contentImages != null) {
+                for (MimeBodyPart htmlImage : contentImages) {
+                    multipart.addBodyPart(htmlImage);
+                }
+            }
+
+            this.message.setContent(multipart); // Associate multi-part with message
+
+            Transport.send(message);
+            logger.debug("CORREO_ELECTRONICO ENVIADO @ECHO");
+
+        } catch (MessagingException ex) {
+            logger.error(ex);
+            throw ex;
+        } finally {
+            logger.debug("FINALIZA METODO - sendEmail()");
+        }
 
     }
 
-    private MimeMessage loadProperties(String fullPathFileProperties) throws IOException {
+    public void sendEmailPlain(final String to, final String subject, final StringBuilder content) throws MessagingException, Exception {
+        logger.debug("INICIA METODO - sendEmail()");
+        try {
+
+            validateEmail(to);
+
+            this.message.setFrom(new InternetAddress(from));
+            this.message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(to)});
+            this.message.setSubject(subject);
+            this.message.setSentDate(Calendar.getInstance().getTime());
+            this.message.setContent(content.toString(), MediaType.TEXT_HTML + ";charset=utf-8");
+
+            logger.debug("to [" + to + "]");
+            logger.debug("from [" + from + "]");
+            logger.debug("subject [" + subject + "]");
+            logger.debug("content [" + content.toString() + "]");
+
+            Transport.send(message);
+            logger.debug("CORREO_ELECTRONICO ENVIADO @ECHO");
+
+        } catch (MessagingException ex) {
+            logger.error(ex);
+            throw ex;
+        } finally {
+            logger.debug("FINALIZA METODO - sendEmail()");
+        }
+    }
+
+    public List<MimeBodyPart> addContentImage(final Map<String, String> content) throws MessagingException {
+        List<MimeBodyPart> outcome = new ArrayList<MimeBodyPart>();
+        for (Map.Entry<String, String> it : content.entrySet()) {
+            try {
+                String key = it.getKey();
+                String value = it.getValue();
+                MimeBodyPart mimeBodyPart = new MimeBodyPart();
+                DataSource dataSource = new FileDataSource(value);
+                mimeBodyPart.setDataHandler(new DataHandler(dataSource));
+                mimeBodyPart.setHeader("Content-ID", "<" + key + ">");
+                logger.debug("ID=[" + key + "]   VALUE=[" + value + "]");
+                outcome.add(mimeBodyPart);
+            } catch (MessagingException ex) {
+                logger.error(ex);
+                throw ex;
+            }
+        }
+        return outcome;
+    }
+
+    public StringBuilder getSourceCodeTemplate(final Map<String, String> valuesReplaceTemplate, final String fullPathTemplate) throws NagoJudgeException, IOException {
+        StringBuilder htmlBody = new StringBuilder();
+        try {
+            logger.debug("INICIA METODO - getSourceCodeTemplate() ");
+            boolean existFile = FileUtil.getInstance().existFile(fullPathTemplate);
+            if (!existFile) {
+                throw new NagoJudgeException("EL ARCHIVO [" + fullPathTemplate + "] NO EXISTE.");
+            }
+
+            BufferedReader in = new BufferedReader(new FileReader(fullPathTemplate));
+            String string;
+            while ((string = in.readLine()) != null) {
+                htmlBody.append(string);
+            }
+            String content = htmlBody.toString();
+            if (valuesReplaceTemplate != null) {
+                for (Map.Entry<String, String> row : valuesReplaceTemplate.entrySet()) {
+                    logger.debug("KEY={" + row.getKey() + "}   VALUE={" + row.getValue() + "}");
+                    content = content.replaceAll(row.getKey(), row.getValue());
+                }
+            }
+            htmlBody = new StringBuilder("<html>" + content + "</html>");
+            return htmlBody;
+        } catch (FileNotFoundException ex) {
+            logger.error(ex);
+            throw ex;
+        } catch (IOException ex) {
+            logger.error(ex);
+            throw ex;
+        } finally {
+            logger.debug("FINALIZA METODO - getSourceCodeTemplate() ");
+
+        }
+    }
+
+    private MimeMessage loadProperties(String fullPathFileConfig) throws IOException {
         try {
             logger.debug("INICIA METODO - loadProperties()");
-            Properties properties = FileUtil.getInstance().loadFileProperties(fullPathFileProperties);
-
-            host = (String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.smtp.host"), "");
-            port = Integer.parseInt((String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.smtp.port"), 0));
+            Properties properties = FileUtil.getInstance().loadFileProperties(fullPathFileConfig);
+            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+                logger.debug("CONTENT_PROPERTIES - KEY [" + entry.getKey() + "]  VALUE [" + entry.getValue() + "]");
+            }
+            host = (String) FormatUtil.getInstance().nvl(properties.get("mail.smtp.host"), "");
+            port = Integer.parseInt((String) FormatUtil.getInstance().nvl(properties.get("mail.smtp.port"), 0));
             from = (String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.smtp.from"), "");
-            username = (String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.usuario"), "");
+            username = (String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.user"), "");
             password = (String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.password"), "");
-            auth = Boolean.valueOf((String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.smtp.auth"), false));
+            auth = Boolean.valueOf((String) FormatUtil.getInstance().nvl(properties.get("mail.smtp.auth"), false));
             debug = Boolean.valueOf((String) FormatUtil.getInstance().nvl(properties.get("mail.nagojudge.debug"), false));
             String socketFactoryPort = (String) FormatUtil.getInstance().nvl(properties.get("mail.smtp.socketFactory.port"), 0);
             String socketFactoryClass = (String) FormatUtil.getInstance().nvl(properties.get("mail.smtp.socketFactory.class"), "");
@@ -136,97 +257,6 @@ public class BuildGenericEmail {
         } catch (AddressException ex) {
             logger.error(ex);
             throw ex;
-        }
-    }
-
-    public void sendEmail(String to, String subject, StringBuilder sourceCodeTemplate, List<MimeBodyPart> contentImages) throws MessagingException {
-        logger.debug("INICIA METODO - sendEmail()");
-        try {
-
-            validateEmail(to);
-
-            this.message.setFrom(new InternetAddress(from));
-            this.message.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(to)});
-            this.message.setSubject(subject);
-            this.message.setSentDate(Calendar.getInstance().getTime());
-
-            Multipart multipart = new MimeMultipart("alternative");
-            MimeBodyPart html = new MimeBodyPart(); // Create the html part
-            html.setContent(sourceCodeTemplate.toString(), "text/html");
-            multipart.addBodyPart(html);
-
-            if (contentImages != null) {
-                for (MimeBodyPart htmlImage : contentImages) {
-                    multipart.addBodyPart(htmlImage);
-                }
-            }
-
-            this.message.setContent(multipart); // Associate multi-part with message
-
-            Transport.send(message);
-            logger.debug("CORREO_ELECTRONICO ENVIADO @ECHO");
-
-        } catch (MessagingException ex) {
-            logger.error(ex);
-            throw ex;
-        } finally {
-            logger.debug("FINALIZA METODO - sendEmail()");
-        }
-
-    }
-
-    public List<MimeBodyPart> contentImage(Map<String, String> content) throws MessagingException {
-        List<MimeBodyPart> outcome = new ArrayList<MimeBodyPart>();
-        for (Map.Entry<String, String> it : content.entrySet()) {
-            try {
-                String key = it.getKey();
-                String value = it.getValue();
-                MimeBodyPart mimeBodyPart = new MimeBodyPart();
-                DataSource dataSource = new FileDataSource(value);
-                mimeBodyPart.setDataHandler(new DataHandler(dataSource));
-                mimeBodyPart.setHeader("Content-ID", "<" + key + ">");
-                logger.debug("ID=[" + key + "]   VALUE=[" + value + "]");
-                outcome.add(mimeBodyPart);
-            } catch (MessagingException ex) {
-                logger.error(ex);
-                throw ex;
-            }
-        }
-        return outcome;
-    }
-
-    public StringBuilder getSourceCodeTemplate(Map<String, String> valuesReplaceTemplate, String fullPathTemplate) throws NagoJudgeException, IOException {
-        StringBuilder htmlBody = new StringBuilder();
-        try {
-            logger.debug("INICIA METODO - getSourceCodeTemplate() ");
-            boolean existFile = FileUtil.getInstance().existFile(fullPathTemplate);
-            if (!existFile) {
-                throw new NagoJudgeException("EL ARCHIVO [" + fullPathTemplate + "] NO EXISTE.");
-            }
-
-            BufferedReader in = new BufferedReader(new FileReader(fullPathTemplate));
-            String string;
-            while ((string = in.readLine()) != null) {
-                htmlBody.append(string);
-            }
-            String content = htmlBody.toString();
-            if (valuesReplaceTemplate != null) {
-                for (Map.Entry<String, String> row : valuesReplaceTemplate.entrySet()) {
-                    logger.debug("KEY={" + row.getKey() + "}   VALUE={" + row.getValue() + "}");
-                    content = content.replaceAll(row.getKey(), row.getValue());
-                }
-            }
-            htmlBody = new StringBuilder("<html>" + content + "</html>");
-            return htmlBody;
-        } catch (FileNotFoundException ex) {
-            logger.error(ex);
-            throw ex;
-        } catch (IOException ex) {
-            logger.error(ex);
-            throw ex;
-        } finally {
-            logger.debug("FINALIZA METODO - getSourceCodeTemplate() ");
-
         }
     }
 

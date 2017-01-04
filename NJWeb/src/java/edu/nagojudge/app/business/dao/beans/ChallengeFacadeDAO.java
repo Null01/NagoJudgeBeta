@@ -6,14 +6,13 @@
 package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.Challenge;
-import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,26 +39,23 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
         super(Challenge.class);
     }
 
-    public String createChallenge(Challenge challenge, List<ProblemPojo> problemPojos) throws Exception {
+    public String createChallenge(Challenge challenge, List<ProblemMessage> problemsMessage) throws Exception {
         try {
             logger.debug("INICIA METODO - createChallenge()");
             StringBuilder sb = new StringBuilder();
             boolean first = true;
-            for (ProblemPojo p : problemPojos) {
+            for (ProblemMessage p : problemsMessage) {
                 if (!first) {
                     sb.append(",");
                 }
                 sb.append(p.getIdProblem());
                 first = false;
             }
-            challenge.setIdsProblems(sb.toString());
-            logger.debug("getIdsProblems()=" + challenge.getIdsProblems());
             logger.debug("getNameChallenge()=" + challenge.getNameChallenge());
             logger.debug("getDateChallenge()=" + challenge.getDateChallenge());
             logger.debug("getDurationMin()=" + challenge.getDurationMin());
             logger.debug("getIdAccountOrganizer()=" + challenge.getIdAccountOrganizer());
             logger.debug("getIdChallenge()=" + challenge.getIdChallenge());
-            logger.debug("getIdsProblems()=" + challenge.getIdsProblems());
             logger.debug("getQuantityProblems()=" + challenge.getQuantityProblems());
             logger.debug("getTeamContestList()=" + challenge.getTeamContestList());
             logger.debug("getDescription()=" + challenge.getDescription());

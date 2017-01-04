@@ -33,43 +33,45 @@ import org.primefaces.model.TreeNode;
 @ManagedBean
 @ViewScoped
 public class NavigationBean implements Serializable {
-
+    
     @EJB
     private FunctionUserFacadeDAO functionUserFacade;
-
+    
     private final Logger logger = Logger.getLogger(NavigationBean.class);
-
+    
     private TreeNode treeNavigation;
-
+    
     public NavigationBean() {
     }
-
+    
     @PostConstruct
     public void init() {
         if (treeNavigation == null) {
             treeNavigation = buildTreeNavigation();
         }
     }
-
+    
     public TreeNode getTreeNavigation() {
         return treeNavigation;
     }
-
+    
     public void setTreeNavigation(TreeNode treeNavigation) {
         this.treeNavigation = treeNavigation;
     }
-
+    
     public String actionRedirect(Object function) {
         FunctionUser redirect = (FunctionUser) function;
         return redirect.getUrlFunction() + "?faces-redirect=true";
     }
-
+    
     private TreeNode buildTreeNavigation() {
         TreeNode tree = new DefaultTreeNode("root", null);
         try {
             Object object = FacesUtil.getFacesUtil().getSessionMap().get(IKeysApplication.KEY_DATA_TYPE_USER);
             if (object == null) {
-                throw new NagoJudgeException("NO EXISTE UN TIPO USUARIO ASOCIADO A LA SESION.");
+                final String msgError = "NO EXISTE UN TIPO USUARIO ASOCIADO A LA SESION.";
+                logger.error(msgError);
+                throw new NagoJudgeException(msgError);
             }
             List<FunctionUser> list = functionUserFacade.findFunctionsAccessByRole(new Long(String.valueOf(object)));
             if (list != null) {
@@ -98,12 +100,12 @@ public class NavigationBean implements Serializable {
                     }
                 }
             }
-
+            
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
         return tree;
     }
-
+    
 }

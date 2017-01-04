@@ -6,6 +6,7 @@
 package edu.nagojudge.app.business.dao.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -17,11 +18,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -45,7 +49,7 @@ public class Problem implements Serializable {
     private Long idProblem;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 200)
     @Column(name = "NAME_PROBLEM")
     private String nameProblem;
     @Basic(optional = false)
@@ -61,6 +65,14 @@ public class Problem implements Serializable {
     @NotNull
     @Column(name = "TIME_LIMIT_SEG")
     private int timeLimitSeg;
+    @Column(name = "DATE_CREATED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated;
+    @ManyToMany(mappedBy = "problemList", fetch = FetchType.LAZY)
+    private List<Challenge> challengeList;
+    @JoinColumn(name = "ID_COMPLEXITY_ALGORITHM_MAX", referencedColumnName = "ID_COMPLEXITY_ALGORITHM")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private ComplexityAlgorithm idComplexityAlgorithmMax;
     @JoinColumn(name = "ID_DIFFICULTY", referencedColumnName = "ID_DIFFICULTY")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private DifficultyLevel idDifficulty;
@@ -124,6 +136,31 @@ public class Problem implements Serializable {
 
     public void setTimeLimitSeg(int timeLimitSeg) {
         this.timeLimitSeg = timeLimitSeg;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    @XmlTransient
+    public List<Challenge> getChallengeList() {
+        return challengeList;
+    }
+
+    public void setChallengeList(List<Challenge> challengeList) {
+        this.challengeList = challengeList;
+    }
+
+    public ComplexityAlgorithm getIdComplexityAlgorithmMax() {
+        return idComplexityAlgorithmMax;
+    }
+
+    public void setIdComplexityAlgorithmMax(ComplexityAlgorithm idComplexityAlgorithmMax) {
+        this.idComplexityAlgorithmMax = idComplexityAlgorithmMax;
     }
 
     public DifficultyLevel getIdDifficulty() {

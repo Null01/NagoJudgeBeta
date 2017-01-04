@@ -3,15 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.app.business.dao.pojo;
+package edu.nagojudge.msg.pojo;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author andresfelipegarciaduran
  */
-public class ProblemPojo implements Serializable{
+@XmlRootElement
+public class ProblemMessage implements Serializable {
 
     private Long idProblem;
     private String nameProblem;
@@ -29,10 +31,10 @@ public class ProblemPojo implements Serializable{
     private int statusTL;
     private int statusWR;
 
-    public ProblemPojo() {
+    public ProblemMessage() {
     }
 
-    public ProblemPojo(Long idProblem, String nameProblem, String author, String nameCategory, String nameDifficulty, String description, int timeLimitSeg, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
+    public ProblemMessage(Long idProblem, String nameProblem, String author, String nameCategory, String nameDifficulty, String description, int timeLimitSeg, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
         this.idProblem = idProblem;
         this.nameProblem = nameProblem;
         this.author = author;

@@ -30,7 +30,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.mail.MessagingException;
@@ -49,6 +48,12 @@ import org.apache.log4j.Logger;
 public class UserFacadeDAO extends AbstractFacade<User> implements Serializable {
 
     @EJB
+    private EmailFacadeDAO emailFacadeDAO;
+
+    @EJB
+    private SecurityFacadeDAO securityFacadeDAO;
+
+    @EJB
     private AccountFacadeDAO accountFacadeDAO;
 
     private final Logger logger = Logger.getLogger(UserFacadeDAO.class);
@@ -65,24 +70,24 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
         super(User.class);
     }
 
-    public User existUserRegistered(String email, String password) {
-        EntityManager em = getEntityManager();
-        User outcome = null;
-        StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT SHA2('").append(password).append("', ").append(TypeSHAEnum.SHA256_NUM.getTypeSha()).append(") ");
-        String passwordEncrypted = (String) em.createNativeQuery(sql.toString()).getSingleResult();
-        sql = new StringBuilder();
-        sql.append("SELECT p FROM ").append(User.class.getSimpleName()).append(" p WHERE p.idEmail = :email AND p.keyUser = :pass");
-        Query query = em.createQuery(sql.toString()).setParameter("email", email).setParameter("pass", passwordEncrypted);
-        List resultList = query.getResultList();
-        if (resultList != null && resultList.size() == 1) {
-            outcome = (User) resultList.get(0);
+    public void loginCompleteUser(String email, String password) throws NagoJudgeException {
+        try {
+            logger.debug("INICIA METODO - loginCompleteUser()");
+            User isRegisted = existUserRegistered(email, password);
+            if (isRegisted == null) {
+                throw new NagoJudgeException("Usuario no registrado");
+            }
+            HttpSession session = FacesUtil.getFacesUtil().getSession(true);
+            session.setAttribute(IKeysApplication.KEY_DATA_USER_EMAIL, isRegisted.getIdEmail());
+            session.setAttribute(IKeysApplication.KEY_DATA_USER_ACCOUNT, isRegisted.getIdAccount());
+            session.setAttribute(IKeysApplication.KEY_DATA_TYPE_USER, isRegisted.getIdType().getIdType());
+            logger.debug("LOGIN [" + email + "] SUCCESSFUL @ECHO");
+        } finally {
+            logger.debug("FINALIZA METODO - loginCompleteUser()");
         }
-
-        return outcome;
     }
 
-    public void validateFieldsUnique(String email) throws NagoJudgeException {
+    private void validateFieldsUnique(String email) throws NagoJudgeException {
         EntityManager em = getEntityManager();
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT COUNT(0) FROM USER WHERE LOWER(ID_EMAIL) = LOWER('").append(email).append("')");
@@ -96,7 +101,7 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
 
     public User findUserByIdAccount(long idAccount) {
         EntityManager em = getEntityManager();
-        User outcome = null;
+        User outcome;
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT p FROM ").append(User.class.getSimpleName()).append(" p WHERE p.idAccount.idAccount = :idAccount ");
         Query query = em.createQuery(sb.toString()).setParameter("idAccount", idAccount);
@@ -105,90 +110,36 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
         return outcome;
     }
 
-    public String encodeSHA2(String string, TypeSHAEnum typeSHAEnum) {
-        EntityManager em = getEntityManager();
-        String outcome = null;
-        StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT SHA2('").append(string).append("', ").append(typeSHAEnum.getTypeSha()).append(") ");
-        outcome = (String) em.createNativeQuery(sql.toString()).getSingleResult();
-
-        return outcome;
-    }
-
-    public void loginCompleteUser(String email, String password) throws NagoJudgeException {
-        User isRegisted = existUserRegistered(email, password);
-        if (isRegisted == null) {
-            throw new NagoJudgeException("Usuario no registrado");
-        }
-        HttpSession session = FacesUtil.getFacesUtil().getSession(true);
-        session.setAttribute(IKeysApplication.KEY_DATA_USER_EMAIL, isRegisted.getIdEmail());
-        session.setAttribute(IKeysApplication.KEY_DATA_USER_ACCOUNT, isRegisted.getIdAccount());
-        session.setAttribute(IKeysApplication.KEY_DATA_TYPE_USER, isRegisted.getIdType().getIdType());
-
-    }
-
     public String createUserCommon(User user, Account account) throws NoSuchFileException, NagoJudgeException, WriterException, IOException, MessagingException, Exception {
         logger.debug("INICIA METODO createUserCommon @ECHO");
         try {
 
-            logger.debug("getNickname=" + account.getNickname());
             account.setDateRegister(Calendar.getInstance().getTime());
-            logger.debug("getDateRegister=" + account.getDateRegister());
+            logger.debug("getDateRegister [" + account.getDateRegister() + "]");
+            logger.debug("getNickname [" + account.getNickname() + "]");
             accountFacadeDAO.validateFieldsUnique(account.getNickname());
             accountFacadeDAO.create(account);
 
-            logger.debug("getFirstName=" + user.getFirstName());
-            logger.debug("getLastName=" + user.getLastName());
-            logger.debug("getIdEmail=" + user.getIdEmail());
-            logger.debug("getDateBirthday=" + user.getDateBirthday());
-            logger.debug("getIdType=" + user.getIdType());
             user.setIdAccount(account);
-            logger.debug("getIdAccount=" + user.getIdAccount());
-            validateFieldsUnique(user.getIdEmail());
-            user.setKeyUser(encodeSHA2(user.getKeyUser(), TypeSHAEnum.SHA256_NUM));
-            logger.debug("getKeyUser=" + user.getKeyUser());
+            user.setKeyUser(securityFacadeDAO.encodeSHA2(user.getKeyUser(), TypeSHAEnum.SHA256));
+            logger.debug("getIdAccount [" + user.getIdAccount() + "]");
+            logger.debug("getFirstName [" + user.getFirstName() + "]");
+            logger.debug("getLastName [" + user.getLastName() + "]");
+            logger.debug("getIdEmail [" + user.getIdEmail() + "]");
+            logger.debug("getDateBirthday [" + user.getDateBirthday() + "]");
+            logger.debug("getIdType [" + user.getIdType() + "]");
+            logger.debug("getKeyUser [" + user.getKeyUser() + "]");
 
+            validateFieldsUnique(user.getIdEmail());
             create(user);
+
             logger.debug("SE CREO EL USUARIO CON LA CUENTA [" + user.getIdAccount() + "] EXITOSAMENTE");
 
-            StringBuilder textQRCode = new StringBuilder();
-            textQRCode.append("User: ").append(user.getIdEmail()).append("\n");
-            textQRCode.append("Password: ").append(user.getKeyUser()).append("\n\n");
-            textQRCode.append(IKeysApplication.KEY_PUBLIC_LABEL_TEAM).append("\n");
-
-            Map<String, String> mapValuesReplace = new HashMap<String, String>();
-            mapValuesReplace.put("->labelNickName", account.getNickname());
-            mapValuesReplace.put("->labelCorreoSoporte", "agarciad1@ucentral.edu.co");
-
-            String fullPathFileProperties = FacesUtil.getFacesUtil().getRealPath() + FacesUtil.getFacesUtil().getInitParameter("auth-email-config");
-            logger.debug("fullPathFileProperties=" + fullPathFileProperties);
-            String fullPathCodeSourceTemplate = FacesUtil.getFacesUtil().getRealPath() + FacesUtil.getFacesUtil().getInitParameter("template-success-register");
-            logger.debug("fullPathCodeSourceTemplate=" + fullPathCodeSourceTemplate);
-
             try {
-                BuildGenericEmail buildGenericEmail = new BuildGenericEmail(fullPathFileProperties);
-                QRGenerator generator = new QRGenerator();
-                BufferedImage bufferedImage = generator.createTextCode(textQRCode.toString(), 300, 300);
-                String fullPathFileQRCode = IResourcesPaths.PATH_ROOT_WORKSPACE_RESOURCE_WEB + File.separatorChar + String.valueOf(generator.hashCode()) + String.valueOf(user.hashCode()) + TypeFilesEnum.PNG.getExtension();
-                logger.debug("fullPathFileQRCode=" + fullPathFileQRCode);
-                String generateFileImageQRByUser = generator.generateFileImageQRByUser(bufferedImage, fullPathFileQRCode);
-                String fullPathNjLogo = IResourcesPaths.PATH_WORKSPACE_IMG_RESOURCE_WEB + File.separatorChar + "nj-logo" + TypeFilesEnum.GIF.getExtension();
-                logger.debug("fullPathNjLogo=" + fullPathNjLogo);
-
-                Map<String, String> mapValuesImgs = new HashMap<String, String>();
-                mapValuesImgs.put("code-qr", generateFileImageQRByUser);
-                mapValuesImgs.put("nj-logo", fullPathNjLogo);
-
-                logger.info(" INICIA LA GENERACION Y ENVIO DEL CORREO ELECTRONICO DE REGISTRO A " + user.getIdEmail());
-                String subject = IKeysApplication.KEY_PUBLIC_LABEL_TEAM + " - Confirmación Registro";
-                StringBuilder contentBody = buildGenericEmail.getSourceCodeTemplate(mapValuesReplace, fullPathCodeSourceTemplate);
-                List<MimeBodyPart> contentImage = buildGenericEmail.contentImage(mapValuesImgs);
-                buildGenericEmail.sendEmail(user.getIdEmail(), subject, contentBody, contentImage);
-                FileUtil.getInstance().removeFile(fullPathFileQRCode);
+                logger.info("INICIA LA GENERACION Y ENVIO DEL CORREO ELECTRONICO DE REGISTRO A " + user.getIdEmail());
+                emailFacadeDAO.sendEmailNewUser(user, account);
+                logger.info("ENVIO DEL CORREO ELECTRONICO A [" + user.getIdEmail() + "] @ECHO");
             } catch (NoSuchFileException ex) {
-                logger.error(ex);
-                throw ex;
-            } catch (WriterException ex) {
                 logger.error(ex);
                 throw ex;
             } catch (IOException ex) {
@@ -198,7 +149,7 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
                 logger.error(ex);
                 throw ex;
             } finally {
-                logger.info(" FINALIZA LA GENERACION Y ENVIO DEL CORREO ELECTRONICO DE REGISTRO A " + user.getIdEmail());
+                logger.info("FINALIZA LA GENERACION Y ENVIO DEL CORREO ELECTRONICO DE REGISTRO A " + user.getIdEmail());
             }
             return String.valueOf(account.getIdAccount());
         } catch (NagoJudgeException ex) {
@@ -212,10 +163,18 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
         }
     }
 
-    public String autoGenerateString() {
-        SecureRandom random = new SecureRandom();
-        String string = new BigInteger(130, random).toString(32);
-        return string.substring(0, 5);
+    public User existUserRegistered(String email, String password) {
+        EntityManager em = getEntityManager();
+        User outcome = null;
+        String passwordEncrypted = securityFacadeDAO.encodeSHA2(password, TypeSHAEnum.SHA256_NUM);
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT p FROM ").append(User.class.getSimpleName()).append(" p WHERE p.idEmail = :email AND p.keyUser = :pass");
+        Query query = em.createQuery(sql.toString()).setParameter("email", email).setParameter("pass", passwordEncrypted);
+        List resultList = query.getResultList();
+        if (resultList != null && resultList.size() == 1) {
+            outcome = (User) resultList.get(0);
+        }
+        return outcome;
     }
 
     public List<UserMessage> findAllUsersMessage() {
@@ -229,6 +188,12 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
         return outcome;
     }
 
+    public String autoGenerateString() {
+        SecureRandom random = new SecureRandom();
+        String string = new BigInteger(130, random).toString(32);
+        return string.substring(0, 5);
+    }
+
     private UserMessage parseUserEntityToMessage(User user) {
         UserMessage userMessage = new UserMessage();
         userMessage.setDateBirthday(user.getDateBirthday() == null ? 0 : user.getDateBirthday().getTime());
@@ -239,6 +204,10 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
         userMessage.setNameTypeUser(user.getIdType().getNameType());
         userMessage.setNicknameAccount(user.getIdAccount().getNickname());
         return userMessage;
+    }
+
+    public void persist(Object object) {
+        em.persist(object);
     }
 
 }

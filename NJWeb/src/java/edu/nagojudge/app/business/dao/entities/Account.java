@@ -43,8 +43,6 @@ public class Account implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID_ACCOUNT")
     private Long idAccount;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "DATE_REGISTER")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
@@ -54,11 +52,11 @@ public class Account implements Serializable {
     @Column(name = "NICKNAME")
     private String nickname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<TeamContest> teamContestList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<User> userList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
+    private List<Submit> submitList;
 
     public Account() {
     }
@@ -67,9 +65,8 @@ public class Account implements Serializable {
         this.idAccount = idAccount;
     }
 
-    public Account(Long idAccount, Date dateRegister, String nickname) {
+    public Account(Long idAccount, String nickname) {
         this.idAccount = idAccount;
-        this.dateRegister = dateRegister;
         this.nickname = nickname;
     }
 
@@ -98,15 +95,6 @@ public class Account implements Serializable {
     }
 
     @XmlTransient
-    public List<Submit> getSubmitList() {
-        return submitList;
-    }
-
-    public void setSubmitList(List<Submit> submitList) {
-        this.submitList = submitList;
-    }
-
-    @XmlTransient
     public List<TeamContest> getTeamContestList() {
         return teamContestList;
     }
@@ -122,6 +110,15 @@ public class Account implements Serializable {
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
+    }
+
+    @XmlTransient
+    public List<Submit> getSubmitList() {
+        return submitList;
+    }
+
+    public void setSubmitList(List<Submit> submitList) {
+        this.submitList = submitList;
     }
 
     @Override

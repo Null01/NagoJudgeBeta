@@ -9,10 +9,10 @@ import edu.nagojudge.app.business.dao.entities.Attachments;
 import edu.nagojudge.app.business.dao.entities.CategoryProblem;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
-import edu.nagojudge.app.business.dao.pojo.ProblemPojo;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.ValidatorUtil;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
@@ -26,7 +26,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -98,7 +97,7 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
         return mapStatisticsStatus;
     }
 
-    public List<ProblemPojo> findProblemEntitiesPojo() {
+    public List<ProblemMessage> findProblemEntitiesPojo() {
         Map<Long, Map<String, Long>> map = new HashMap<Long, Map<String, Long>>();
         EntityManager em = getEntityManager();
 
@@ -115,10 +114,10 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
             map.get(idProblem).put(status, value);
         }
 
-        List<ProblemPojo> problemPojos = new ArrayList<ProblemPojo>();
+        List<ProblemMessage> problemPojos = new ArrayList<ProblemMessage>();
         List<Problem> problems = findProblemEntities(true, -1, -1);
         for (Problem p : problems) {
-            ProblemPojo problemPojo = new ProblemPojo(p.getIdProblem(), p.getNameProblem(), p.getAuthor(), p.getIdCategory().getNameCategory(), p.getIdDifficulty().getNameDifficulty(),
+            ProblemMessage problemPojo = new ProblemMessage(p.getIdProblem(), p.getNameProblem(), p.getAuthor(), p.getIdCategory().getNameCategory(), p.getIdDifficulty().getNameDifficulty(),
                     p.getDescription(), p.getTimeLimitSeg(), 0, 0, 0, 0, 0, 0, 0, 0);
             Map<String, Long> mapValues = map.get(problemPojo.getIdProblem());
             if (mapValues != null) {
@@ -224,7 +223,7 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
             List<Attachments> attachmentses = new ArrayList<Attachments>();
             Attachments attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(problem, TypeSHAEnum.SHA256));
-            attachment.setDateLoad(Calendar.getInstance().getTime());
+            attachment.setDateCreated(Calendar.getInstance().getTime());
             attachment.setIdProblem(problemView);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension());
             attachmentses.add(attachment);
@@ -233,7 +232,7 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
 
             attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(input, TypeSHAEnum.SHA256));
-            attachment.setDateLoad(Calendar.getInstance().getTime());
+            attachment.setDateCreated(Calendar.getInstance().getTime());
             attachment.setIdProblem(problemView);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_IN.getExtension());
             attachmentses.add(attachment);
@@ -242,7 +241,7 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
 
             attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(output, TypeSHAEnum.SHA256));
-            attachment.setDateLoad(Calendar.getInstance().getTime());
+            attachment.setDateCreated(Calendar.getInstance().getTime());
             attachment.setIdProblem(problemView);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_OUT.getExtension());
             attachmentses.add(attachment);

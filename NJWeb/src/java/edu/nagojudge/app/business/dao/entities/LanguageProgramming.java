@@ -42,17 +42,17 @@ public class LanguageProgramming implements Serializable {
     private Long idLanguage;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 100)
     @Column(name = "NAME_LANGUAGE")
     private String nameLanguage;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 100)
     @Column(name = "VERSION")
     private String version;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 100)
     @Column(name = "EXTENSION")
     private String extension;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLanguage", fetch = FetchType.LAZY)
