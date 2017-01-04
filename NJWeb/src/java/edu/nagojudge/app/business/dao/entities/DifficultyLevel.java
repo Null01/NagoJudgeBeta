@@ -26,14 +26,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "DIFFICULTY_LEVEL")
+@Table(name = "difficulty_level", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DifficultyLevel.findAll", query = "SELECT d FROM DifficultyLevel d")})
 public class DifficultyLevel implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

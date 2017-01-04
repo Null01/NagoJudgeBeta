@@ -10,22 +10,18 @@ import edu.nagojudge.app.business.dao.beans.ProblemFacadeDAO;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.ProblemMessage;
-import edu.nagojudge.tools.utils.FormatUtil;
-import java.io.IOException;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.Flash;
 import org.apache.log4j.Logger;
+import org.primefaces.event.FlowEvent;
 
 /**
  *
@@ -76,15 +72,9 @@ public class ChallengeBean implements Serializable {
             mapProblemsSelected.put(problemPojo.getIdProblem(), Boolean.FALSE);
             mapProblemsSelectedObject.put(problemPojo.getIdProblem(), problemPojo);
         }
-
-        Flash flash = FacesUtil.getFacesUtil().getFlash();
-        if (flash.get(KEYS_REQUEST[1]) != null) {
-            Integer numProblems = new Integer(String.valueOf(flash.get(KEYS_REQUEST[1])));
-            challengeView.setQuantityProblems(numProblems.shortValue());
-        }
     }
 
-    public void actionUpdateListProblemsSelected() {
+    public void actionUpdateListenerProblemsSelected() {
         listProblemsSelectedFinally.clear();
         for (Map.Entry<Long, Boolean> entry : mapProblemsSelected.entrySet()) {
             if (entry.getValue()) {
@@ -93,31 +83,21 @@ public class ChallengeBean implements Serializable {
         }
     }
 
-    public void actionSaveCompleteCompetition() {
+    public String actionOnFlowProcessCreateChallenge(FlowEvent event) {
+        return event.getNewStep();
+    }
+
+    public void actionSaveCompleteChallenge() {
         try {
-            logger.debug("INICIA METODO - actionSaveCompleteCompetition()");
-            logger.debug("LIST_PROBLEMS_SELECTED=" + listProblemsSelectedFinally);
-            logger.debug("OBJ_CHALLENGE=" + challengeView);
-            logger.debug("duracionStartSelected=" + duracionStartSelected);
-            logger.debug("timeStartSelected=" + timeStartSelected);
-            logger.debug("quantityProblemsStartSelected=" + quantityProblemsStartSelected);
-            challengeView.setDurationMin(FormatUtil.getInstance().parseTimeToMinutes(duracionStartSelected));
-            challengeView.setDateChallenge(FormatUtil.getInstance().addTimeToDate(challengeView.getDateChallenge(), timeStartSelected));
-            challengeView.setQuantityProblems(Short.parseShort(quantityProblemsStartSelected));
-            String idChallengeCreated = challengeFacade.createChallenge(challengeView, listProblemsSelectedFinally);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Competencia #" + idChallengeCreated);
-            FacesUtil.getFacesUtil().redirect(TARGET_PATH);
-        } catch (ParseException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (IOException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+            logger.debug("INICIA METODO - actionSaveCompleteChallenge()");
+            String challengeId = challengeFacade.createChallenge(challengeView, listProblemsSelectedFinally);
+            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Competencia #" + challengeId);
+            FacesUtil.getFacesUtil().redirect("/go/modules/practice/contest/search.xhtml");
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } finally {
-            logger.debug("FINALIZA METODO - actionSaveCompleteCompetition()");
+            logger.debug("FINALIZA METODO - actionSaveCompleteChallenge()");
         }
     }
 

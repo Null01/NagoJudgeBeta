@@ -26,14 +26,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "FUNCTION_USER")
+@Table(name = "function_user", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "FunctionUser.findAll", query = "SELECT f FROM FunctionUser f")})
 public class FunctionUser implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

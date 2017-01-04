@@ -26,14 +26,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "COMPLEXITY_ALGORITHM")
+@Table(name = "complexity_algorithm", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ComplexityAlgorithm.findAll", query = "SELECT c FROM ComplexityAlgorithm c")})
 public class ComplexityAlgorithm implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

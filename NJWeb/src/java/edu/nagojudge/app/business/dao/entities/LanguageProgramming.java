@@ -26,14 +26,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "LANGUAGE_PROGRAMMING")
+@Table(name = "language_programming", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LanguageProgramming.findAll", query = "SELECT l FROM LanguageProgramming l")})
 public class LanguageProgramming implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

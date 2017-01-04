@@ -28,14 +28,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "SUBMIT")
+@Table(name = "submit", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Submit.findAll", query = "SELECT s FROM Submit s")})
 public class Submit implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

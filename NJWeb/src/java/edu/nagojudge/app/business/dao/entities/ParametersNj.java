@@ -23,14 +23,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "PARAMETERS_NJ", catalog = "njlive", schema = "")
+@Table(name = "parameters_nj", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ParametersNj.findAll", query = "SELECT p FROM ParametersNj p")})
 public class ParametersNj implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)

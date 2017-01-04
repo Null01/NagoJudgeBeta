@@ -6,6 +6,8 @@
 package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.Challenge;
+import edu.nagojudge.app.business.dao.entities.Problem;
+import edu.nagojudge.app.business.dao.entities.TeamContest;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,23 +45,34 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
     public String createChallenge(Challenge challenge, List<ProblemMessage> problemsMessage) throws Exception {
         try {
             logger.debug("INICIA METODO - createChallenge()");
-            StringBuilder sb = new StringBuilder();
             boolean first = true;
-            for (ProblemMessage p : problemsMessage) {
+            String sql = "SELECT p FROM Problem p WHERE p.idProblem IN (";
+            for (ProblemMessage problemMessage : problemsMessage) {
                 if (!first) {
-                    sb.append(",");
+                    sql += ",";
                 }
-                sb.append(p.getIdProblem());
+                sql += problemMessage.getIdProblem();
                 first = false;
             }
-            logger.debug("getNameChallenge()=" + challenge.getNameChallenge());
-            logger.debug("getDateChallenge()=" + challenge.getDateChallenge());
-            logger.debug("getDurationMin()=" + challenge.getDurationMin());
+            sql += ")";
+            logger.debug("QUERY-ATTACH-PROBLEMS: " + sql);
+
+            Query query = em.createQuery(sql, Problem.class);
+            challenge.setProblemList(query.getResultList());
+
+            challenge.setDateCreated(Calendar.getInstance().getTime());
+            challenge.setDateEnd(challenge.getDateStart()); // Revisar
+
             logger.debug("getIdAccountOrganizer()=" + challenge.getIdAccountOrganizer());
-            logger.debug("getIdChallenge()=" + challenge.getIdChallenge());
+            logger.debug("getNameChallenge()=" + challenge.getNameChallenge());
+            logger.debug("getDescription()=" + challenge.getDescription());
             logger.debug("getQuantityProblems()=" + challenge.getQuantityProblems());
             logger.debug("getTeamContestList()=" + challenge.getTeamContestList());
-            logger.debug("getDescription()=" + challenge.getDescription());
+            logger.debug("getProblemList()=" + challenge.getProblemList());
+            logger.debug("getDateCreated()=" + challenge.getDateCreated());
+            logger.debug("getDateStart()=" + challenge.getDateStart());
+            logger.debug("getDateEnd()=" + challenge.getDateEnd());
+
             create(challenge);
             return String.valueOf(challenge.getIdChallenge());
         } catch (Exception ex) {

@@ -31,14 +31,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "CHALLENGE")
+@Table(name = "challenge", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Challenge.findAll", query = "SELECT c FROM Challenge c")})
 public class Challenge implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,13 +61,14 @@ public class Challenge implements Serializable {
     private short quantityProblems;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "DATE_CHALLENGE")
+    @Column(name = "DATE_START")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateChallenge;
+    private Date dateStart;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "DURATION_MIN")
-    private int durationMin;
+    @Column(name = "DATE_END")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateEnd;
     @Lob
     @Size(max = 65535)
     @Column(name = "DESCRIPTION")
@@ -74,12 +76,12 @@ public class Challenge implements Serializable {
     @Column(name = "DATE_CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
-    @JoinTable(name = "CHALLENGE_PROBLEM", joinColumns = {
+    @JoinTable(name = "challenge_problem", joinColumns = {
         @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")}, inverseJoinColumns = {
         @JoinColumn(name = "ID_PROBLEM", referencedColumnName = "ID_PROBLEM")})
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Problem> problemList;
-    @JoinTable(name = "CHALLENGE_USER", joinColumns = {
+    @JoinTable(name = "challenge_user", joinColumns = {
         @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")}, inverseJoinColumns = {
         @JoinColumn(name = "ID_TEAM_CONTEST", referencedColumnName = "ID_TEAM_CONTEST")})
     @ManyToMany(fetch = FetchType.LAZY)
@@ -92,13 +94,13 @@ public class Challenge implements Serializable {
         this.idChallenge = idChallenge;
     }
 
-    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, short quantityProblems, Date dateChallenge, int durationMin) {
+    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, short quantityProblems, Date dateStart, Date dateEnd) {
         this.idChallenge = idChallenge;
         this.nameChallenge = nameChallenge;
         this.idAccountOrganizer = idAccountOrganizer;
         this.quantityProblems = quantityProblems;
-        this.dateChallenge = dateChallenge;
-        this.durationMin = durationMin;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
     }
 
     public Long getIdChallenge() {
@@ -133,20 +135,20 @@ public class Challenge implements Serializable {
         this.quantityProblems = quantityProblems;
     }
 
-    public Date getDateChallenge() {
-        return dateChallenge;
+    public Date getDateStart() {
+        return dateStart;
     }
 
-    public void setDateChallenge(Date dateChallenge) {
-        this.dateChallenge = dateChallenge;
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
     }
 
-    public int getDurationMin() {
-        return durationMin;
+    public Date getDateEnd() {
+        return dateEnd;
     }
 
-    public void setDurationMin(int durationMin) {
-        this.durationMin = durationMin;
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
     }
 
     public String getDescription() {

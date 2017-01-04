@@ -29,14 +29,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "ACCOUNT")
+@Table(name = "account", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a")})
 public class Account implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,11 +53,11 @@ public class Account implements Serializable {
     @Column(name = "NICKNAME")
     private String nickname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
+    private List<Submit> submitList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<TeamContest> teamContestList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<User> userList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
 
     public Account() {
     }
@@ -95,6 +96,15 @@ public class Account implements Serializable {
     }
 
     @XmlTransient
+    public List<Submit> getSubmitList() {
+        return submitList;
+    }
+
+    public void setSubmitList(List<Submit> submitList) {
+        this.submitList = submitList;
+    }
+
+    @XmlTransient
     public List<TeamContest> getTeamContestList() {
         return teamContestList;
     }
@@ -110,15 +120,6 @@ public class Account implements Serializable {
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
-    }
-
-    @XmlTransient
-    public List<Submit> getSubmitList() {
-        return submitList;
-    }
-
-    public void setSubmitList(List<Submit> submitList) {
-        this.submitList = submitList;
     }
 
     @Override
