@@ -373,8 +373,10 @@ body{
 
 .container {
     position: absolute;
-    //padding-left: 525px !important;
-    //padding-top: 280px !important;
+    /*
+    padding-left: 525px !important;
+    padding-top: 280px !important;
+    */
     padding-left: 44.5% !important;
     padding-top: 18.5% !important;
 }

@@ -4,185 +4,238 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
-    template="/home.xhtml"
-    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+    template="/home.xhtml" >
 
     <ui:define name="content">
 
-        <link rel="stylesheet" href="css/editor-customized.css"/>
-
         <h:form id="form-create-challenge" class="form-horizontal">
+            <p:wizard flowListener="#{challengeBean.actionOnFlowProcessCreateChallenge}">
+                <p:tab id="wizard-tab-01-create-challenge" title="#{msg['challenge.config.create.datos.title']}">
 
-            <div class="panel panel-default">
-                <div class="panel-heading">#{msg['challenge.config.create.datos.title']}</div>
-                <div class="panel-body">
-
-                    <div class="well">
-                        <p:messages id="messages"
-                                    autoUpdate="true"
-                                    closable="true" />
+                    <div class="panel panel-default">
 
                         <div class="panel-body">
-                            <fieldset>
-                                <div class="form-group">
-                                    <label for="dateChallenge" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge']}</label>
-                                    <div class="col-md-1">
-                                        <p:calendar id="dateChallenge" pattern="MM/dd/yyyy" placeholder="02/05/2015" yearRange="c-50:c+5" navigator="true" required="true"
-                                                    value="#{challengeBean.challengeView.dateChallenge}" />
-                                    </div>
-                                    <label for="timeChallenge" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge']}</label>
-                                    <div class="col-md-1">
-                                        <p:selectOneMenu id="timeChallenge" styleClass="selected-list form-control" style="width: 100%;" 
-                                                         value="#{challengeBean.timeStartSelected}"  required="true" >
-                                            <f:selectItems value="#{challengeBean.listTimesStarted}" />                                               
-                                        </p:selectOneMenu>
-                                    </div>
+                            <div class="well">
+                                <p:messages id="messages01"
+                                            autoUpdate="true"
+                                            closable="true" />
 
-                                    <label for="duration" class="col-md-1 control-label">#{msg['challenge.label.duration']}</label>
-                                    <div class="col-md-1">
-                                        <p:selectOneMenu id="duration" styleClass="selected-list form-control" style="width: 100%;" 
-                                                         value="#{challengeBean.duracionStartSelected}"  required="true" >
-                                            <f:selectItems value="#{challengeBean.listDurationsStarted}" />                                               
-                                        </p:selectOneMenu>
-                                    </div>
-                                    <label for="quantityProblems" class="col-md-1 control-label">#{msg['challenge.label.quantityProblems']}</label>
-                                    <div class="col-md-1">
-                                        <p:selectOneMenu id="quantityProblems" styleClass="selected-list form-control" style="width: 100%;" 
-                                                         value="#{challengeBean.quantityProblemsStartSelected}"  required="true" >
-                                            <f:selectItems value="#{challengeBean.listQuantityProblems}" />                                               
-                                        </p:selectOneMenu>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="nameChallenge" class="col-md-2 control-label">#{msg['challenge.label.nameChallenge']}</label>
-                                    <div class="col-md-2">
-                                        <p:inputText styleClass="form-control" id="nameChallenge" placeholder="#{msg['challenge.label.nameChallenge']}" required="true"
-                                                     value="#{challengeBean.challengeView.nameChallenge}" />
-                                    </div>
-                                    <label for="descriptionChallenge" class="col-md-1 control-label">#{msg['challenge.label.descriptionChallenge']}</label>
-                                    <div class="col-md-6">
-                                        <p:inputTextarea id="descriptionProblem" rows="5" style="width: 100%;" autoResize="false" 
-                                                         placeholder="#{msg['challenge.label.descriptionChallenge.placeholder']}" required="true" 
-                                                         value="#{challengeBean.challengeView.description}" />
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </div>
-
-                    </div>
-
-                    <div class="well bs-component">
-
-                        <div class="panel-body">
-
-                            <p:panelGrid id="panelTitleProblemsSelected" style="background: inherit !important;">
-
-                                <ui:repeat id="reapeat" value="#{challengeBean.listProblemsSelectedFinally}" var="it" varStatus="itVS" >
-
-                                    <p:spacer rendered="#{itVS.index mod 4 eq 0 and itVS.index ne 0}" >
-                                        <br/> <br/>
-                                    </p:spacer>
-                                    <span class="label label-default" style="font-size: 20px;"> #{utilBean.formatCharacter(65 + itVS.index)} - #{it.nameProblem}  </span> 
-                                    <p:spacer width="2" />                                   
-                                </ui:repeat>
-                            </p:panelGrid>
-
-                            <p:spacer height="30"/>
-
-                            <p:dataTable id="table-problems-contest"
-                                         var="p"
-                                         widgetVar="cpWidgetVar"
-                                         tableStyleClass="table table-striped table-hover"
-                                         value="#{challengeBean.listProblems}"
-                                         styleClass="center-block"
-                                         filteredValue="#{challengeBean.filteredProblems}"
-                                         rowKey="#{p.idProblem}"
-                                         paginator="true"
-                                         paginatorPosition="bottom"
-                                         emptyMessage="#{msg['general.table.noinfo']}">
-                                <f:facet name="header">
-                                    <p:outputPanel>
+                                <div class="panel-body">
+                                    <fieldset>
                                         <div class="form-group">
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-search" aria-hidden="true" />
-                                                </span>
-                                                <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('cpWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{challengeBean.searchParameter}"/>
+                                            <label for="nameChallenge" class="col-md-2 control-label">#{msg['challenge.label.nameChallenge']}</label>
+                                            <div class="col-md-4">
+                                                <p:inputText id="nameChallenge"
+                                                             styleClass="form-control"
+                                                             placeholder="#{msg['challenge.label.nameChallenge']}"
+                                                             required="true"
+                                                             value="#{challengeBean.challengeView.nameChallenge}" />
+                                            </div>
+                                            <label for="dateChallenge" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge']}</label>
+                                            <div class="col-md-4">
+                                                <p:calendar id="dateChallenge"
+                                                            pattern="MM/dd/yyyy"                                                    
+                                                            placeholder="02/05/2015"
+                                                            yearRange="c-50:c+5"
+                                                            navigator="true"
+                                                            required="true"
+                                                            value="#{challengeBean.challengeView.dateChallenge}" />
                                             </div>
                                         </div>
-                                    </p:outputPanel>
-                                </f:facet>
-                                <p:column headerText="" width="25">                                   
-                                    <p:selectBooleanCheckbox value="#{challengeBean.mapProblemsSelected[ p.idProblem ]}" >
-                                        <p:ajax listener="#{challengeBean.actionUpdateListProblemsSelected}" update="@form" />
-                                    </p:selectBooleanCheckbox>
-                                </p:column>
-                                <p:column headerText="Id" width="130" sortBy="#{p.idProblem}" filterBy="#{p.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
-                                    <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
-                                </p:column>
-                                <p:column headerText="Problem" width="200" sortBy="#{p.nameProblem}">
-                                    <h:commandLink value="#{p.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                                        <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{p.idProblem}" />
-                                    </h:commandLink>
-                                </p:column>
-                                <p:column headerText="Autor" width="240" sortBy="#{p.author}" filterBy="#{p.author}"  filterStyle="display:none;" filterMatchMode="contains">
-                                    <h:outputText value="#{p.author}" />
-                                </p:column>
-                                <p:column headerText="TL" width="60" sortBy="#{p.timeLimitSeg}" filterBy="#{p.timeLimitSeg}" filterStyle="display:none;" filterMatchMode="contains">
-                                    <h:outputText value="#{p.timeLimitSeg}" />
-                                </p:column>
-                                <p:column headerText="Categoria" width="200" sortBy="#{p.nameCategory}"  filterBy="#{p.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
-                                    <h:outputText value="#{p.nameCategory}" />
-                                </p:column>
-                                <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}"  filterBy="#{p.nameDifficulty}" filterStyle="display:none;" filterMatchMode="contains">
-                                    <h:outputText value="#{p.nameDifficulty}" />
-                                </p:column>
-                                <p:column headerText="Descripcion" width="300">
-                                    <h:outputText value="#{p.description}" />
-                                </p:column>
-                                <p:column headerText="AC" width="30" style="text-align: center !important;" sortBy="#{p.statusAC}" >
-                                    <h:outputText value="#{p.statusAC}" />
-                                </p:column>
-                                <p:column headerText="WR" width="30" style="text-align: center !important;" sortBy="#{p.statusWR}" >
-                                    <h:outputText value="#{p.statusWR}" />
-                                </p:column>
-                                <p:column headerText="TL" width="30" style="text-align: center !important;" sortBy="#{p.statusTL}" >
-                                    <h:outputText value="#{p.statusTL}" />
-                                </p:column>
-                                <p:column headerText="RE" width="30" style="text-align: center !important;" sortBy="#{p.statusRE}" >
-                                    <h:outputText value="#{p.statusRE}" />
-                                </p:column>
-                                <p:column headerText="CE" width="30" style="text-align: center !important;" sortBy="#{p.statusCE}" >
-                                    <h:outputText value="#{p.statusCE}" />
-                                </p:column>
-                                <p:column headerText="CS" width="30" style="text-align: center !important;" sortBy="#{p.statusCS}" >
-                                    <h:outputText value="#{p.statusCS}" />
-                                </p:column>
-                                <p:column headerText="IP" width="30" style="text-align: center !important;" sortBy="#{p.statusIP}" >
-                                    <h:outputText value="#{p.statusIP}" />
-                                </p:column>
-                                <p:column headerText="Total" width="30" style="text-align: center !important;" sortBy="#{p.totalStatus}" >
-                                    <h:outputText value="#{p.totalStatus}" />
-                                </p:column>
-                            </p:dataTable>
 
-                            <p:spacer height="10" />
+                                        <div class="form-group">
+                                            <label for="timeChallenge" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge']}</label>
+                                            <div class="col-md-4">
+                                                <p:selectOneMenu id="timeChallenge"
+                                                                 styleClass="selected-list form-control"
+                                                                 style="width: 100%;" 
+                                                                 value="#{challengeBean.timeStartSelected}"
+                                                                 required="true">
+                                                    <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
+                                                    <f:selectItems value="#{challengeBean.listTimesStarted}"  />                                               
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <label for="duration" class="col-md-2 control-label">#{msg['challenge.label.duration']}</label>
+                                            <div class="col-md-4">
+                                                <p:selectOneMenu id="duration"
+                                                                 styleClass="selected-list form-control"
+                                                                 style="width: 100%;" 
+                                                                 value="#{challengeBean.duracionStartSelected}"
+                                                                 required="true">
+                                                    <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
+                                                    <f:selectItems value="#{challengeBean.listDurationsStarted}" />                                               
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
 
-                            <div class="form-group text-center">
-
-                                <p:commandButton id="btn-create-challenge"
-                                                 styleClass="btn btn-default"
-                                                 value="Guardar"
-                                                 action="#{challengeBean.actionSaveCompleteCompetition}"
-                                                 update="messages"/>
+                                        <div class="form-group">
+                                            <label for="descriptionChallenge" class="col-md-2 control-label">#{msg['challenge.label.descriptionChallenge']}</label>
+                                            <div class="col-md-4">
+                                                <p:inputTextarea id="descriptionProblem"
+                                                                 rows="5"
+                                                                 style="width: 100%;"
+                                                                 autoResize="false" 
+                                                                 placeholder="#{msg['challenge.label.descriptionChallenge.placeholder']}"
+                                                                 required="true" 
+                                                                 value="#{challengeBean.challengeView.description}" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
-
                         </div>
-
                     </div>
-                </div>
-            </div>
+                </p:tab>
+
+                <p:tab id="wizard-tab-02-create-challenge" title="Seleccion Ejercicios" >
+
+                    <div class="panel panel-default">
+
+                        <div class="panel-body">
+                            <div class="well">
+                                <p:messages id="messages02"
+                                            autoUpdate="true"
+                                            closable="true" />
+
+                                <div class="panel-body">
+
+
+                                    <p:panelGrid id="panelTitleProblemsSelected" style="background: inherit !important;">
+
+                                        <ui:repeat id="reapeat" value="#{challengeBean.listProblemsSelectedFinally}" var="it" varStatus="itVS" >
+                                            <p:spacer rendered="#{itVS.index mod 4 eq 0 and itVS.index ne 0}" >
+                                                <br/> <br/>
+                                            </p:spacer>
+                                            <span class="label label-default" style="font-size: 20px;"> #{utilBean.formatCharacter(65 + itVS.index)} - #{it.nameProblem}  </span> 
+                                            <p:spacer width="2" />                                   
+                                        </ui:repeat>
+                                    </p:panelGrid>
+
+                                    <p:spacer height="30"/>
+
+                                    <p:dataTable id="table-problems-contest"
+                                                 var="p"
+                                                 widgetVar="cpWidgetVar"
+                                                 tableStyleClass="table table-striped table-hover"
+                                                 value="#{challengeBean.listProblems}"
+                                                 styleClass="center-block"
+                                                 filteredValue="#{challengeBean.filteredProblems}"
+                                                 rowKey="#{p.idProblem}"
+                                                 paginator="true"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="#{msg['general.table.noinfo']}">
+                                        <f:facet name="header">
+                                            <p:outputPanel>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                                                        </span>
+                                                        <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('cpWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{challengeBean.searchParameter}"/>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </f:facet>
+
+                                        <p:column headerText="" width="25">                                   
+                                            <p:selectBooleanCheckbox value="#{challengeBean.mapProblemsSelected[ p.idProblem ]}" >
+                                                <p:ajax listener="#{challengeBean.actionUpdateListenerProblemsSelected}" update="@form" />
+                                            </p:selectBooleanCheckbox>
+                                        </p:column>
+                                        <p:column headerText="Id" width="80" sortBy="#{p.idProblem}" filterStyle="display:none;" >
+                                            <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
+                                        </p:column>
+                                        <p:column headerText="Problem" width="200" sortBy="#{p.nameProblem}">
+                                            <h:commandLink value="#{p.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
+                                                <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{p.idProblem}" />
+                                            </h:commandLink>
+                                        </p:column>
+                                        <p:column headerText="Autor" width="240" sortBy="#{p.author}" filterBy="#{p.author}" filterStyle="display:none;" filterMatchMode="contains">
+                                            <h:outputText value="#{p.author}" />
+                                        </p:column>
+                                        <p:column headerText="TL" width="80" sortBy="#{p.timeLimitSeg}" filterBy="#{p.timeLimitSeg}" filterStyle="display:none;" >
+                                            <h:outputText value="#{p.timeLimitSeg}" />
+                                        </p:column>
+                                        <p:column headerText="Categoria" width="200" sortBy="#{p.nameCategory}"  filterBy="#{p.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
+                                            <h:outputText value="#{p.nameCategory}" />
+                                        </p:column>
+                                        <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}"  filterBy="#{p.nameDifficulty}" filterStyle="display:none;" filterMatchMode="contains">
+                                            <h:outputText value="#{p.nameDifficulty}" />
+                                        </p:column>
+                                        <p:column headerText="AC" width="30" style="text-align: center !important;" sortBy="#{p.statusAC}" >
+                                            <h:outputText value="#{p.statusAC}" />
+                                        </p:column>
+                                        <p:column headerText="WR" width="30" style="text-align: center !important;" sortBy="#{p.statusWR}" >
+                                            <h:outputText value="#{p.statusWR}" />
+                                        </p:column>
+                                        <p:column headerText="TL" width="30" style="text-align: center !important;" sortBy="#{p.statusTL}" >
+                                            <h:outputText value="#{p.statusTL}" />
+                                        </p:column>
+                                        <p:column headerText="RE" width="30" style="text-align: center !important;" sortBy="#{p.statusRE}" >
+                                            <h:outputText value="#{p.statusRE}" />
+                                        </p:column>
+                                        <p:column headerText="CE" width="30" style="text-align: center !important;" sortBy="#{p.statusCE}" >
+                                            <h:outputText value="#{p.statusCE}" />
+                                        </p:column>
+                                        <p:column headerText="CS" width="30" style="text-align: center !important;" sortBy="#{p.statusCS}" >
+                                            <h:outputText value="#{p.statusCS}" />
+                                        </p:column>
+                                        <p:column headerText="IP" width="30" style="text-align: center !important;" sortBy="#{p.statusIP}" >
+                                            <h:outputText value="#{p.statusIP}" />
+                                        </p:column>
+                                        <p:column headerText="Total" width="30" style="text-align: center !important;" sortBy="#{p.totalStatus}" >
+                                            <h:outputText value="#{p.totalStatus}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p:tab>
+
+                <p:tab id="wizard-tab-03-create-challenge" title="Confirmación" >
+                    <div class="panel panel-default">
+                        <div class="panel-heading">#{msg['challenge.config.create.datos.title']}</div>
+                        <div class="panel-body">
+                            <div class="well">
+                                <div class="panel-body">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label for="outputNameChallenge" class="col-md-2 control-label">#{msg['challenge.label.nameChallenge']}</label>
+
+                                            <div class="col-md-4">
+                                                <p:outputLabel id="outputNameChallenge"
+                                                              styleClass="form-control"
+                                                              value="#{challengeBean.challengeView.nameChallenge}" />
+
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">#{msg['challenge.config.create.datos.title']}</div>
+                        <div class="panel-body">
+                            <div class="well">
+                                <div class="panel-body">
+                                    UNO
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <p:commandButton id="btn-create-challenge"
+                                         styleClass="btn btn-default"
+                                         value="Guardar"
+                                         process="@this" />
+                    </div>
+                </p:tab>
+
+
+            </p:wizard>
         </h:form>
     </ui:define>
 </ui:composition>
