@@ -24,6 +24,7 @@ public class UtilBean implements Serializable {
     private final int SIZE_FORMAT_PROBLEM_ID = 3;
     private final int SIZE_FORMAT_SUBMIT_ID = 5;
     private final int SIZE_FORMAT_ACCOUNT_ID = 5;
+    private final int SIZE_FORMAT_CHALLENGE_ID = 3;
 
     public UtilBean() {
     }
@@ -38,6 +39,10 @@ public class UtilBean implements Serializable {
 
     public String formatIdAccount(long id) {
         return FormatUtil.getInstance().buildZerosToLeft(id, SIZE_FORMAT_ACCOUNT_ID);
+    }
+
+    public String formatIdChallenge(long id) {
+        return FormatUtil.getInstance().buildZerosToLeft(id, SIZE_FORMAT_CHALLENGE_ID);
     }
 
     public String formatCharacter(int codeChar) {

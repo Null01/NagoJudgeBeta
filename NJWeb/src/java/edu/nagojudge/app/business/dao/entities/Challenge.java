@@ -57,10 +57,6 @@ public class Challenge implements Serializable {
     private long idAccountOrganizer;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "QUANTITY_PROBLEMS")
-    private short quantityProblems;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "DATE_START")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateStart;
@@ -94,11 +90,10 @@ public class Challenge implements Serializable {
         this.idChallenge = idChallenge;
     }
 
-    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, short quantityProblems, Date dateStart, Date dateEnd) {
+    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, Date dateStart, Date dateEnd) {
         this.idChallenge = idChallenge;
         this.nameChallenge = nameChallenge;
         this.idAccountOrganizer = idAccountOrganizer;
-        this.quantityProblems = quantityProblems;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
     }
@@ -125,14 +120,6 @@ public class Challenge implements Serializable {
 
     public void setIdAccountOrganizer(long idAccountOrganizer) {
         this.idAccountOrganizer = idAccountOrganizer;
-    }
-
-    public short getQuantityProblems() {
-        return quantityProblems;
-    }
-
-    public void setQuantityProblems(short quantityProblems) {
-        this.quantityProblems = quantityProblems;
     }
 
     public Date getDateStart() {
@@ -209,5 +196,5 @@ public class Challenge implements Serializable {
     public String toString() {
         return "edu.nagojudge.app.business.dao.entities.Challenge[ idChallenge=" + idChallenge + " ]";
     }
-    
+
 }

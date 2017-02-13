@@ -66,7 +66,6 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
             logger.debug("getIdAccountOrganizer()=" + challenge.getIdAccountOrganizer());
             logger.debug("getNameChallenge()=" + challenge.getNameChallenge());
             logger.debug("getDescription()=" + challenge.getDescription());
-            logger.debug("getQuantityProblems()=" + challenge.getQuantityProblems());
             logger.debug("getTeamContestList()=" + challenge.getTeamContestList());
             logger.debug("getProblemList()=" + challenge.getProblemList());
             logger.debug("getDateCreated()=" + challenge.getDateCreated());

@@ -29,7 +29,7 @@ import org.primefaces.event.FlowEvent;
  */
 @ManagedBean
 @ViewScoped
-public class ChallengeBean implements Serializable {
+public class ChallengeCreateBean implements Serializable {
 
     @EJB
     private ChallengeFacadeDAO challengeFacade;
@@ -37,10 +37,9 @@ public class ChallengeBean implements Serializable {
     @EJB
     private ProblemFacadeDAO problemFacade;
 
-    private final Logger logger = Logger.getLogger(ChallengeBean.class);
+    private final Logger logger = Logger.getLogger(ChallengeCreateBean.class);
 
-    private final String KEYS_REQUEST[] = {"idProblem", "numProblems"};
-    private final String TARGET_PATH = "/go/to/modules/content/problem/search.xhtml";
+    private final String TARGET_PATH = "/go/to/modules/practice/contest/search.xhtml";
 
     private Challenge challengeView = new Challenge();
     private Map<Long, Boolean> mapProblemsSelected = new HashMap<Long, Boolean>();
@@ -58,7 +57,7 @@ public class ChallengeBean implements Serializable {
     private List<ProblemMessage> filteredProblems;
     private String searchParameter;
 
-    public ChallengeBean() {
+    public ChallengeCreateBean() {
     }
 
     @PostConstruct
@@ -92,7 +91,7 @@ public class ChallengeBean implements Serializable {
             logger.debug("INICIA METODO - actionSaveCompleteChallenge()");
             String challengeId = challengeFacade.createChallenge(challengeView, listProblemsSelectedFinally);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Competencia #" + challengeId);
-            FacesUtil.getFacesUtil().redirect("/go/modules/practice/contest/search.xhtml");
+            FacesUtil.getFacesUtil().redirect(TARGET_PATH);
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
