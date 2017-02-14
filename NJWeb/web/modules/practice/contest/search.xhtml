@@ -43,28 +43,42 @@
                                     </div>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column headerText="Id Contest" width="100" filterBy="#{p.idChallenge}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Id Contest" width="30" filterBy="#{p.idChallenge}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{utilBean.formatIdChallenge(p.idChallenge)}" />
                             </p:column>
                             <p:column headerText="Name" width="100" filterBy="#{p.nameChallenge}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.nameChallenge}" />
                             </p:column>
-                            <p:column headerText="Date Start" width="100" filterBy="#{p.dateStart}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Date Start" width="80" filterBy="#{p.dateStart}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.dateStart}" >
                                     <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="Date End" width="100" filterBy="#{p.dateEnd}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Date End" width="80" filterBy="#{p.dateEnd}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.dateEnd}" >
                                     <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="Description" width="100" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Description" width="180" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.description}" />
                             </p:column>
-                            <p:column headerText="#Problems" width="40" filterStyle="display:none;" filterMatchMode="contains">
-                                <h:outputText value="#{p.problemList.size}" />
+                            <p:column headerText="Problems" width="20" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{p.problemMessages.size()}" />
                             </p:column>
+                            <p:column headerText="Board" width="200">
+                                <h:commandLink value="Open" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
+
+                                </h:commandLink>
+                            </p:column>
+                            <p:column headerText="Board" width="40" style="text-align: center !important;" >
+                                <p:commandLink styleClass="glyphicon glyphicon-play"
+                                               target="_blank"
+                                               ajax="false"
+                                               action="#{challengeViewBean.actionRedirectViewToBoardChallenge}">
+                                    <f:setPropertyActionListener target="#{challengeViewBean.challengeMessageView.idChallenge}" value="#{p.idChallenge}" />
+                                </p:commandLink>
+                            </p:column>
+
                         </p:dataTable>
                     </h:form>
                 </div>
