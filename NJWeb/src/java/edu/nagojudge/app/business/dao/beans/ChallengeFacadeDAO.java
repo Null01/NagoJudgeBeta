@@ -8,6 +8,7 @@ package edu.nagojudge.app.business.dao.beans;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.TeamContest;
+import edu.nagojudge.msg.pojo.ChallengeMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -115,6 +116,37 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
         List<String> outcome = new ArrayList<String>();
         for (int i = 1; i <= 12; i++) {
             outcome.add(String.valueOf(i));
+        }
+        return outcome;
+    }
+
+    public List<ChallengeMessage> getAllChallengeMessage() {
+        List<ChallengeMessage> outcome = new ArrayList<ChallengeMessage>();
+        List<Challenge> challenges = findAll();
+        for (Challenge challenge : challenges) {
+            ChallengeMessage challengeMessage = new ChallengeMessage();
+            challengeMessage.setDateCreated(challenge.getDateCreated());
+            challengeMessage.setDateEnd(challenge.getDateEnd());
+            challengeMessage.setDateStart(challenge.getDateStart());
+            challengeMessage.setDescription(challenge.getDescription());
+            challengeMessage.setIdAccountOrganizer(challenge.getIdAccountOrganizer());
+            challengeMessage.setIdChallenge(challenge.getIdChallenge());
+            challengeMessage.setNameChallenge(challenge.getNameChallenge());
+
+            List<Problem> problemList = challenge.getProblemList();
+            List<ProblemMessage> problemMessages = new ArrayList<ProblemMessage>();
+            for (Problem problem : problemList) {
+                ProblemMessage problemMessage = new ProblemMessage();
+                problemMessage.setIdProblem(problem.getIdProblem());
+                problemMessage.setNameCategory(problem.getIdCategory().getNameCategory());
+                problemMessage.setNameDifficulty(problem.getIdDifficulty().getNameDifficulty());
+                problemMessage.setAuthor(problem.getAuthor());
+                problemMessage.setNameProblem(problem.getNameProblem());
+                problemMessages.add(problemMessage);
+            }
+            
+            challengeMessage.setProblemMessages(problemMessages);
+            outcome.add(challengeMessage);
         }
         return outcome;
     }
