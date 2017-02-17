@@ -6,11 +6,13 @@
 package edu.nagojudge.msg.pojo;
 
 import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author andresfelipegarciaduran
  */
+@XmlRootElement
 public class ParametersNJMessage {
 
     private String idParameter;

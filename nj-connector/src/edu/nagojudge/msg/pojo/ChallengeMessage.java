@@ -7,11 +7,13 @@ package edu.nagojudge.msg.pojo;
 
 import java.util.Date;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author andresfelipegarciaduran
  */
+@XmlRootElement
 public class ChallengeMessage {
 
     private Long idChallenge;
