@@ -7,7 +7,6 @@ package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -20,11 +19,11 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class SecurityFacadeDAO implements Serializable {
+public class SecurityFacade implements Serializable {
 
     private final String MSG_ERROR_INVALID_KEY_PUB = "Public key corrupt, notify to administrator.";
 
-    private final Logger logger = Logger.getLogger(SecurityFacadeDAO.class);
+    private final Logger logger = Logger.getLogger(SecurityFacade.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;

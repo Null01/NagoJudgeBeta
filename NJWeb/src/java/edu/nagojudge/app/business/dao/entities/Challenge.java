@@ -9,18 +9,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,10 +30,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "challenge", catalog = "njlive", schema = "")
+@Table(name = "CHALLENGE", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Challenge.findAll", query = "SELECT c FROM Challenge c")})
@@ -72,16 +71,10 @@ public class Challenge implements Serializable {
     @Column(name = "DATE_CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
-    @JoinTable(name = "challenge_problem", joinColumns = {
-        @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")}, inverseJoinColumns = {
-        @JoinColumn(name = "ID_PROBLEM", referencedColumnName = "ID_PROBLEM")})
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Problem> problemList;
-    @JoinTable(name = "challenge_user", joinColumns = {
-        @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")}, inverseJoinColumns = {
-        @JoinColumn(name = "ID_TEAM_CONTEST", referencedColumnName = "ID_TEAM_CONTEST")})
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<TeamContest> teamContestList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
+    private List<TeamAccount> teamAccountList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
+    private List<ChallengeProblem> challengeProblemList;
 
     public Challenge() {
     }
@@ -155,21 +148,21 @@ public class Challenge implements Serializable {
     }
 
     @XmlTransient
-    public List<Problem> getProblemList() {
-        return problemList;
+    public List<TeamAccount> getTeamAccountList() {
+        return teamAccountList;
     }
 
-    public void setProblemList(List<Problem> problemList) {
-        this.problemList = problemList;
+    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
+        this.teamAccountList = teamAccountList;
     }
 
     @XmlTransient
-    public List<TeamContest> getTeamContestList() {
-        return teamContestList;
+    public List<ChallengeProblem> getChallengeProblemList() {
+        return challengeProblemList;
     }
 
-    public void setTeamContestList(List<TeamContest> teamContestList) {
-        this.teamContestList = teamContestList;
+    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
+        this.challengeProblemList = challengeProblemList;
     }
 
     @Override
@@ -196,5 +189,5 @@ public class Challenge implements Serializable {
     public String toString() {
         return "edu.nagojudge.app.business.dao.entities.Challenge[ idChallenge=" + idChallenge + " ]";
     }
-
+    
 }

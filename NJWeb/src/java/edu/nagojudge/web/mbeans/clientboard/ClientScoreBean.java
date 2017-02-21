@@ -3,13 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.web.mbeans;
+package edu.nagojudge.web.mbeans.clientboard;
 
+import edu.nagojudge.app.business.dao.beans.TeamAccountFacade;
+import edu.nagojudge.app.business.dao.beans.TeamChallengeSubmitFacade;
 import edu.nagojudge.msg.pojo.ScoreClientMessage;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -19,10 +24,22 @@ import javax.faces.bean.ViewScoped;
 @ViewScoped
 public class ClientScoreBean {
 
+    @EJB
+    private TeamAccountFacade teamAccountFacade;
+
+    @EJB
+    private TeamChallengeSubmitFacade teamChallengeSubmitFacade;
+
+    private final Logger logger = Logger.getLogger(ClientScoreBean.class);
+
     private List<ScoreClientMessage> listScoreChallenge = new ArrayList<ScoreClientMessage>();
     private List<ScoreClientMessage> filteredScoreChallenge = new ArrayList<ScoreClientMessage>();
 
     public ClientScoreBean() {
+    }
+
+    @PostConstruct
+    public void init() {
     }
 
     public List<ScoreClientMessage> getListScoreChallenge() {

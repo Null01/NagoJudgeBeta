@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.CategoryProblemFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.CategoryProblemFacade;
 import edu.nagojudge.app.business.dao.entities.CategoryProblem;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class CategoryBean implements Serializable {
     private final Logger logger = Logger.getLogger(CategoryBean.class);
 
     @EJB
-    private CategoryProblemFacadeDAO categoryProblemFacade;
+    private CategoryProblemFacade categoryProblemFacade;
 
     private List<SelectItem> categoryProblemItems;
     private CategoryProblem categoryProblemView = new CategoryProblem();

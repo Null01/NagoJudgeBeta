@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.LanguageProgrammingFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.LanguageProgrammingFacade;
 import edu.nagojudge.app.business.dao.entities.LanguageProgramming;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 public class LanguageBean implements Serializable {
 
     @EJB
-    private LanguageProgrammingFacadeDAO languageProgrammingFacade;
+    private LanguageProgrammingFacade languageProgrammingFacade;
 
     private final Logger logger = Logger.getLogger(LanguageBean.class);
 

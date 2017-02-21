@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.msg.pojo;
 
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -12,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author andresfelipegarciaduran
  */
 @XmlRootElement
-public class ScoreClientMessage {
+public class ScoreClientMessage  implements Serializable{
 
     private String nameTeam;
     private int[] solvedProblems;

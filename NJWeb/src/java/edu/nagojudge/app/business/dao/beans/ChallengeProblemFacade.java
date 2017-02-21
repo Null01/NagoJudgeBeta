@@ -5,8 +5,7 @@
  */
 package edu.nagojudge.app.business.dao.beans;
 
-import edu.nagojudge.app.business.dao.entities.TypeUser;
-import java.io.Serializable;
+import edu.nagojudge.app.business.dao.entities.ChallengeProblem;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,7 +15,8 @@ import javax.persistence.PersistenceContext;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class TypeUserFacadeDAO extends AbstractFacade<TypeUser> implements Serializable{
+public class ChallengeProblemFacade extends AbstractFacade<ChallengeProblem> {
+
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
 
@@ -25,10 +25,8 @@ public class TypeUserFacadeDAO extends AbstractFacade<TypeUser> implements Seria
         return em;
     }
 
-    public TypeUserFacadeDAO() {
-        super(TypeUser.class);
+    public ChallengeProblemFacade() {
+        super(ChallengeProblem.class);
     }
-    
-    
     
 }

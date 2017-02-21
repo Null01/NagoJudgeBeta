@@ -5,9 +5,9 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.ProblemFacadeDAO;
-import edu.nagojudge.app.business.dao.beans.SubmitFacadeDAO;
-import edu.nagojudge.app.business.dao.beans.UserFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.ProblemFacade;
+import edu.nagojudge.app.business.dao.beans.SubmitFacade;
+import edu.nagojudge.app.business.dao.beans.UserFacade;
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.Submit;
@@ -37,11 +37,11 @@ import org.primefaces.model.chart.PieChartModel;
 public class ProfileBean implements Serializable {
 
     @EJB
-    private SubmitFacadeDAO submitFacade;
+    private SubmitFacade submitFacade;
     @EJB
-    private ProblemFacadeDAO problemFacade;
+    private ProblemFacade problemFacade;
     @EJB
-    private UserFacadeDAO userFacade;
+    private UserFacade userFacade;
 
     private final Logger logger = Logger.getLogger(ProfileBean.class);
 
@@ -92,7 +92,7 @@ public class ProfileBean implements Serializable {
         try {
             logger.debug("INICIA METODO onRowEditMySubmit()");
             SubmitMessage submitMessage = (SubmitMessage) event.getObject();
-            submitMessage.setVisibleWeb(TypeStateEnum.valueOf(this.submitView.getVisibleWeb()).getType());
+            //submitMessage.setVisibleWeb(TypeStateEnum.valueOf(this.submitView.getVisibleWeb()).getType());
             logger.debug("getVisibleWeb [" + submitMessage.getVisibleWeb() + "]");
             submitFacade.editSubmitMessage(submitMessage);
         } catch (Exception ex) {

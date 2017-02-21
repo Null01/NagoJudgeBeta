@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.DifficultyLevelFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.DifficultyLevelFacade;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 public class DifficultyLevelBean implements Serializable {
 
     @EJB
-    private DifficultyLevelFacadeDAO difficultyLevelFacade;
+    private DifficultyLevelFacade difficultyLevelFacade;
 
     private List<SelectItem> difficultyLevelItems;
     private DifficultyLevel difficultyLevel = new DifficultyLevel();

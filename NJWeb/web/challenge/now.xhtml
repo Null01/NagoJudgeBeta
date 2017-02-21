@@ -3,8 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <f:view contentType="text/html">
         <h:head>
@@ -23,6 +23,18 @@
         </h:head>
         <h:body id="main">
 
+            <ui:define name="metadata">
+                <f:metadata>
+                    <f:viewParam name="key" value="#{clientBoardBean.key}" required="true" >
+                        <f:validateLength minimum="1" maximum="30" />
+                    </f:viewParam>
+                    <f:viewParam name="id" value="#{clientBoardBean.id}" required="true">
+                        <f:validateLength minimum="1" maximum="30" />
+                    </f:viewParam>
+                    <f:event type="preRenderView" listener="#{clientBoardBean.actionListenerPreRender}" />
+                </f:metadata>
+            </ui:define>
+
             <div id="main-header">
                 <nav class="navbar navbar-default">
                     <div class="container-fluid">
@@ -33,14 +45,25 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="#">NagoJudge</a>
+                            <a class="navbar-brand" href="#">Nago Judge</a>
                         </div>
 
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <div class="navbar-form navbar-left text-center">
-                                <p:commandLink styleClass="btn btn-default" style="padding-left: 80px; padding-right: 80px;" value="Problems" />
-                                <p:commandLink styleClass="btn btn-default" style="padding-left: 80px; padding-right: 80px;" value="Score" />
-                                <p:commandLink styleClass="btn btn-default" style="padding-left: 80px; padding-right: 80px;" value="Submit" />
+                                <h:form>
+                                    <p:commandLink styleClass="btn btn-default" style="width: 160px;"
+                                                   value="Problems"
+                                                   actionListener="#{clientBoardBean.actionShowPanelProblems}"
+                                                   update="@all"/>
+                                    <p:commandLink styleClass="btn btn-default" style="width: 160px;"
+                                                   value="Score"
+                                                   actionListener="#{clientBoardBean.actionShowPanelScore}" 
+                                                   update="@all"/>
+                                    <p:commandLink styleClass="btn btn-default" style="width: 160px;"
+                                                   value="Submit"
+                                                   actionListener="#{clientBoardBean.actionShowPanelSubmits}"
+                                                   update="@all"/>
+                                </h:form>
                             </div>
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
@@ -52,25 +75,40 @@
                 </nav>
             </div>
 
-            <div id="main-body">
-                <p:dataTable id="table-score"
-                             var="p"
-                             widgetVar="widgetScoreChallenge"
-                             tableStyleClass="table table-striped table-hover"
-                             value="#{clientScoreBean.listScoreChallenge}"
-                             styleClass="center-block"
-                             filteredValue="#{clientScoreBean.filteredScoreChallenge}"
-                             rowKey="#{p.nameTeam}"
-                             rows="15"
-                             paginator="true"
-                             paginatorPosition="bottom"                                     
-                             emptyMessage="#{msg['general.table.noinfo']}">
-                    
-                    
-                </p:dataTable>
+            <div id="main-body" style="margin-top: -20px;">                
+                <p:panel id="panel-client-problems" rendered="#{clientBoardBean.showProblems}">
+                    1
+                </p:panel>
+
+                <p:panel id="panel-client-score" rendered="#{clientBoardBean.showScore}">
+                    <!--  <p:dataTable id="table-score"
+                                   var="p"
+                                   widgetVar="widgetScoreChallenge"
+                                   tableStyleClass="table table-striped table-hover"
+                                   value="#{clientScoreBean.listScoreChallenge}"
+                                   styleClass="center-block"
+                                   filteredValue="#{clientScoreBean.filteredScoreChallenge}"
+                                   rowKey="#{p.nameTeam}"
+                                   rows="15"
+                                   paginator="true"
+                                   paginatorPosition="bottom"                                     
+                                   emptyMessage="#{msg['general.table.noinfo']}">
+  
+  
+                      </p:dataTable>  -->
+                    2
+                </p:panel>
+
+                <p:panel id="panel-client-submits" rendered="#{clientBoardBean.showSubmits}" >
+                    3
+                </p:panel>
             </div>
 
-            <ui:include id="main-footer" src="/commons/footer.xhtml"/>
+            <div id="main-footer">
+                <p:row>
+                    <p class="text-center" > #{common['footer.general.appweb']} </p>
+                </p:row>
+            </div>
         </h:body>
         <script type="text/javascript" >
             PrimeFaces.locales['es'] = { closeText: 'Cerrar', prevText: 'Anterior', nextText: 'Siguiente', monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'], monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'], dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'], dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'], dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'], weekHeader: 'Semana', firstDay: 1, isRTL: false, showMonthAfterYear: false, yearSuffix: '', timeOnlyTitle: 'Sólo hora', timeText: 'Tiempo', hourText: 'Hora', minuteText: 'Minuto', secondText: 'Segundo', currentText: 'Fecha actual', ampm: false, month: 'Mes', week: 'Semana', day: 'Día', allDayText : 'Todo el día' };

@@ -5,8 +5,9 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.ChallengeFacadeDAO;
-import edu.nagojudge.app.business.dao.entities.Challenge;
+import edu.nagojudge.app.business.dao.beans.ChallengeFacade;
+import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.app.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,11 +29,12 @@ public class ChallengeViewBean implements Serializable {
     private final Logger logger = Logger.getLogger(ChallengeViewBean.class);
 
     @EJB
-    private ChallengeFacadeDAO challengeFacade;
+    private ChallengeFacade challengeFacade;
 
     private List<ChallengeMessage> listChallenges;
     private List<ChallengeMessage> filteredChallenges;
     private String searchParameter;
+    private String idUser;
 
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
@@ -45,7 +47,6 @@ public class ChallengeViewBean implements Serializable {
     }
 
     public String actionRedirectViewToBoardChallenge() {
-        logger.debug("getIdChallenge [" + challengeMessageView.getIdChallenge() + "]");
         return "/challenge/now.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
@@ -79,6 +80,15 @@ public class ChallengeViewBean implements Serializable {
 
     public void setSearchParameter(String searchParameter) {
         this.searchParameter = searchParameter;
+    }
+
+    public String getIdUser() {
+        this.idUser = (String) FacesUtil.getFacesUtil().getAttributeCurrentSession(IKeysApplication.KEY_DATA_USER_EMAIL);
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
 }

@@ -6,11 +6,10 @@
 package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.Challenge;
+import edu.nagojudge.app.business.dao.entities.ChallengeProblem;
 import edu.nagojudge.app.business.dao.entities.Problem;
-import edu.nagojudge.app.business.dao.entities.TeamContest;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,9 +26,9 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Serializable {
+public class ChallengeFacade extends AbstractFacade<Challenge> {
 
-    private final Logger logger = Logger.getLogger(ChallengeFacadeDAO.class);
+    private final Logger logger = Logger.getLogger(ChallengeFacade.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -39,7 +38,7 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
         return em;
     }
 
-    public ChallengeFacadeDAO() {
+    public ChallengeFacade() {
         super(Challenge.class);
     }
 
@@ -59,20 +58,28 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
             logger.debug("QUERY-ATTACH-PROBLEMS: " + sql);
 
             Query query = em.createQuery(sql, Problem.class);
-            challenge.setProblemList(query.getResultList());
+            List<Problem> problems = query.getResultList();
 
+            List<ChallengeProblem> challengeProblems = new ArrayList<ChallengeProblem>();
+            for (Problem problem : problems) {
+                ChallengeProblem challengeProblem = new ChallengeProblem();
+                challengeProblem.setIdChallenge(challenge);
+                challengeProblem.setIdProblem(problem);
+                challengeProblems.add(challengeProblem);
+            }
+
+            challenge.setChallengeProblemList(challengeProblems);
             challenge.setDateCreated(Calendar.getInstance().getTime());
             challenge.setDateEnd(challenge.getDateStart()); // Revisar
 
             logger.debug("getIdAccountOrganizer()=" + challenge.getIdAccountOrganizer());
             logger.debug("getNameChallenge()=" + challenge.getNameChallenge());
             logger.debug("getDescription()=" + challenge.getDescription());
-            logger.debug("getTeamContestList()=" + challenge.getTeamContestList());
-            logger.debug("getProblemList()=" + challenge.getProblemList());
+            logger.debug("getTeamAccountList()=" + challenge.getTeamAccountList());
+            logger.debug("getChallengeProblemList()=" + challenge.getChallengeProblemList());
             logger.debug("getDateCreated()=" + challenge.getDateCreated());
             logger.debug("getDateStart()=" + challenge.getDateStart());
             logger.debug("getDateEnd()=" + challenge.getDateEnd());
-
             create(challenge);
             return String.valueOf(challenge.getIdChallenge());
         } catch (Exception ex) {
@@ -133,18 +140,18 @@ public class ChallengeFacadeDAO extends AbstractFacade<Challenge> implements Ser
             challengeMessage.setIdChallenge(challenge.getIdChallenge());
             challengeMessage.setNameChallenge(challenge.getNameChallenge());
 
-            List<Problem> problemList = challenge.getProblemList();
+            List<ChallengeProblem> challengeProblems = challenge.getChallengeProblemList();
             List<ProblemMessage> problemMessages = new ArrayList<ProblemMessage>();
-            for (Problem problem : problemList) {
+            for (ChallengeProblem challengeProblem : challengeProblems) {
                 ProblemMessage problemMessage = new ProblemMessage();
-                problemMessage.setIdProblem(problem.getIdProblem());
-                problemMessage.setNameCategory(problem.getIdCategory().getNameCategory());
-                problemMessage.setNameDifficulty(problem.getIdDifficulty().getNameDifficulty());
-                problemMessage.setAuthor(problem.getAuthor());
-                problemMessage.setNameProblem(problem.getNameProblem());
+                problemMessage.setIdProblem(challengeProblem.getIdProblem().getIdProblem());
+                problemMessage.setNameCategory(challengeProblem.getIdProblem().getIdCategory().getNameCategory());
+                problemMessage.setNameDifficulty(challengeProblem.getIdProblem().getIdDifficulty().getNameDifficulty());
+                problemMessage.setAuthor(challengeProblem.getIdProblem().getAuthor());
+                problemMessage.setNameProblem(challengeProblem.getIdProblem().getNameProblem());
                 problemMessages.add(problemMessage);
             }
-            
+
             challengeMessage.setProblemMessages(problemMessages);
             outcome.add(challengeMessage);
         }

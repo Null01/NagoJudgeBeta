@@ -7,7 +7,6 @@ package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.FunctionUser;
 import edu.nagojudge.app.business.dao.entities.TypeUser;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -21,9 +20,9 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class FunctionUserFacadeDAO extends AbstractFacade<FunctionUser> implements Serializable {
+public class FunctionUserFacade extends AbstractFacade<FunctionUser> {
 
-    private final Logger logger = Logger.getLogger(FunctionUserFacadeDAO.class);
+    private final Logger logger = Logger.getLogger(FunctionUserFacade.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -33,7 +32,7 @@ public class FunctionUserFacadeDAO extends AbstractFacade<FunctionUser> implemen
         return em;
     }
 
-    public FunctionUserFacadeDAO() {
+    public FunctionUserFacade() {
         super(FunctionUser.class);
     }
 

@@ -45,10 +45,6 @@
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <filter-class> org.primefaces.webapp.filter.FileUploadFilter </filter-class>
     </filter>
-    <filter-mapping>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
     <servlet>
         <servlet-name>Push Servlet</servlet-name>
         <servlet-class>org.primefaces.push.PushServlet</servlet-class>
@@ -75,9 +71,4 @@
     <welcome-file-list>
         <welcome-file>to/index.xhtml</welcome-file>
     </welcome-file-list>
-    <ejb-local-ref>
-        <ejb-ref-name>SecurityFacadeDAO</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
-        <ejb-link>#SecurityFacadeDAO</ejb-link>
-    </ejb-local-ref>
 </web-app>

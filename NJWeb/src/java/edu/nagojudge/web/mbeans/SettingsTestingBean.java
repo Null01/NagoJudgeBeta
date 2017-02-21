@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.EmailFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.EmailFacade;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import javax.ejb.EJB;
@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 public class SettingsTestingBean {
 
     @EJB
-    private EmailFacadeDAO emailFacadeDAO;
+    private EmailFacade emailFacade;
 
     private final Logger logger = Logger.getLogger(SettingsTestingBean.class);
 
@@ -37,7 +37,7 @@ public class SettingsTestingBean {
         final String MESSAGE_SUCCESSFUL = "Correo Electronico enviado exitosamente.";
         try {
             logger.debug("sendComposite [" + sendComposite + "]");
-            emailFacadeDAO.sendEmail(sendTo, sendSubject, new StringBuilder(sendComposite));
+            emailFacade.sendEmail(sendTo, sendSubject, new StringBuilder(sendComposite));
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, MESSAGE_SUCCESSFUL);
         } catch (NagoJudgeException ex) {
             logger.error(ex);

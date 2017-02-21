@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.FunctionUserFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.FunctionUserFacade;
 import edu.nagojudge.app.business.dao.entities.FunctionUser;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
@@ -35,7 +35,7 @@ import org.primefaces.model.TreeNode;
 public class NavigationBean implements Serializable {
     
     @EJB
-    private FunctionUserFacadeDAO functionUserFacade;
+    private FunctionUserFacade functionUserFacade;
     
     private final Logger logger = Logger.getLogger(NavigationBean.class);
     

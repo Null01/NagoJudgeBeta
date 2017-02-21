@@ -5,8 +5,7 @@
  */
 package edu.nagojudge.app.business.dao.beans;
 
-import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
-import java.io.Serializable;
+import edu.nagojudge.app.business.dao.entities.TypeUser;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,7 +15,8 @@ import javax.persistence.PersistenceContext;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class DifficultyLevelFacadeDAO extends AbstractFacade<DifficultyLevel> implements Serializable{
+public class TypeUserFacade extends AbstractFacade<TypeUser> {
+
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
 
@@ -25,8 +25,8 @@ public class DifficultyLevelFacadeDAO extends AbstractFacade<DifficultyLevel> im
         return em;
     }
 
-    public DifficultyLevelFacadeDAO() {
-        super(DifficultyLevel.class);
+    public TypeUserFacade() {
+        super(TypeUser.class);
     }
     
 }

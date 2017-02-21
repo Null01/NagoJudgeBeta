@@ -7,7 +7,9 @@ package edu.nagojudge.app.business.dao.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,19 +21,21 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "submit", catalog = "njlive", schema = "")
+@Table(name = "SUBMIT", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Submit.findAll", query = "SELECT s FROM Submit s")})
@@ -45,11 +49,6 @@ public class Submit implements Serializable {
     private Long idSubmit;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
-    @Column(name = "STATUS_SUBMIT")
-    private String statusSubmit;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "DATE_SUBMIT")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateSubmit;
@@ -60,20 +59,19 @@ public class Submit implements Serializable {
     @Size(max = 65535)
     @Column(name = "MSG_JUDGE")
     private String msgJudge;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 10)
-    @Column(name = "VISIBLE_WEB")
-    private String visibleWeb;
-    @JoinColumn(name = "ID_ACCOUNT", referencedColumnName = "ID_ACCOUNT")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Account idAccount;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
+    private List<AccountSubmit> accountSubmitList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
+    private List<TeamChallengeSubmit> teamChallengeSubmitList;
     @JoinColumn(name = "ID_LANGUAGE", referencedColumnName = "ID_LANGUAGE")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private LanguageProgramming idLanguage;
     @JoinColumn(name = "ID_PROBLEM", referencedColumnName = "ID_PROBLEM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Problem idProblem;
+    @JoinColumn(name = "D_STATUS", referencedColumnName = "ID_STATUS")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private SubmitStatus dStatus;
 
     public Submit() {
     }
@@ -82,11 +80,9 @@ public class Submit implements Serializable {
         this.idSubmit = idSubmit;
     }
 
-    public Submit(Long idSubmit, String statusSubmit, Date dateSubmit, String visibleWeb) {
+    public Submit(Long idSubmit, Date dateSubmit) {
         this.idSubmit = idSubmit;
-        this.statusSubmit = statusSubmit;
         this.dateSubmit = dateSubmit;
-        this.visibleWeb = visibleWeb;
     }
 
     public Long getIdSubmit() {
@@ -95,14 +91,6 @@ public class Submit implements Serializable {
 
     public void setIdSubmit(Long idSubmit) {
         this.idSubmit = idSubmit;
-    }
-
-    public String getStatusSubmit() {
-        return statusSubmit;
-    }
-
-    public void setStatusSubmit(String statusSubmit) {
-        this.statusSubmit = statusSubmit;
     }
 
     public Date getDateSubmit() {
@@ -129,20 +117,22 @@ public class Submit implements Serializable {
         this.msgJudge = msgJudge;
     }
 
-    public String getVisibleWeb() {
-        return visibleWeb;
+    @XmlTransient
+    public List<AccountSubmit> getAccountSubmitList() {
+        return accountSubmitList;
     }
 
-    public void setVisibleWeb(String visibleWeb) {
-        this.visibleWeb = visibleWeb;
+    public void setAccountSubmitList(List<AccountSubmit> accountSubmitList) {
+        this.accountSubmitList = accountSubmitList;
     }
 
-    public Account getIdAccount() {
-        return idAccount;
+    @XmlTransient
+    public List<TeamChallengeSubmit> getTeamChallengeSubmitList() {
+        return teamChallengeSubmitList;
     }
 
-    public void setIdAccount(Account idAccount) {
-        this.idAccount = idAccount;
+    public void setTeamChallengeSubmitList(List<TeamChallengeSubmit> teamChallengeSubmitList) {
+        this.teamChallengeSubmitList = teamChallengeSubmitList;
     }
 
     public LanguageProgramming getIdLanguage() {
@@ -159,6 +149,14 @@ public class Submit implements Serializable {
 
     public void setIdProblem(Problem idProblem) {
         this.idProblem = idProblem;
+    }
+
+    public SubmitStatus getDStatus() {
+        return dStatus;
+    }
+
+    public void setDStatus(SubmitStatus dStatus) {
+        this.dStatus = dStatus;
     }
 
     @Override

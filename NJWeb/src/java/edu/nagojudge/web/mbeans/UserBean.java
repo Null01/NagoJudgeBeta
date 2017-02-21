@@ -6,8 +6,8 @@
 package edu.nagojudge.web.mbeans;
 
 import com.google.zxing.WriterException;
-import edu.nagojudge.app.business.dao.beans.TypeUserFacadeDAO;
-import edu.nagojudge.app.business.dao.beans.UserFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.TypeUserFacade;
+import edu.nagojudge.app.business.dao.beans.UserFacade;
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.TypeUser;
 import edu.nagojudge.app.business.dao.entities.User;
@@ -38,10 +38,10 @@ import org.primefaces.model.UploadedFile;
 public class UserBean implements Serializable {
 
     @EJB
-    private TypeUserFacadeDAO typeUserFacade;
+    private TypeUserFacade typeUserFacade;
 
     @EJB
-    private UserFacadeDAO userFacade;
+    private UserFacade userFacade;
 
     private final Logger logger = Logger.getLogger(UserBean.class);
 

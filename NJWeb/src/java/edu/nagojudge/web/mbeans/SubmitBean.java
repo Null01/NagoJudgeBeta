@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.SubmitFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.SubmitFacade;
 import edu.nagojudge.app.business.dao.entities.LanguageProgramming;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.Submit;
@@ -37,7 +37,7 @@ import org.primefaces.push.EventBusFactory;
 public class SubmitBean implements Serializable {
 
     @EJB
-    private SubmitFacadeDAO submitFacade;
+    private SubmitFacade submitFacade;
 
     private final String TARGET_PATH = "/go/to/modules/board/score.xhtml";
 

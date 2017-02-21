@@ -33,12 +33,12 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class EmailFacadeDAO implements Serializable {
+public class EmailFacade implements Serializable {
 
     @EJB
-    private SecurityFacadeDAO securityFacadeDAO;
+    private SecurityFacade securityFacadeDAO;
 
-    private final Logger logger = Logger.getLogger(EmailFacadeDAO.class);
+    private final Logger logger = Logger.getLogger(EmailFacade.class);
 
     public void sendEmailNewUser(User user, Account account) throws IOException, NagoJudgeException, MessagingException, Exception {
         String fullPathFileQRCode = null;

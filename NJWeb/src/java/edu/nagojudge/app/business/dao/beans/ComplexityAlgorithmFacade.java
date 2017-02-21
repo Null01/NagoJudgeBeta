@@ -5,8 +5,7 @@
  */
 package edu.nagojudge.app.business.dao.beans;
 
-import edu.nagojudge.app.business.dao.entities.TeamContest;
-import java.io.Serializable;
+import edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,7 +15,8 @@ import javax.persistence.PersistenceContext;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class TeamContestFacadeDAO extends AbstractFacade<TeamContest> implements Serializable{
+public class ComplexityAlgorithmFacade extends AbstractFacade<ComplexityAlgorithm> {
+
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
 
@@ -25,8 +25,8 @@ public class TeamContestFacadeDAO extends AbstractFacade<TeamContest> implements
         return em;
     }
 
-    public TeamContestFacadeDAO() {
-        super(TeamContest.class);
+    public ComplexityAlgorithmFacade() {
+        super(ComplexityAlgorithm.class);
     }
     
 }

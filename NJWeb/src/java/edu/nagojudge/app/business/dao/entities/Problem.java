@@ -18,7 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -33,10 +32,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "problem", catalog = "njlive", schema = "")
+@Table(name = "PROBLEM", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Problem.findAll", query = "SELECT p FROM Problem p")})
@@ -69,12 +68,6 @@ public class Problem implements Serializable {
     @Column(name = "DATE_CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
-    @ManyToMany(mappedBy = "problemList", fetch = FetchType.LAZY)
-    private List<Challenge> challengeList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Attachments> attachmentsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
     @JoinColumn(name = "ID_COMPLEXITY_ALGORITHM_MAX", referencedColumnName = "ID_COMPLEXITY_ALGORITHM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ComplexityAlgorithm idComplexityAlgorithmMax;
@@ -84,6 +77,12 @@ public class Problem implements Serializable {
     @JoinColumn(name = "ID_CATEGORY", referencedColumnName = "ID_CATEGORY")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CategoryProblem idCategory;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<ChallengeProblem> challengeProblemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Attachments> attachmentsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Submit> submitList;
 
     public Problem() {
     }
@@ -147,33 +146,6 @@ public class Problem implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    @XmlTransient
-    public List<Challenge> getChallengeList() {
-        return challengeList;
-    }
-
-    public void setChallengeList(List<Challenge> challengeList) {
-        this.challengeList = challengeList;
-    }
-
-    @XmlTransient
-    public List<Attachments> getAttachmentsList() {
-        return attachmentsList;
-    }
-
-    public void setAttachmentsList(List<Attachments> attachmentsList) {
-        this.attachmentsList = attachmentsList;
-    }
-
-    @XmlTransient
-    public List<Submit> getSubmitList() {
-        return submitList;
-    }
-
-    public void setSubmitList(List<Submit> submitList) {
-        this.submitList = submitList;
-    }
-
     public ComplexityAlgorithm getIdComplexityAlgorithmMax() {
         return idComplexityAlgorithmMax;
     }
@@ -196,6 +168,33 @@ public class Problem implements Serializable {
 
     public void setIdCategory(CategoryProblem idCategory) {
         this.idCategory = idCategory;
+    }
+
+    @XmlTransient
+    public List<ChallengeProblem> getChallengeProblemList() {
+        return challengeProblemList;
+    }
+
+    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
+        this.challengeProblemList = challengeProblemList;
+    }
+
+    @XmlTransient
+    public List<Attachments> getAttachmentsList() {
+        return attachmentsList;
+    }
+
+    public void setAttachmentsList(List<Attachments> attachmentsList) {
+        this.attachmentsList = attachmentsList;
+    }
+
+    @XmlTransient
+    public List<Submit> getSubmitList() {
+        return submitList;
+    }
+
+    public void setSubmitList(List<Submit> submitList) {
+        this.submitList = submitList;
     }
 
     @Override

@@ -8,7 +8,6 @@ package edu.nagojudge.app.business.dao.beans;
 import edu.nagojudge.app.business.dao.entities.ParametersNj;
 import edu.nagojudge.msg.pojo.ParametersNJMessage;
 import java.util.Calendar;
-import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

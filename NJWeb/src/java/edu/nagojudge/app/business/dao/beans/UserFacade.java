@@ -8,32 +8,21 @@ package edu.nagojudge.app.business.dao.beans;
 import com.google.zxing.WriterException;
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.User;
-import edu.nagojudge.app.business.tools.barcodes.QRGenerator;
-import edu.nagojudge.app.business.tools.emails.BuildGenericEmail;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.constants.IKeysApplication;
-import edu.nagojudge.app.utils.constants.IResourcesPaths;
 import edu.nagojudge.msg.pojo.UserMessage;
-import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
-import edu.nagojudge.tools.utils.FileUtil;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.nio.file.NoSuchFileException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -45,18 +34,18 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class UserFacadeDAO extends AbstractFacade<User> implements Serializable {
+public class UserFacade extends AbstractFacade<User> {
 
     @EJB
-    private EmailFacadeDAO emailFacadeDAO;
+    private EmailFacade emailFacadeDAO;
 
     @EJB
-    private SecurityFacadeDAO securityFacadeDAO;
+    private SecurityFacade securityFacadeDAO;
 
     @EJB
-    private AccountFacadeDAO accountFacadeDAO;
+    private AccountFacade accountFacadeDAO;
 
-    private final Logger logger = Logger.getLogger(UserFacadeDAO.class);
+    private final Logger logger = Logger.getLogger(UserFacade.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -66,7 +55,7 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
         return em;
     }
 
-    public UserFacadeDAO() {
+    public UserFacade() {
         super(User.class);
     }
 
@@ -204,10 +193,6 @@ public class UserFacadeDAO extends AbstractFacade<User> implements Serializable 
         userMessage.setNameTypeUser(user.getIdType().getNameType());
         userMessage.setNicknameAccount(user.getIdAccount().getNickname());
         return userMessage;
-    }
-
-    public void persist(Object object) {
-        em.persist(object);
     }
 
 }

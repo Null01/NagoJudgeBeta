@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.msg.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author andresfelipegarciaduran
  */
 @XmlRootElement
-public class ParametersNJMessage {
+public class ParametersNJMessage  implements Serializable{
 
     private String idParameter;
     private byte[] contentParameter;

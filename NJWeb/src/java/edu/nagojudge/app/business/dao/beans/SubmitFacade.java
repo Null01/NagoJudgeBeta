@@ -6,9 +6,11 @@
 package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.Account;
+import edu.nagojudge.app.business.dao.entities.AccountSubmit;
 import edu.nagojudge.app.business.dao.entities.LanguageProgramming;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.Submit;
+import edu.nagojudge.app.business.dao.entities.SubmitStatus;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.constants.IKeysApplication;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
@@ -20,14 +22,12 @@ import edu.nagojudge.tools.utils.FileUtil;
 import edu.nagojudge.tools.utils.FormatUtil;
 import edu.nagojudge.web.utils.resources.clients.ClientService;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,11 +40,14 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializable {
+public class SubmitFacade extends AbstractFacade<Submit> {
+
+    @EJB
+    private AccountSubmitFacade accountSubmitFacade;
 
     private final String TOKEN = "asd";
 
-    private final Logger logger = Logger.getLogger(SubmitFacadeDAO.class);
+    private final Logger logger = Logger.getLogger(SubmitFacade.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -54,7 +57,7 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
         return em;
     }
 
-    public SubmitFacadeDAO() {
+    public SubmitFacade() {
         super(Submit.class);
     }
 
@@ -74,27 +77,32 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
         return outcome;
     }
 
-    public SubmitMessage createSubmitSolve(Submit submitView, Problem problemView, LanguageProgramming languageProgrammingView, byte[] contentCodeSource) throws IOException, Exception {
+    public SubmitMessage createSubmitSolve(Submit submit, Problem problemView, LanguageProgramming languageProgrammingView, byte[] contentCodeSource) throws IOException, Exception {
         try {
             logger.debug("INICIA METODO - createSubmitSolve()");
-            HttpSession session = FacesUtil.getFacesUtil().getSession(true);
+            HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
             Object accountObject = session.getAttribute(IKeysApplication.KEY_DATA_USER_ACCOUNT);
             final Object email = session.getAttribute(IKeysApplication.KEY_DATA_USER_EMAIL);
 
-            submitView.setIdAccount((Account) accountObject);
-            submitView.setIdProblem(problemView);
-            submitView.setIdLanguage(languageProgrammingView);
-            submitView.setStatusSubmit(TypeStateJudgeEnum.IP.getValue());
-            submitView.setDateSubmit(Calendar.getInstance().getTime());
-            submitView.setVisibleWeb(TypeStateEnum.PRIVATE.getType());
-            create(submitView);
+            submit.setIdProblem(problemView);
+            submit.setIdLanguage(languageProgrammingView);
+            submit.setDStatus(em.find(SubmitStatus.class, TypeStateJudgeEnum.IP.getValue()));
+            submit.setDateSubmit(Calendar.getInstance().getTime());
+
+            Account account = (Account) accountObject;
+
+            AccountSubmit accountSubmit = new AccountSubmit();
+            accountSubmit.setIdAccount(account);
+            accountSubmit.setIdSubmit(submit);
+            accountSubmit.setVisibleWeb(TypeStateEnum.PRIVATE.getType());
+            accountSubmitFacade.create(accountSubmit);
 
             String pathFile = IResourcesPaths.PATH_SAVE_CODE_SOURCE_LOCAL + java.io.File.separatorChar
-                    + String.valueOf(email) + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submitView.getIdProblem().getIdProblem(), 7);
-            String nameFile = FormatUtil.getInstance().buildZerosToLeft(submitView.getIdSubmit(), 7) + "." + languageProgrammingView.getExtension();
+                    + String.valueOf(email) + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
+            String nameFile = FormatUtil.getInstance().buildZerosToLeft(submit.getIdSubmit(), 7) + "." + languageProgrammingView.getExtension();
             FileUtil.getInstance().createFile(contentCodeSource, pathFile, nameFile);
 
-            final Long idSubmit = submitView.getIdSubmit();
+            final Long idSubmit = submit.getIdSubmit();
 
             final Thread thread = new Thread(new Runnable() {
 
@@ -110,7 +118,7 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
             });
             thread.start();
 
-            return parseSubmitEntityToMessage(submitView);
+            return parseSubmitEntityToMessage(submit);
         } catch (IOException ex) {
             logger.error(ex);
             throw ex;
@@ -182,9 +190,14 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
     public void editSubmitMessage(SubmitMessage submitMessage) {
         try {
             logger.debug("INICIA METODO - editSubmitMessage()");
-            Submit submit = find(submitMessage.getIdSubmit());
-            submit.setVisibleWeb(submitMessage.getVisibleWeb());
-            edit(submit);
+            StringBuilder sql = new StringBuilder();
+            sql.append("select p from AccountSubmit p where p.idSubmit = :id_submit and p.idAccount = :id_account");
+            Query query = em.createQuery(sql.toString(), AccountSubmit.class)
+                    .setParameter("id_submit", submitMessage.getIdProblem())
+                    .setParameter("id_account", submitMessage.getIdAccount());
+            AccountSubmit accountSubmit = (AccountSubmit) query.getSingleResult();
+            accountSubmit.setVisibleWeb(submitMessage.getVisibleWeb());
+            accountSubmitFacade.edit(accountSubmit);
             logger.debug("editSubmit @ECHO");
         } catch (Exception ex) {
             logger.error(ex);
@@ -197,15 +210,17 @@ public class SubmitFacadeDAO extends AbstractFacade<Submit> implements Serializa
         SubmitMessage submitMessage = new SubmitMessage();
         submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
         submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
-        submitMessage.setIdAccount(submit.getIdAccount().getIdAccount());
+        List<AccountSubmit> accountSubmits = submit.getAccountSubmitList();
+        AccountSubmit accountSubmit = accountSubmits.get(0);
+        submitMessage.setIdAccount(accountSubmit.getIdAccount().getIdAccount());
         submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
         submitMessage.setIdSubmit(submit.getIdSubmit());
         submitMessage.setMsgJudge(submit.getMsgJudge());
         submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
         submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
-        submitMessage.setNickname(submit.getIdAccount().getNickname());
-        submitMessage.setStatusSubmit(submit.getStatusSubmit());
-        submitMessage.setVisibleWeb(submit.getVisibleWeb());
+        submitMessage.setNickname(accountSubmit.getIdAccount().getNickname());
+        submitMessage.setStatusSubmit(submitMessage.getStatusSubmit());
+        submitMessage.setVisibleWeb(accountSubmit.getVisibleWeb());
         return submitMessage;
     }
 

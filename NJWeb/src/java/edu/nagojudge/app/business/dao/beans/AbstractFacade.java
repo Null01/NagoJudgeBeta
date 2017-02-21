@@ -11,11 +11,10 @@ import javax.persistence.EntityManager;
 /**
  *
  * @author andresfelipegarciaduran
- * @param <T>
  */
 public abstract class AbstractFacade<T> {
 
-    private final Class<T> entityClass;
+    private Class<T> entityClass;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -23,19 +22,19 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public void create(T entity) throws Exception {
+    public void create(T entity) {
         getEntityManager().persist(entity);
     }
 
-    public void edit(T entity) throws Exception {
+    public void edit(T entity) {
         getEntityManager().merge(entity);
     }
 
-    public void remove(T entity) throws Exception {
+    public void remove(T entity) {
         getEntityManager().remove(getEntityManager().merge(entity));
     }
 
-    public T find(Object id) throws Exception {
+    public T find(Object id) {
         return getEntityManager().find(entityClass, id);
     }
 
@@ -45,7 +44,7 @@ public abstract class AbstractFacade<T> {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    public List<T> findRange(int[] range) throws Exception {
+    public List<T> findRange(int[] range) {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
         javax.persistence.Query q = getEntityManager().createQuery(cq);
@@ -54,12 +53,12 @@ public abstract class AbstractFacade<T> {
         return q.getResultList();
     }
 
-    public int count() throws Exception {
+    public int count() {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
-
+    
 }

@@ -6,7 +6,6 @@
 package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.Attachments;
-import java.io.Serializable;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,7 +15,8 @@ import javax.persistence.PersistenceContext;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class AttachmentsFacadeDAO extends AbstractFacade<Attachments> implements Serializable{
+public class AttachmentsFacade extends AbstractFacade<Attachments> {
+
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
 
@@ -25,7 +25,7 @@ public class AttachmentsFacadeDAO extends AbstractFacade<Attachments> implements
         return em;
     }
 
-    public AttachmentsFacadeDAO() {
+    public AttachmentsFacade() {
         super(Attachments.class);
     }
     

@@ -5,8 +5,8 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.ChallengeFacadeDAO;
-import edu.nagojudge.app.business.dao.beans.ProblemFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.ChallengeFacade;
+import edu.nagojudge.app.business.dao.beans.ProblemFacade;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.ProblemMessage;
@@ -32,10 +32,10 @@ import org.primefaces.event.FlowEvent;
 public class ChallengeCreateBean implements Serializable {
 
     @EJB
-    private ChallengeFacadeDAO challengeFacade;
+    private ChallengeFacade challengeFacade;
 
     @EJB
-    private ProblemFacadeDAO problemFacade;
+    private ProblemFacade problemFacade;
 
     private final Logger logger = Logger.getLogger(ChallengeCreateBean.class);
 

@@ -29,10 +29,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "account", catalog = "njlive", schema = "")
+@Table(name = "ACCOUNT", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a")})
@@ -53,11 +53,11 @@ public class Account implements Serializable {
     @Column(name = "NICKNAME")
     private String nickname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<TeamContest> teamContestList;
+    private List<AccountSubmit> accountSubmitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<User> userList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
+    private List<TeamAccount> teamAccountList;
 
     public Account() {
     }
@@ -96,21 +96,12 @@ public class Account implements Serializable {
     }
 
     @XmlTransient
-    public List<Submit> getSubmitList() {
-        return submitList;
+    public List<AccountSubmit> getAccountSubmitList() {
+        return accountSubmitList;
     }
 
-    public void setSubmitList(List<Submit> submitList) {
-        this.submitList = submitList;
-    }
-
-    @XmlTransient
-    public List<TeamContest> getTeamContestList() {
-        return teamContestList;
-    }
-
-    public void setTeamContestList(List<TeamContest> teamContestList) {
-        this.teamContestList = teamContestList;
+    public void setAccountSubmitList(List<AccountSubmit> accountSubmitList) {
+        this.accountSubmitList = accountSubmitList;
     }
 
     @XmlTransient
@@ -120,6 +111,15 @@ public class Account implements Serializable {
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
+    }
+
+    @XmlTransient
+    public List<TeamAccount> getTeamAccountList() {
+        return teamAccountList;
+    }
+
+    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
+        this.teamAccountList = teamAccountList;
     }
 
     @Override

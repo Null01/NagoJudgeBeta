@@ -6,7 +6,7 @@
 package edu.nagojudge.web.mbeans;
 
 import edu.nagojudge.app.business.dao.beans.ParametersNjFacade;
-import edu.nagojudge.app.business.dao.beans.SecurityFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.SecurityFacade;
 import edu.nagojudge.app.business.dao.entities.ParametersNj;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.ParametersNJMessage;
@@ -35,7 +35,7 @@ public class SettingsGeneralBean {
     private final Logger logger = Logger.getLogger(SettingsGeneralBean.class);
 
     @EJB
-    private SecurityFacadeDAO securityFacadeDAO;
+    private SecurityFacade securityFacadeDAO;
 
     @EJB
     private ParametersNjFacade parametersNjFacade;

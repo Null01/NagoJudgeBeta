@@ -5,8 +5,8 @@
  */
 package edu.nagojudge.web.mbeans;
 
-import edu.nagojudge.app.business.dao.beans.ProblemFacadeDAO;
-import edu.nagojudge.app.business.dao.beans.SubmitFacadeDAO;
+import edu.nagojudge.app.business.dao.beans.ProblemFacade;
+import edu.nagojudge.app.business.dao.beans.SubmitFacade;
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.CategoryProblem;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
@@ -35,10 +35,10 @@ import org.primefaces.model.UploadedFile;
 public class ProblemsBean implements Serializable {
 
     @EJB
-    private SubmitFacadeDAO submitFacadeDAO;
+    private SubmitFacade submitFacadeDAO;
 
     @EJB
-    private ProblemFacadeDAO problemFacade;
+    private ProblemFacade problemFacade;
 
     private final Logger logger = Logger.getLogger(ProblemsBean.class);
 

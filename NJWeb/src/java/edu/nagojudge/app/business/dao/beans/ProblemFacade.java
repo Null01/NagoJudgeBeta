@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.app.business.dao.beans;
 
+import edu.nagojudge.app.business.dao.entities.AccountSubmit;
 import edu.nagojudge.app.business.dao.entities.Attachments;
 import edu.nagojudge.app.business.dao.entities.CategoryProblem;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
@@ -19,7 +20,6 @@ import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import edu.nagojudge.tools.utils.FormatUtil;
 import java.io.IOException;
-import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,12 +39,12 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Serializable {
+public class ProblemFacade extends AbstractFacade<Problem> {
 
     @EJB
-    private AttachmentsFacadeDAO attachmentsFacadeDAO;
+    private AttachmentsFacade attachmentsFacadeDAO;
 
-    private final Logger logger = Logger.getLogger(ProblemFacadeDAO.class);
+    private final Logger logger = Logger.getLogger(ProblemFacade.class);
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -54,7 +54,7 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
         return em;
     }
 
-    public ProblemFacadeDAO() {
+    public ProblemFacade() {
         super(Problem.class);
     }
 
@@ -102,8 +102,12 @@ public class ProblemFacadeDAO extends AbstractFacade<Problem> implements Seriali
         EntityManager em = getEntityManager();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT S.ID_PROBLEM, S.STATUS_SUBMIT, COUNT(0) FROM SUBMIT S GROUP BY S.ID_PROBLEM, S.STATUS_SUBMIT ORDER BY S.ID_PROBLEM DESC");
-        List<Object[]> resultList = em.createNativeQuery(sql.toString()).getResultList();
+        sql.append("SELECT p.idSubmit.idProblem.idProblem, ").append("p.idSubmit.dStatus.idStatus, ").append("COUNT(0) ");
+        sql.append("FROM AccountSubmit p GROUP BY p.idSubmit.idProblem.idProblem, p.idSubmit.dStatus.idStatus ");
+        sql.append("ORDER BY p.idSubmit.idProblem.idProblem DESC");
+        Query query = em.createQuery(sql.toString(), AccountSubmit.class);
+        List<Object[]> resultList = query.getResultList();
+
         for (Object[] objects : resultList) {
             long idProblem = Long.parseLong(String.valueOf(objects[0]));
             if (map.get(idProblem) == null) {
