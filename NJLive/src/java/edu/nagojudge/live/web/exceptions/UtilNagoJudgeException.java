@@ -1,4 +1,4 @@
-package edu.nagojudge.app.exceptions;
+package edu.nagojudge.live.web.exceptions;
 
 /**
  *

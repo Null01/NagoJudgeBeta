@@ -1,6 +1,6 @@
-package edu.nagojudge.app.utils;
+package edu.nagojudge.live.web.utils;
 
-import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
+import edu.nagojudge.live.web.exceptions.UtilNagoJudgeException;
 import java.util.regex.Pattern;
 
 /**

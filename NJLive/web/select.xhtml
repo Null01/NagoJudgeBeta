@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <f:view contentType="text/html">
+        <h:head>
+            <ui:include src="/commons/header.xhtml"/>
+            <script type="text/javascript" src="/js/particleground.js"></script>
+        </h:head>
+        <h:body id="main-body">
+            <div class="container">
+                <ui:include src="/commons/navigation.xhtml"/>
+
+                <div class="container">
+                    <div id="selectbox" class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3"> 
+
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <div class="panel-title text-center"> Welcome to Nago Judge </div>
+                            </div>
+                            <div class="panel-body" >
+                                <h:form id="form-select" styleClass="form-horizontal" >
+                                    <p:panel id="panel-login">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                            <p:selectOneMenu id="selectChallenge" styleClass="selected-list form-control" style="width: 100%;" converter="challengeMessageConvertJSF"
+                                                             value="#{configChallengeBean.challengeMessageView}"  required="true" >
+                                                <f:selectItems value="#{configChallengeBean.categoryProblemItems}" />                                               
+                                            </p:selectOneMenu>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                            <p:password id="password"
+                                                        styleClass="form-control"
+                                                        placeholder="Password"
+                                                        value="#{signInOutBean.password}"
+                                                        required="true" >
+                                                <f:validateLength minimum="3" maximum="15" />
+                                            </p:password>
+                                        </div>                                                                  
+
+                                        <div class="form-group">
+                                            <p:messages autoUpdate="true" closable="true" />
+                                            <div class="col-sm-12 controls">
+                                                <p:commandButton styleClass="btn btn-primary pull-right"
+                                                                 value="sign in"
+                                                                 actionListener="#{signInOutBean.actionSignInSession}"
+                                                                 update="panel-login"/>
+                                            </div>
+                                        </div>
+                                    </p:panel>
+                                </h:form>
+                            </div>                     
+                        </div>                        
+                    </div>
+
+                    <div id="particles"></div>
+
+                    <ui:include id="panel-draw" src="/commons/particleground.xhtml" />
+
+                </div>
+
+                <ui:include src="/commons/footer.xhtml"/>
+            </div>
+        </h:body>
+    </f:view>
+</html>

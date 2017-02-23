@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.web.mbeans.clientboard;
+package edu.nagojudge.live.web.mbeans;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
