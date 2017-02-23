@@ -26,10 +26,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "LANGUAGE_PROGRAMMING", catalog = "njlive", schema = "")
+@Table(name = "language_programming", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LanguageProgramming.findAll", query = "SELECT l FROM LanguageProgramming l")})

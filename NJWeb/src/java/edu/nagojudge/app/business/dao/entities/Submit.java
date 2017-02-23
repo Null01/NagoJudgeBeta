@@ -32,10 +32,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "SUBMIT", catalog = "njlive", schema = "")
+@Table(name = "submit", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Submit.findAll", query = "SELECT s FROM Submit s")})
@@ -59,19 +59,19 @@ public class Submit implements Serializable {
     @Size(max = 65535)
     @Column(name = "MSG_JUDGE")
     private String msgJudge;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
-    private List<AccountSubmit> accountSubmitList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
-    private List<TeamChallengeSubmit> teamChallengeSubmitList;
     @JoinColumn(name = "ID_LANGUAGE", referencedColumnName = "ID_LANGUAGE")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private LanguageProgramming idLanguage;
     @JoinColumn(name = "ID_PROBLEM", referencedColumnName = "ID_PROBLEM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Problem idProblem;
-    @JoinColumn(name = "D_STATUS", referencedColumnName = "ID_STATUS")
+    @JoinColumn(name = "ID_STATUS", referencedColumnName = "ID_STATUS")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private SubmitStatus dStatus;
+    private SubmitStatus idStatus;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
+    private List<AccountSubmit> accountSubmitList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
+    private List<TeamChallengeSubmit> teamChallengeSubmitList;
 
     public Submit() {
     }
@@ -117,24 +117,6 @@ public class Submit implements Serializable {
         this.msgJudge = msgJudge;
     }
 
-    @XmlTransient
-    public List<AccountSubmit> getAccountSubmitList() {
-        return accountSubmitList;
-    }
-
-    public void setAccountSubmitList(List<AccountSubmit> accountSubmitList) {
-        this.accountSubmitList = accountSubmitList;
-    }
-
-    @XmlTransient
-    public List<TeamChallengeSubmit> getTeamChallengeSubmitList() {
-        return teamChallengeSubmitList;
-    }
-
-    public void setTeamChallengeSubmitList(List<TeamChallengeSubmit> teamChallengeSubmitList) {
-        this.teamChallengeSubmitList = teamChallengeSubmitList;
-    }
-
     public LanguageProgramming getIdLanguage() {
         return idLanguage;
     }
@@ -151,12 +133,30 @@ public class Submit implements Serializable {
         this.idProblem = idProblem;
     }
 
-    public SubmitStatus getDStatus() {
-        return dStatus;
+    public SubmitStatus getIdStatus() {
+        return idStatus;
     }
 
-    public void setDStatus(SubmitStatus dStatus) {
-        this.dStatus = dStatus;
+    public void setIdStatus(SubmitStatus idStatus) {
+        this.idStatus = idStatus;
+    }
+
+    @XmlTransient
+    public List<AccountSubmit> getAccountSubmitList() {
+        return accountSubmitList;
+    }
+
+    public void setAccountSubmitList(List<AccountSubmit> accountSubmitList) {
+        this.accountSubmitList = accountSubmitList;
+    }
+
+    @XmlTransient
+    public List<TeamChallengeSubmit> getTeamChallengeSubmitList() {
+        return teamChallengeSubmitList;
+    }
+
+    public void setTeamChallengeSubmitList(List<TeamChallengeSubmit> teamChallengeSubmitList) {
+        this.teamChallengeSubmitList = teamChallengeSubmitList;
     }
 
     @Override

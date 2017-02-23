@@ -86,7 +86,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
 
             submit.setIdProblem(problemView);
             submit.setIdLanguage(languageProgrammingView);
-            submit.setDStatus(em.find(SubmitStatus.class, TypeStateJudgeEnum.IP.getValue()));
+            submit.setIdStatus(em.find(SubmitStatus.class, TypeStateJudgeEnum.IP.getValue()));
             submit.setDateSubmit(Calendar.getInstance().getTime());
 
             Account account = (Account) accountObject;

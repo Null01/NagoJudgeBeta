@@ -9,7 +9,6 @@ import edu.nagojudge.app.exceptions.NagoJudgeException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;

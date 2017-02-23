@@ -13,6 +13,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -27,10 +29,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "TEAM", catalog = "njlive", schema = "")
+@Table(name = "team", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Team.findAll", query = "SELECT t FROM Team t")})
@@ -38,6 +40,10 @@ public class Team implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID_TEAM")
+    private Long idTeam;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -46,16 +52,29 @@ public class Team implements Serializable {
     @Column(name = "DATE_REGISTER")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idNameTeam", fetch = FetchType.LAZY)
-    private List<TeamAccount> teamAccountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idNameTeam", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTeam", fetch = FetchType.LAZY)
     private List<TeamChallengeSubmit> teamChallengeSubmitList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTeam", fetch = FetchType.LAZY)
+    private List<TeamAccount> teamAccountList;
 
     public Team() {
     }
 
-    public Team(String idNameTeam) {
+    public Team(Long idTeam) {
+        this.idTeam = idTeam;
+    }
+
+    public Team(Long idTeam, String idNameTeam) {
+        this.idTeam = idTeam;
         this.idNameTeam = idNameTeam;
+    }
+
+    public Long getIdTeam() {
+        return idTeam;
+    }
+
+    public void setIdTeam(Long idTeam) {
+        this.idTeam = idTeam;
     }
 
     public String getIdNameTeam() {
@@ -75,15 +94,6 @@ public class Team implements Serializable {
     }
 
     @XmlTransient
-    public List<TeamAccount> getTeamAccountList() {
-        return teamAccountList;
-    }
-
-    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
-        this.teamAccountList = teamAccountList;
-    }
-
-    @XmlTransient
     public List<TeamChallengeSubmit> getTeamChallengeSubmitList() {
         return teamChallengeSubmitList;
     }
@@ -92,10 +102,19 @@ public class Team implements Serializable {
         this.teamChallengeSubmitList = teamChallengeSubmitList;
     }
 
+    @XmlTransient
+    public List<TeamAccount> getTeamAccountList() {
+        return teamAccountList;
+    }
+
+    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
+        this.teamAccountList = teamAccountList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idNameTeam != null ? idNameTeam.hashCode() : 0);
+        hash += (idTeam != null ? idTeam.hashCode() : 0);
         return hash;
     }
 
@@ -106,7 +125,7 @@ public class Team implements Serializable {
             return false;
         }
         Team other = (Team) object;
-        if ((this.idNameTeam == null && other.idNameTeam != null) || (this.idNameTeam != null && !this.idNameTeam.equals(other.idNameTeam))) {
+        if ((this.idTeam == null && other.idTeam != null) || (this.idTeam != null && !this.idTeam.equals(other.idTeam))) {
             return false;
         }
         return true;
@@ -114,7 +133,7 @@ public class Team implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.app.business.dao.entities.Team[ idNameTeam=" + idNameTeam + " ]";
+        return "edu.nagojudge.app.business.dao.entities.Team[ idTeam=" + idTeam + " ]";
     }
     
 }

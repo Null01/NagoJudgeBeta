@@ -102,8 +102,8 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         EntityManager em = getEntityManager();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT p.idSubmit.idProblem.idProblem, ").append("p.idSubmit.dStatus.idStatus, ").append("COUNT(0) ");
-        sql.append("FROM AccountSubmit p GROUP BY p.idSubmit.idProblem.idProblem, p.idSubmit.dStatus.idStatus ");
+        sql.append("SELECT p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.idStatus, COUNT(0) ");
+        sql.append("FROM AccountSubmit p GROUP BY p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.idStatus ");
         sql.append("ORDER BY p.idSubmit.idProblem.idProblem DESC");
         Query query = em.createQuery(sql.toString(), AccountSubmit.class);
         List<Object[]> resultList = query.getResultList();

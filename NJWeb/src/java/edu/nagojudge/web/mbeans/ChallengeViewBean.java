@@ -46,8 +46,8 @@ public class ChallengeViewBean implements Serializable {
         this.listChallenges = new ArrayList<ChallengeMessage>(this.challengeFacade.getAllChallengeMessage());
     }
 
-    public String actionRedirectViewToBoardChallenge() {
-        return "/challenge/now.xhtml?faces-redirect=true&includeViewParams=true";
+    public String actionRedirectSummaryChallenge() {
+        return "/modules/practice/contest/summary.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public ChallengeMessage getChallengeMessageView() {

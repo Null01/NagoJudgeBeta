@@ -65,7 +65,7 @@ public class UserBean implements Serializable {
     public void init() {
         this.listUsers = userFacade.findAllUsersMessage();
         this.typeUserItems = parceToSelectItemTypeUsers(typeUserFacade.findAll());
-        userView.setKeyUser(userFacade.autoGenerateString());
+        userView.setPasswordUser(userFacade.autoGenerateString());
     }
 
     public void actionCreateUser(ActionEvent event) {
@@ -101,7 +101,7 @@ public class UserBean implements Serializable {
     }
 
     public void actionChangePasswordGenerate(ActionEvent actionEvent) {
-        userView.setKeyUser(userFacade.autoGenerateString());
+        userView.setPasswordUser(userFacade.autoGenerateString());
     }
 
     public List<UserMessage> getListUsers() {

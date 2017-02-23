@@ -110,14 +110,14 @@ public class UserFacade extends AbstractFacade<User> {
             accountFacadeDAO.create(account);
 
             user.setIdAccount(account);
-            user.setKeyUser(securityFacadeDAO.encodeSHA2(user.getKeyUser(), TypeSHAEnum.SHA256));
+            user.setPasswordUser(securityFacadeDAO.encodeSHA2(user.getPasswordUser(), TypeSHAEnum.SHA256));
             logger.debug("getIdAccount [" + user.getIdAccount() + "]");
             logger.debug("getFirstName [" + user.getFirstName() + "]");
             logger.debug("getLastName [" + user.getLastName() + "]");
             logger.debug("getIdEmail [" + user.getIdEmail() + "]");
             logger.debug("getDateBirthday [" + user.getDateBirthday() + "]");
             logger.debug("getIdType [" + user.getIdType() + "]");
-            logger.debug("getKeyUser [" + user.getKeyUser() + "]");
+            logger.debug("getKeyUser [" + user.getPasswordUser() + "]");
 
             validateFieldsUnique(user.getIdEmail());
             create(user);
@@ -157,7 +157,7 @@ public class UserFacade extends AbstractFacade<User> {
         User outcome = null;
         String passwordEncrypted = securityFacadeDAO.encodeSHA2(password, TypeSHAEnum.SHA256_NUM);
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT p FROM ").append(User.class.getSimpleName()).append(" p WHERE p.idEmail = :email AND p.keyUser = :pass");
+        sql.append("SELECT p FROM User p WHERE p.idEmail = :email AND p.passwordUser = :pass");
         Query query = em.createQuery(sql.toString()).setParameter("email", email).setParameter("pass", passwordEncrypted);
         List resultList = query.getResultList();
         if (resultList != null && resultList.size() == 1) {

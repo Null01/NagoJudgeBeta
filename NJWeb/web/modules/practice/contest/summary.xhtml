@@ -1,0 +1,41 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/core"
+    template="/home.xhtml">
+
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="idChallenge" value="#{challengeSummaryBean.idChallenge}"
+                         required="true" >
+                <f:validateLength minimum="1" maximum="30" />
+            </f:viewParam>
+            <f:event type="preRenderView"
+                     listener="#{challengeSummaryBean.actionListenerPreRender}" 
+                     rendered="form-search-challenge"  />
+        </f:metadata>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="well">
+            <fieldset>
+                <div class="form-group">
+                    <h:form id="form-search-challenge" class="form-horizontal">
+                        <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                        #{challengeSummaryBean.challengeMessageView.dateStart}
+                        -
+                        #{challengeSummaryBean.challengeMessageView.dateEnd}
+                        
+                         <p:clock pattern="HH:mm:ss dd.MM.yyyy"  />
+                    </h:form>
+                </div>
+            </fieldset> 
+        </div>
+
+    </ui:define>
+</ui:composition>
+
