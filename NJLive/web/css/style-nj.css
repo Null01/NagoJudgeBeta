@@ -6,11 +6,11 @@ body {
     background-color: white;
 }
 
-#loginbox {
+#box-float {
     margin-top: 30px;
 }
 
-#loginbox > div:first-child {        
+#box-float > div:first-child {        
     padding-bottom: 10px;    
 }
 

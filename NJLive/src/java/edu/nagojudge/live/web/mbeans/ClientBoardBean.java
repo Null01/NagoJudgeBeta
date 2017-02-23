@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.web.mbeans.clientboard;
+package edu.nagojudge.live.web.mbeans;
 
-import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.live.web.utils.FacesUtil;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;

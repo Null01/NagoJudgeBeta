@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <ui:include src="/commons/header.xhtml"/>
+        </h:head>
+        <h:body id="main">
+
+            <ui:define name="metadata">
+                <f:metadata>
+                    <f:viewParam name="key" value="#{clientBoardBean.key}" required="true" >
+                        <f:validateLength minimum="1" maximum="30" />
+                    </f:viewParam>
+                    <f:viewParam name="id" value="#{clientBoardBean.id}" required="true">
+                        <f:validateLength minimum="1" maximum="30" />
+                    </f:viewParam>
+                    <f:event type="preRenderView" listener="#{clientBoardBean.actionListenerPreRender}" />
+                </f:metadata>
+            </ui:define>
+
+            <ui:include src="/commons/navigation.xhtml" />
+
+            <div id="main-body" style="margin-top: -20px;">
+                
+                <p:panel id="panel-client-problems" rendered="#{clientBoardBean.showProblems}">
+                    1
+                </p:panel>
+
+                <p:panel id="panel-client-score" rendered="#{clientBoardBean.showScore}">                  
+                    2
+                </p:panel>
+
+                <p:panel id="panel-client-submits" rendered="#{clientBoardBean.showSubmits}" >
+                    3
+                </p:panel>
+            </div>
+
+            <div id="main-footer">
+                <p:row>
+                    <p class="text-center" > #{common['footer.general.appweb']} </p>
+                </p:row>
+            </div>
+        </h:body>
+
+        <script type="text/javascript" >
+            PrimeFaces.locales['es'] = { closeText: 'Cerrar', prevText: 'Anterior', nextText: 'Siguiente', monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'], monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'], dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'], dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'], dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'], weekHeader: 'Semana', firstDay: 1, isRTL: false, showMonthAfterYear: false, yearSuffix: '', timeOnlyTitle: 'Sólo hora', timeText: 'Tiempo', hourText: 'Hora', minuteText: 'Minuto', secondText: 'Segundo', currentText: 'Fecha actual', ampm: false, month: 'Mes', week: 'Semana', day: 'Día', allDayText : 'Todo el día' };
+        </script>
+    </f:view>
+</html>

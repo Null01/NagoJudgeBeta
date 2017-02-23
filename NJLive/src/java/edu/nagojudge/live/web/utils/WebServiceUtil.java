@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.app.utils;
+package edu.nagojudge.live.web.utils;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;

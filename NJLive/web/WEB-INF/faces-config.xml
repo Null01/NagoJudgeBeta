@@ -8,7 +8,7 @@
             <default-locale>es</default-locale>
         </locale-config>
         <resource-bundle>
-            <base-name>edu.nagojudge.web.utils.resources.msgs.general</base-name>
+            <base-name>edu.nagojudge.live.web.utils.resources.i18n.general</base-name>
             <var>msg</var>
         </resource-bundle>
     </application>
