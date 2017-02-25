@@ -12,6 +12,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
@@ -25,10 +27,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "SUBMIT_STATUS", catalog = "njlive", schema = "")
+@Table(name = "submit_status", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "SubmitStatus.findAll", query = "SELECT s FROM SubmitStatus s")})
@@ -36,11 +38,15 @@ public class SubmitStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID_STATUS")
+    private Integer idStatus;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 4)
-    @Column(name = "ID_STATUS")
-    private String idStatus;
+    @Size(min = 1, max = 45)
+    @Column(name = "KEY_STATUS")
+    private String keyStatus;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -50,27 +56,36 @@ public class SubmitStatus implements Serializable {
     @Size(max = 65535)
     @Column(name = "DESCRIPTION")
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dStatus", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idStatus", fetch = FetchType.LAZY)
     private List<Submit> submitList;
 
     public SubmitStatus() {
     }
 
-    public SubmitStatus(String idStatus) {
+    public SubmitStatus(Integer idStatus) {
         this.idStatus = idStatus;
     }
 
-    public SubmitStatus(String idStatus, String nameStatus) {
+    public SubmitStatus(Integer idStatus, String keyStatus, String nameStatus) {
         this.idStatus = idStatus;
+        this.keyStatus = keyStatus;
         this.nameStatus = nameStatus;
     }
 
-    public String getIdStatus() {
+    public Integer getIdStatus() {
         return idStatus;
     }
 
-    public void setIdStatus(String idStatus) {
+    public void setIdStatus(Integer idStatus) {
         this.idStatus = idStatus;
+    }
+
+    public String getKeyStatus() {
+        return keyStatus;
+    }
+
+    public void setKeyStatus(String keyStatus) {
+        this.keyStatus = keyStatus;
     }
 
     public String getNameStatus() {

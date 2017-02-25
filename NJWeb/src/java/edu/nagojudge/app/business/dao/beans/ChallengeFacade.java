@@ -14,7 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -70,7 +72,6 @@ public class ChallengeFacade extends AbstractFacade<Challenge> {
 
             challenge.setChallengeProblemList(challengeProblems);
             challenge.setDateCreated(Calendar.getInstance().getTime());
-            challenge.setDateEnd(challenge.getDateStart()); // Revisar
 
             logger.debug("getIdAccountOrganizer()=" + challenge.getIdAccountOrganizer());
             logger.debug("getNameChallenge()=" + challenge.getNameChallenge());
@@ -100,22 +101,6 @@ public class ChallengeFacade extends AbstractFacade<Challenge> {
             time.setSeconds(0);
             outcome.add(dateFormat.format(time));
         }
-        return outcome;
-    }
-
-    public List<String> obtenerListaDuracionCompetencias() {
-        List<String> outcome = new ArrayList<String>();
-        outcome.add("3 Horas");
-        outcome.add("4 Horas");
-        outcome.add("5 Horas");
-        outcome.add("6 Horas");
-        outcome.add("7 Horas");
-        outcome.add("1 Dia");
-        outcome.add("2 Dias");
-        outcome.add("3 Dias");
-        outcome.add("4 Dias");
-        outcome.add("1 Semana");
-        outcome.add("2 Semanas");
         return outcome;
     }
 

@@ -22,10 +22,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "TEAM_ACCOUNT", catalog = "njlive", schema = "")
+@Table(name = "team_account", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TeamAccount.findAll", query = "SELECT t FROM TeamAccount t")})
@@ -43,9 +43,9 @@ public class TeamAccount implements Serializable {
     @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Challenge idChallenge;
-    @JoinColumn(name = "ID_NAME_TEAM", referencedColumnName = "ID_NAME_TEAM")
+    @JoinColumn(name = "ID_TEAM", referencedColumnName = "ID_TEAM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Team idNameTeam;
+    private Team idTeam;
 
     public TeamAccount() {
     }
@@ -78,12 +78,12 @@ public class TeamAccount implements Serializable {
         this.idChallenge = idChallenge;
     }
 
-    public Team getIdNameTeam() {
-        return idNameTeam;
+    public Team getIdTeam() {
+        return idTeam;
     }
 
-    public void setIdNameTeam(Team idNameTeam) {
-        this.idNameTeam = idNameTeam;
+    public void setIdTeam(Team idTeam) {
+        this.idTeam = idTeam;
     }
 
     @Override

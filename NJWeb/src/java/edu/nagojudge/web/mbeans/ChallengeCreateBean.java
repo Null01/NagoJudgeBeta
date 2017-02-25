@@ -9,9 +9,11 @@ import edu.nagojudge.app.business.dao.beans.ChallengeFacade;
 import edu.nagojudge.app.business.dao.beans.ProblemFacade;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.app.utils.TransformUtil;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +48,9 @@ public class ChallengeCreateBean implements Serializable {
     private Map<Long, ProblemMessage> mapProblemsSelectedObject = new HashMap<Long, ProblemMessage>();
     private List<ProblemMessage> listProblemsSelectedFinally = new ArrayList<ProblemMessage>();
 
-    private List<String> listTimesStarted = new ArrayList<String>();
+    private List<String> listTimes = new ArrayList<String>();
     private String timeStartSelected;
+    private String timeEndSelected;
     private List<String> listDurationsStarted = new ArrayList<String>();
     private String duracionStartSelected;
     private List<String> listQuantityProblems = new ArrayList<String>();
@@ -64,8 +67,7 @@ public class ChallengeCreateBean implements Serializable {
     public void init() {
 
         this.listProblems = problemFacade.findProblemEntitiesPojo();
-        this.listTimesStarted = challengeFacade.obtenerListaHorasInicioCompetencias();
-        this.listDurationsStarted = challengeFacade.obtenerListaDuracionCompetencias();
+        this.listTimes = challengeFacade.obtenerListaHorasInicioCompetencias();
         this.listQuantityProblems = challengeFacade.obtenerListaNumeroEnunciados();
         for (ProblemMessage problemPojo : listProblems) {
             mapProblemsSelected.put(problemPojo.getIdProblem(), Boolean.FALSE);
@@ -89,6 +91,10 @@ public class ChallengeCreateBean implements Serializable {
     public void actionSaveCompleteChallenge() {
         try {
             logger.debug("INICIA METODO - actionSaveCompleteChallenge()");
+            Date start = TransformUtil.getUtilTransform().addFormatHHmmaToDate(challengeView.getDateStart(), timeStartSelected);
+            Date end = TransformUtil.getUtilTransform().addFormatHHmmaToDate(challengeView.getDateEnd(), timeEndSelected);
+            challengeView.setDateStart(start);
+            challengeView.setDateEnd(end);
             String challengeId = challengeFacade.createChallenge(challengeView, listProblemsSelectedFinally);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Competencia #" + challengeId);
             FacesUtil.getFacesUtil().redirect(TARGET_PATH);
@@ -132,12 +138,12 @@ public class ChallengeCreateBean implements Serializable {
         this.listProblemsSelectedFinally = listProblemsSelectedFinally;
     }
 
-    public List<String> getListTimesStarted() {
-        return listTimesStarted;
+    public List<String> getListTimes() {
+        return listTimes;
     }
 
-    public void setListTimesStarted(List<String> listTimesStarted) {
-        this.listTimesStarted = listTimesStarted;
+    public void setListTimes(List<String> listTimes) {
+        this.listTimes = listTimes;
     }
 
     public String getTimeStartSelected() {
@@ -202,6 +208,14 @@ public class ChallengeCreateBean implements Serializable {
 
     public void setSearchParameter(String searchParameter) {
         this.searchParameter = searchParameter;
+    }
+
+    public String getTimeEndSelected() {
+        return timeEndSelected;
+    }
+
+    public void setTimeEndSelected(String timeEndSelected) {
+        this.timeEndSelected = timeEndSelected;
     }
 
 }

@@ -32,9 +32,13 @@
                                                              required="true"
                                                              value="#{challengeCreateBean.challengeView.nameChallenge}" />
                                             </div>
-                                            <label for="dateChallenge" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge']}</label>
+                                            <div class="col-md-4"> </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="dateChallengeStart" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.start']}</label>
                                             <div class="col-md-4">
-                                                <p:calendar id="dateChallenge"
+                                                <p:calendar id="dateChallengeStart"
                                                             pattern="MM/dd/yyyy"                                                    
                                                             placeholder="02/05/2015"
                                                             yearRange="c-50:c+5"
@@ -42,29 +46,39 @@
                                                             required="true"
                                                             value="#{challengeCreateBean.challengeView.dateStart}" />
                                             </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="timeChallenge" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge']}</label>
+                                            <label for="timeChallengeStart" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge.start']}</label>
                                             <div class="col-md-4">
-                                                <p:selectOneMenu id="timeChallenge"
+                                                <p:selectOneMenu id="timeChallengeStart"
                                                                  styleClass="selected-list form-control"
                                                                  style="width: 100%;" 
                                                                  value="#{challengeCreateBean.timeStartSelected}"
                                                                  required="true">
                                                     <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
-                                                    <f:selectItems value="#{challengeCreateBean.listTimesStarted}"  />                                               
+                                                    <f:selectItems value="#{challengeCreateBean.listTimes}"  />                                               
                                                 </p:selectOneMenu>
                                             </div>
-                                            <label for="duration" class="col-md-2 control-label">#{msg['challenge.label.duration']}</label>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="dateChallengeEnd" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.end']}</label>
                                             <div class="col-md-4">
-                                                <p:selectOneMenu id="duration"
+                                                <p:calendar id="dateChallengeEnd"
+                                                            pattern="MM/dd/yyyy"                                                    
+                                                            placeholder="02/05/2015"
+                                                            yearRange="c-50:c+5"
+                                                            navigator="true"
+                                                            required="true"
+                                                            value="#{challengeCreateBean.challengeView.dateEnd}" />
+                                            </div>
+                                            <label for="timeChallengeEnd" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge.end']}</label>
+                                            <div class="col-md-4">
+                                                <p:selectOneMenu id="timeChallengeEnd"
                                                                  styleClass="selected-list form-control"
                                                                  style="width: 100%;" 
-                                                                 value="#{challengeCreateBean.duracionStartSelected}"
+                                                                 value="#{challengeCreateBean.timeEndSelected}"
                                                                  required="true">
                                                     <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
-                                                    <f:selectItems value="#{challengeCreateBean.listDurationsStarted}" />                                               
+                                                    <f:selectItems value="#{challengeCreateBean.listTimes}"  />                                               
                                                 </p:selectOneMenu>
                                             </div>
                                         </div>

@@ -10,8 +10,7 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="key" value="#{challengeViewBean.challengeMessageView.idChallenge}"/>
-            <f:viewParam name="id" value="#{challengeViewBean.idUser}"/>            
+            <f:viewParam name="idChallenge" value="#{challengeViewBean.challengeMessageView.idChallenge}"/>
         </f:metadata>
     </ui:define>
 
@@ -69,9 +68,7 @@
                             </p:column>
                             <p:column headerText="Board" width="40" style="text-align: center !important;" >
                                 <p:commandLink styleClass="glyphicon glyphicon-play"
-                                               target="_blank"
-                                               ajax="false"
-                                               action="#{challengeViewBean.actionRedirectViewToBoardChallenge}">
+                                               action="#{challengeViewBean.actionRedirectSummaryChallenge}">
                                     <f:setPropertyActionListener target="#{challengeViewBean.challengeMessageView.idChallenge}" value="#{p.idChallenge}" />
                                 </p:commandLink>
                             </p:column>

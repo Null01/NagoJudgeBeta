@@ -30,10 +30,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "CHALLENGE", catalog = "njlive", schema = "")
+@Table(name = "challenge", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Challenge.findAll", query = "SELECT c FROM Challenge c")})
@@ -72,9 +72,9 @@ public class Challenge implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
-    private List<TeamAccount> teamAccountList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
     private List<ChallengeProblem> challengeProblemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
+    private List<TeamAccount> teamAccountList;
 
     public Challenge() {
     }
@@ -148,21 +148,21 @@ public class Challenge implements Serializable {
     }
 
     @XmlTransient
-    public List<TeamAccount> getTeamAccountList() {
-        return teamAccountList;
-    }
-
-    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
-        this.teamAccountList = teamAccountList;
-    }
-
-    @XmlTransient
     public List<ChallengeProblem> getChallengeProblemList() {
         return challengeProblemList;
     }
 
     public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
         this.challengeProblemList = challengeProblemList;
+    }
+
+    @XmlTransient
+    public List<TeamAccount> getTeamAccountList() {
+        return teamAccountList;
+    }
+
+    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
+        this.teamAccountList = teamAccountList;
     }
 
     @Override

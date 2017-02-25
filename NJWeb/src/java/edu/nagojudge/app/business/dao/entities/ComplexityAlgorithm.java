@@ -26,10 +26,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "COMPLEXITY_ALGORITHM", catalog = "njlive", schema = "")
+@Table(name = "complexity_algorithm", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ComplexityAlgorithm.findAll", query = "SELECT c FROM ComplexityAlgorithm c")})
@@ -46,7 +46,7 @@ public class ComplexityAlgorithm implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "NAME_COMPLEXITY_ALGORITHM")
     private String nameComplexityAlgorithm;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idComplexityAlgorithmMax", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idComplexityAlgorithm", fetch = FetchType.LAZY)
     private List<Problem> problemList;
 
     public ComplexityAlgorithm() {

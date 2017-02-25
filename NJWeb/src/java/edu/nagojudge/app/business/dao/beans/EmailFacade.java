@@ -56,7 +56,7 @@ public class EmailFacade implements Serializable {
             // Construccion codigo QR
             StringBuilder textQRCode = new StringBuilder();
             textQRCode.append("User: ").append(user.getIdEmail()).append("\n");
-            textQRCode.append("Password: ").append(user.getKeyUser()).append("\n\n");
+            textQRCode.append("Password: ").append(user.getPasswordUser()).append("\n\n");
             textQRCode.append("#NagoTeam").append("\n");
             QRGenerator generator = new QRGenerator();
             final BufferedImage bufferedImage = generator.createTextCode(textQRCode.toString(), 300, 300);

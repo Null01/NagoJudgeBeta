@@ -32,10 +32,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "PROBLEM", catalog = "njlive", schema = "")
+@Table(name = "problem", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Problem.findAll", query = "SELECT p FROM Problem p")})
@@ -68,21 +68,21 @@ public class Problem implements Serializable {
     @Column(name = "DATE_CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
-    @JoinColumn(name = "ID_COMPLEXITY_ALGORITHM_MAX", referencedColumnName = "ID_COMPLEXITY_ALGORITHM")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Attachments> attachmentsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Submit> submitList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<ChallengeProblem> challengeProblemList;
+    @JoinColumn(name = "ID_COMPLEXITY_ALGORITHM", referencedColumnName = "ID_COMPLEXITY_ALGORITHM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private ComplexityAlgorithm idComplexityAlgorithmMax;
+    private ComplexityAlgorithm idComplexityAlgorithm;
     @JoinColumn(name = "ID_DIFFICULTY", referencedColumnName = "ID_DIFFICULTY")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private DifficultyLevel idDifficulty;
     @JoinColumn(name = "ID_CATEGORY", referencedColumnName = "ID_CATEGORY")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CategoryProblem idCategory;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<ChallengeProblem> challengeProblemList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Attachments> attachmentsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
 
     public Problem() {
     }
@@ -146,39 +146,6 @@ public class Problem implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public ComplexityAlgorithm getIdComplexityAlgorithmMax() {
-        return idComplexityAlgorithmMax;
-    }
-
-    public void setIdComplexityAlgorithmMax(ComplexityAlgorithm idComplexityAlgorithmMax) {
-        this.idComplexityAlgorithmMax = idComplexityAlgorithmMax;
-    }
-
-    public DifficultyLevel getIdDifficulty() {
-        return idDifficulty;
-    }
-
-    public void setIdDifficulty(DifficultyLevel idDifficulty) {
-        this.idDifficulty = idDifficulty;
-    }
-
-    public CategoryProblem getIdCategory() {
-        return idCategory;
-    }
-
-    public void setIdCategory(CategoryProblem idCategory) {
-        this.idCategory = idCategory;
-    }
-
-    @XmlTransient
-    public List<ChallengeProblem> getChallengeProblemList() {
-        return challengeProblemList;
-    }
-
-    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
-        this.challengeProblemList = challengeProblemList;
-    }
-
     @XmlTransient
     public List<Attachments> getAttachmentsList() {
         return attachmentsList;
@@ -195,6 +162,39 @@ public class Problem implements Serializable {
 
     public void setSubmitList(List<Submit> submitList) {
         this.submitList = submitList;
+    }
+
+    @XmlTransient
+    public List<ChallengeProblem> getChallengeProblemList() {
+        return challengeProblemList;
+    }
+
+    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
+        this.challengeProblemList = challengeProblemList;
+    }
+
+    public ComplexityAlgorithm getIdComplexityAlgorithm() {
+        return idComplexityAlgorithm;
+    }
+
+    public void setIdComplexityAlgorithm(ComplexityAlgorithm idComplexityAlgorithm) {
+        this.idComplexityAlgorithm = idComplexityAlgorithm;
+    }
+
+    public DifficultyLevel getIdDifficulty() {
+        return idDifficulty;
+    }
+
+    public void setIdDifficulty(DifficultyLevel idDifficulty) {
+        this.idDifficulty = idDifficulty;
+    }
+
+    public CategoryProblem getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(CategoryProblem idCategory) {
+        this.idCategory = idCategory;
     }
 
     @Override
