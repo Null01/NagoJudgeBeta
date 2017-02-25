@@ -29,7 +29,8 @@
                                             <p:selectOneMenu id="select-challenge"
                                                              value="#{configChallengeBean.challengeMessageView}"
                                                              style="width:100%;"
-                                                             converter="challengeMessageConvertJSF">
+                                                             converter="challengeMessageConvertJSF"
+                                                             required="true">
                                                 <f:selectItems var="item"
                                                                value="#{configChallengeBean.challengeMessageItems}" />
                                             </p:selectOneMenu>

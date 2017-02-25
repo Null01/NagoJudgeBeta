@@ -28,7 +28,7 @@ public class SignInOutBean implements Serializable {
     private String username = "agarciad1@ucentral.edu.co", password;
 
     private final String TARGET_PATH_NEXT_STEP_LOGIN = "/now/challenge/select.xhtml";
-    private final String TARGET_PATH_LOGOUT = "/go/";
+    private final String TARGET_PATH_NEXT_STEP_LOGOUT = "/";
 
     public SignInOutBean() {
     }
@@ -46,7 +46,7 @@ public class SignInOutBean implements Serializable {
         try {
             HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
             session.invalidate();
-            FacesUtil.getFacesUtil().redirect(TARGET_PATH_LOGOUT);
+            FacesUtil.getFacesUtil().redirect(TARGET_PATH_NEXT_STEP_LOGOUT);
         } catch (IOException ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
