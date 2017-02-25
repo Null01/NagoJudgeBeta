@@ -5,6 +5,7 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
     xmlns:fn="http://java.sun.com/jsp/jstl/core"
+    xmlns:pe="http://primefaces.org/ui/extensions"
     template="/home.xhtml">
 
 
@@ -26,16 +27,28 @@
                 <div class="form-group">
                     <h:form id="form-search-challenge" class="form-horizontal">
                         <p:messages id="msgs" autoUpdate="true" closable="true"/>
-                        #{challengeSummaryBean.challengeMessageView.dateStart}
-                        -
-                        #{challengeSummaryBean.challengeMessageView.dateEnd}
-                        
-                         <p:clock pattern="HH:mm:ss dd.MM.yyyy"  />
+
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="col-md-12 text-center">
+                                        <h1> 
+                                            <pe:timer id="status-challenge-on"
+                                                      timeout="#{challengeSummaryBean.timeEndingChallenge}"
+                                                      format="[Running:] DD [days] HH:mm:ss"
+                                                      rendered="#{challengeSummaryBean.actionRenderPanelTimerStatusChallenge}"/>
+                                            <p:outputLabel id="status-challenge-off"
+                                                           value="Challenge End"
+                                                           rendered="#{!challengeSummaryBean.actionRenderPanelTimerStatusChallenge}"/> 
+                                        </h1>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
                     </h:form>
                 </div>
             </fieldset> 
         </div>
-
     </ui:define>
 </ui:composition>
 

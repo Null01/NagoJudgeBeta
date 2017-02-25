@@ -9,6 +9,8 @@ import edu.nagojudge.app.business.dao.beans.ChallengeFacade;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
+import java.util.Calendar;
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -35,11 +37,9 @@ public class ChallengeSummaryBean {
     public ChallengeSummaryBean() {
     }
 
-    @PostConstruct
-    public void init() {
-        logger.debug("-> idChallenge [" + challengeMessageView.getIdChallenge() + "]");
-        logger.debug("idChallenge [" + idChallenge + "]");
-
+    public boolean getActionRenderPanelTimerStatusChallenge() {
+        Date currentTime = Calendar.getInstance().getTime();
+        return currentTime.after(challengeMessageView.getDateStart()) && currentTime.before(challengeMessageView.getDateEnd());
     }
 
     public void actionListenerPreRender() {
@@ -52,6 +52,23 @@ public class ChallengeSummaryBean {
             challengeMessageView = parseChallengeToChallengeMessage(find);
             logger.debug("params [" + challengeMessageView.getIdChallenge() + "]");
         }
+    }
+
+    public long getTimeEndingChallenge() {
+        Calendar endTimeChallenge = Calendar.getInstance();
+        Date currentTime = Calendar.getInstance().getTime();
+        endTimeChallenge.setTimeInMillis(challengeMessageView.getDateEnd().getTime() - currentTime.getTime());
+
+        logger.debug("endChallenge: " + challengeMessageView.getDateEnd());
+        logger.debug("currentTime: " + currentTime);
+        logger.debug("ending a: " + endTimeChallenge.getTime());
+
+        logger.debug(endTimeChallenge.get(Calendar.DATE));
+
+        return (60 * 60 * 24 * (endTimeChallenge.get(Calendar.DATE) - 1))
+                + (60 * 60 * endTimeChallenge.get(Calendar.HOUR_OF_DAY))
+                + (60 * (endTimeChallenge.get(Calendar.MINUTE)))
+                + endTimeChallenge.get(Calendar.SECOND);
     }
 
     public ChallengeMessage getChallengeMessageView() {
