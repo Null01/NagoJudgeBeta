@@ -19,8 +19,9 @@
                 </div>
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <div class="navbar-form navbar-left text-center">
-                        <h:form>
+                    <h:form>
+                        <div class="navbar-form navbar-left text-center">
+
                             <p:commandLink styleClass="btn btn-default" style="width: 160px;"
                                            value="Problems"
                                            actionListener="#{clientBoardBean.actionShowPanelProblems}"
@@ -33,13 +34,17 @@
                                            value="Submit"
                                            actionListener="#{clientBoardBean.actionShowPanelSubmits}"
                                            update="@all"/>
-                        </h:form>
-                    </div>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a href="#">Sign Out</a>
-                        </li>
-                    </ul>
+
+                        </div>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <p:commandLink styleClass="glyphicon glyphicon-off"
+                                               actionListener="#{signInOutBean.actionSignOutSession}"
+                                               ajax="false">
+                                </p:commandLink>
+                            </li>
+                        </ul>
+                    </h:form>
                 </div>
             </div>
         </nav>
