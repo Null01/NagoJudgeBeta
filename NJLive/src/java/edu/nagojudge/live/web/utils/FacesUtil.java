@@ -124,7 +124,7 @@ public class FacesUtil {
 
     public boolean isValidationFailed() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        return facesContext.isPostback() && facesContext.isValidationFailed();
+        return !facesContext.isPostback() && facesContext.isValidationFailed();
     }
 
     public void printErrorResponse(String message) {
@@ -152,21 +152,20 @@ public class FacesUtil {
                             + "<head>"
                             + "  <meta content='text/html; charset=UTF-8' http-equiv=\"Content-Type\"/>\n"
                             + "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n"
-                            + "  <link rel=\"stylesheet\" href=\"/go/to/tools/frameworks/bootstrap/css/lumen/bootstrap.min.css\"/>\n"
-                            + "  <script src=\"/go/to/tools/frameworks/bootstrap/js/bootstrap.min.js\"></script>\n"
-                            + "  <link rel=\"icon\" type=\"image/ico\" href=\"/go/to/img/logo-icon.png\"/>"
+                            + "  <link rel=\"stylesheet\" href=\"/now/tools/frameworks/bootstrap/css/bootstrap.min.css\"/>\n"
+                            + "  <link rel=\"icon\" type=\"image/ico\" href=\"/now/img/logo-icon.png\"/>"
                             + "  <title>Nago Judge</title>"
                             + "</head>"
                             + "<body>"
                             + "<div class=\"container\">\n"
                             + "    <div class=\"row\">\n"
-                            + "        <div class=\"col-md-12\">\n"
+                            + "        <div class=\"col-md-12 text-center\">\n"
                             + "            <div class=\"error-template\">\n"
                             + "                <div class=\"error-details\">\n"
                             + "<h1> " + messageThrowable + "</h1>\n"
                             + "                </div>\n"
                             + "                <div class=\"error-actions\">\n"
-                            + "                    <a href=\"/go/to/home.xhtml\" class=\"btn btn-primary btn-lg\"><span class=\"glyphicon glyphicon-home\"></span>\n Return to home </a>"
+                            + "                    <a href=\"/now/signin.xhtml\" class=\"btn btn-primary btn-lg\"><span class=\"glyphicon glyphicon-home\"></span>\n Return to home </a>"
                             + "                </div>\n"
                             + "            </div>\n"
                             + "        </div>\n"

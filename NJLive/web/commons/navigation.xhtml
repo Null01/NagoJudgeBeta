@@ -3,38 +3,31 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui">
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions" >
 
     <div id="main-navigtion">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Nago Judge</a>
-                </div>
+        <h:form>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Nago Judge</a>
+                    </div>
 
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <h:form>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <div class="navbar-form navbar-left text-center">
-
-                            <p:commandLink styleClass="btn btn-default" style="width: 160px;"
+                            <h:commandLink styleClass="btn btn-default" style="width: 160px;"
                                            value="Problems"
-                                           actionListener="#{clientBoardBean.actionShowPanelProblems}"
-                                           update=":panel-client-problems"/>
-                            <p:commandLink styleClass="btn btn-default" style="width: 160px;"
+                                           action="#{clientMonitorBoardBean.actionRedirectContentBoard}" />
+                            <h:commandLink styleClass="btn btn-default" style="width: 160px;"
                                            value="Score"
-                                           actionListener="#{clientBoardBean.actionShowPanelScore}" 
-                                           update="@all"/>
-                            <p:commandLink styleClass="btn btn-default" style="width: 160px;"
-                                           value="Submit"
-                                           actionListener="#{clientBoardBean.actionShowPanelSubmits}"
-                                           update="@all"/>
-
+                                           action="#{clientMonitorBoardBean.actionRedirectScoreBoard}" />
                         </div>
                         <ul class="nav navbar-nav navbar-right">
                             <li>
@@ -44,13 +37,17 @@
                                 </p:commandLink>
                             </li>
                         </ul>
-                    </h:form>
+                    </div>
+
                 </div>
-            </div>
-        </nav>
+                <div class="col-md-12 text-center">
+                    <h3>
+                        <pe:timer timeout="#{clientMonitorBoardBean.timeEndingChallenge}"
+                                  format="[Running:] DD [days] HH:mm:ss" />
+                    </h3>
+                </div>
+            </nav>
+        </h:form>
     </div>
-
-
-
 </ui:composition>
 

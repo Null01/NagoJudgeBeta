@@ -4,10 +4,11 @@
  * and open the template in the editor.
  */
 package edu.nagojudge.live.web.mbeans;
-import java.util.ArrayList;
-import java.util.List;
+
+import edu.nagojudge.live.web.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.ChallengeMessage;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
@@ -18,40 +19,31 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class ClientScoreBean {
-/*
-    @EJB
-    private TeamAccountFacade teamAccountFacade;
-
-    @EJB
-    private TeamChallengeSubmitFacade teamChallengeSubmitFacade;
+public class ClientScoreBean implements Serializable {
 
     private final Logger logger = Logger.getLogger(ClientScoreBean.class);
 
-    private List<ScoreClientMessage> listScoreChallenge = new ArrayList<ScoreClientMessage>();
-    private List<ScoreClientMessage> filteredScoreChallenge = new ArrayList<ScoreClientMessage>();
+    private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
     public ClientScoreBean() {
     }
 
-    @PostConstruct
-    public void init() {
+    public void actionListenerPreRenderPage() {
+        boolean validationFailed = FacesUtil.getFacesUtil().isValidationFailed();
+        if (validationFailed) {
+            logger.error("params {" + challengeMessageView.getIdChallenge() + "}");
+            FacesUtil.getFacesUtil().printErrorResponse("Authentication failed, contact administrator.");
+        }else{
+            
+        }
     }
 
-    public List<ScoreClientMessage> getListScoreChallenge() {
-        return listScoreChallenge;
+    public ChallengeMessage getChallengeMessageView() {
+        return challengeMessageView;
     }
 
-    public void setListScoreChallenge(List<ScoreClientMessage> listScoreChallenge) {
-        this.listScoreChallenge = listScoreChallenge;
+    public void setChallengeMessageView(ChallengeMessage challengeMessageView) {
+        this.challengeMessageView = challengeMessageView;
     }
 
-    public List<ScoreClientMessage> getFilteredScoreChallenge() {
-        return filteredScoreChallenge;
-    }
-
-    public void setFilteredScoreChallenge(List<ScoreClientMessage> filteredScoreChallenge) {
-        this.filteredScoreChallenge = filteredScoreChallenge;
-    }
-*/
 }
