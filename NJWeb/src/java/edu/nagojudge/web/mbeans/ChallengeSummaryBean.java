@@ -9,6 +9,7 @@ import edu.nagojudge.app.business.dao.beans.ChallengeFacade;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class ChallengeSummaryBean {
+public class ChallengeSummaryBean implements Serializable {
 
     @EJB
     private ChallengeFacade challengeFacade;

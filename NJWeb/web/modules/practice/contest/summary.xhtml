@@ -11,13 +11,13 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="idChallenge" value="#{challengeSummaryBean.idChallenge}"
+            <f:viewParam name="idChallenge" 
+                         value="#{challengeSummaryBean.idChallenge}"
                          required="true" >
                 <f:validateLength minimum="1" maximum="30" />
             </f:viewParam>
             <f:event type="preRenderView"
-                     listener="#{challengeSummaryBean.actionListenerPreRender}" 
-                     rendered="form-search-challenge"  />
+                     listener="#{challengeSummaryBean.actionListenerPreRender}" />
         </f:metadata>
     </ui:define>
 

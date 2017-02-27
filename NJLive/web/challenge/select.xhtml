@@ -13,10 +13,8 @@
         </h:head>
         <h:body id="main-body">
             <div class="container">
-
                 <div class="container">
                     <div id="box-float" class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3"> 
-
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <div class="panel-title text-center"> Welcome To Nago Judge </div>
@@ -27,12 +25,13 @@
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-pushpin"></i></span>
                                             <p:selectOneMenu id="select-challenge"
-                                                             value="#{configChallengeBean.challengeMessageView}"
+                                                             value="#{clientConfigurationInitBean.challengeMessageView}"
                                                              style="width:100%;"
                                                              converter="challengeMessageConvertJSF"
                                                              required="true">
+                                                <f:selectItem value="#{null}" itemLabel="Select one challenge" />
                                                 <f:selectItems var="item"
-                                                               value="#{configChallengeBean.challengeMessageItems}" />
+                                                               value="#{clientConfigurationInitBean.challengeMessageItems}" />
                                             </p:selectOneMenu>
                                         </div>
                                         <div class="form-group">
@@ -40,7 +39,7 @@
                                             <div class="col-sm-12 text-center">
                                                 <p:commandButton styleClass="btn btn-primary"
                                                                  value="ready"
-                                                                 actionListener="#{configChallengeBean.actionInitConfigBoard}"
+                                                                 action="#{clientConfigurationInitBean.actionRedirectInitConfigBoard}"
                                                                  update="panel-config-challenge"/>
                                             </div>
                                         </div>

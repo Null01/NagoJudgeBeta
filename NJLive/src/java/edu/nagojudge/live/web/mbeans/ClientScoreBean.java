@@ -4,6 +4,13 @@
  * and open the template in the editor.
  */
 package edu.nagojudge.live.web.mbeans;
+
+import edu.nagojudge.live.business.entity.dao.TeamAccountDAO;
+import edu.nagojudge.live.web.utils.FacesUtil;
+import edu.nagojudge.live.web.utils.constants.IKeysApplication;
+import edu.nagojudge.msg.pojo.ChallengeMessage;
+import edu.nagojudge.msg.pojo.ScoreMessage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -18,40 +25,39 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class ClientScoreBean {
-/*
-    @EJB
-    private TeamAccountFacade teamAccountFacade;
+public class ClientScoreBean implements Serializable {
 
     @EJB
-    private TeamChallengeSubmitFacade teamChallengeSubmitFacade;
+    private TeamAccountDAO teamAccountDAO;
 
     private final Logger logger = Logger.getLogger(ClientScoreBean.class);
 
-    private List<ScoreClientMessage> listScoreChallenge = new ArrayList<ScoreClientMessage>();
-    private List<ScoreClientMessage> filteredScoreChallenge = new ArrayList<ScoreClientMessage>();
+    private List<ScoreMessage> listScoreTeams = new ArrayList<ScoreMessage>();
+    private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
     public ClientScoreBean() {
     }
 
     @PostConstruct
     public void init() {
+        Long challengeId = (Long) FacesUtil.getFacesUtil().getAttributeCurrentSession(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
+        listScoreTeams = new ArrayList<ScoreMessage>(teamAccountDAO.findTeamsScoreByChallenge(challengeId));
     }
 
-    public List<ScoreClientMessage> getListScoreChallenge() {
-        return listScoreChallenge;
+    public ChallengeMessage getChallengeMessageView() {
+        return challengeMessageView;
     }
 
-    public void setListScoreChallenge(List<ScoreClientMessage> listScoreChallenge) {
-        this.listScoreChallenge = listScoreChallenge;
+    public void setChallengeMessageView(ChallengeMessage challengeMessageView) {
+        this.challengeMessageView = challengeMessageView;
     }
 
-    public List<ScoreClientMessage> getFilteredScoreChallenge() {
-        return filteredScoreChallenge;
+    public List<ScoreMessage> getListScoreTeams() {
+        return listScoreTeams;
     }
 
-    public void setFilteredScoreChallenge(List<ScoreClientMessage> filteredScoreChallenge) {
-        this.filteredScoreChallenge = filteredScoreChallenge;
+    public void setListScoreTeams(List<ScoreMessage> listScoreTeams) {
+        this.listScoreTeams = listScoreTeams;
     }
-*/
+
 }
