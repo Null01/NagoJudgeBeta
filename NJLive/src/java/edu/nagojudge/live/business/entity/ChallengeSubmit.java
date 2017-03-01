@@ -25,49 +25,41 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author andres.garcia
  */
 @Entity
-@Table(name = "team_account", catalog = "njlive", schema = "")
+@Table(name = "challenge_submit", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TeamAccount.findAll", query = "SELECT t FROM TeamAccount t")})
-public class TeamAccount implements Serializable {
+    @NamedQuery(name = "ChallengeSubmit.findAll", query = "SELECT c FROM ChallengeSubmit c")})
+public class ChallengeSubmit implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "ID_TEAM_ACCOUNT")
-    private Long idTeamAccount;
-    @JoinColumn(name = "ID_ACCOUNT", referencedColumnName = "ID_ACCOUNT")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Account idAccount;
+    @Column(name = "ID_CHALLENGE_SUBMIT")
+    private Long idChallengeSubmit;
     @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Challenge idChallenge;
     @JoinColumn(name = "ID_TEAM", referencedColumnName = "ID_TEAM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Team idTeam;
+    @JoinColumn(name = "ID_SUBMIT", referencedColumnName = "ID_SUBMIT")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Submit idSubmit;
 
-    public TeamAccount() {
+    public ChallengeSubmit() {
     }
 
-    public TeamAccount(Long idTeamAccount) {
-        this.idTeamAccount = idTeamAccount;
+    public ChallengeSubmit(Long idChallengeSubmit) {
+        this.idChallengeSubmit = idChallengeSubmit;
     }
 
-    public Long getIdTeamAccount() {
-        return idTeamAccount;
+    public Long getIdChallengeSubmit() {
+        return idChallengeSubmit;
     }
 
-    public void setIdTeamAccount(Long idTeamAccount) {
-        this.idTeamAccount = idTeamAccount;
-    }
-
-    public Account getIdAccount() {
-        return idAccount;
-    }
-
-    public void setIdAccount(Account idAccount) {
-        this.idAccount = idAccount;
+    public void setIdChallengeSubmit(Long idChallengeSubmit) {
+        this.idChallengeSubmit = idChallengeSubmit;
     }
 
     public Challenge getIdChallenge() {
@@ -86,21 +78,29 @@ public class TeamAccount implements Serializable {
         this.idTeam = idTeam;
     }
 
+    public Submit getIdSubmit() {
+        return idSubmit;
+    }
+
+    public void setIdSubmit(Submit idSubmit) {
+        this.idSubmit = idSubmit;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTeamAccount != null ? idTeamAccount.hashCode() : 0);
+        hash += (idChallengeSubmit != null ? idChallengeSubmit.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TeamAccount)) {
+        if (!(object instanceof ChallengeSubmit)) {
             return false;
         }
-        TeamAccount other = (TeamAccount) object;
-        if ((this.idTeamAccount == null && other.idTeamAccount != null) || (this.idTeamAccount != null && !this.idTeamAccount.equals(other.idTeamAccount))) {
+        ChallengeSubmit other = (ChallengeSubmit) object;
+        if ((this.idChallengeSubmit == null && other.idChallengeSubmit != null) || (this.idChallengeSubmit != null && !this.idChallengeSubmit.equals(other.idChallengeSubmit))) {
             return false;
         }
         return true;
@@ -108,7 +108,7 @@ public class TeamAccount implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.live.business.entity.TeamAccount[ idTeamAccount=" + idTeamAccount + " ]";
+        return "edu.nagojudge.live.business.entity.ChallengeSubmit[ idChallengeSubmit=" + idChallengeSubmit + " ]";
     }
     
 }

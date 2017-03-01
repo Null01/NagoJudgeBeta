@@ -71,7 +71,7 @@ public class Submit implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
     private List<AccountSubmit> accountSubmitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSubmit", fetch = FetchType.LAZY)
-    private List<TeamChallengeSubmit> teamChallengeSubmitList;
+    private List<ChallengeSubmit> challengeSubmitList;
 
     public Submit() {
     }
@@ -151,12 +151,12 @@ public class Submit implements Serializable {
     }
 
     @XmlTransient
-    public List<TeamChallengeSubmit> getTeamChallengeSubmitList() {
-        return teamChallengeSubmitList;
+    public List<ChallengeSubmit> getChallengeSubmitList() {
+        return challengeSubmitList;
     }
 
-    public void setTeamChallengeSubmitList(List<TeamChallengeSubmit> teamChallengeSubmitList) {
-        this.teamChallengeSubmitList = teamChallengeSubmitList;
+    public void setChallengeSubmitList(List<ChallengeSubmit> challengeSubmitList) {
+        this.challengeSubmitList = challengeSubmitList;
     }
 
     @Override

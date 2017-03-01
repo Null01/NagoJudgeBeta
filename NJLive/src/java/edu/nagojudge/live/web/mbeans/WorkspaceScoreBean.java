@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.live.web.mbeans;
 
-import edu.nagojudge.live.business.entity.dao.TeamAccountDAO;
+import edu.nagojudge.live.business.entity.facade.dao.ChallengeSubmitDAO;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
@@ -25,23 +25,23 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class ClientScoreBean implements Serializable {
+public class WorkspaceScoreBean implements Serializable {
 
     @EJB
-    private TeamAccountDAO teamAccountDAO;
+    private ChallengeSubmitDAO challengeSubmitDAO;
 
-    private final Logger logger = Logger.getLogger(ClientScoreBean.class);
+    private final Logger logger = Logger.getLogger(WorkspaceScoreBean.class);
 
     private List<ScoreMessage> listScoreTeams = new ArrayList<ScoreMessage>();
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
-    public ClientScoreBean() {
+    public WorkspaceScoreBean() {
     }
 
     @PostConstruct
     public void init() {
         Long challengeId = (Long) FacesUtil.getFacesUtil().getAttributeCurrentSession(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
-        listScoreTeams = new ArrayList<ScoreMessage>(teamAccountDAO.findTeamsScoreByChallenge(challengeId));
+        listScoreTeams = new ArrayList<ScoreMessage>(challengeSubmitDAO.findScoreAllTeamFromChallenge(challengeId));
     }
 
     public ChallengeMessage getChallengeMessageView() {

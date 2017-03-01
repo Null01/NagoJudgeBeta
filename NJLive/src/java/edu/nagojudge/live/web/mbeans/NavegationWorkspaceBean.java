@@ -5,14 +5,12 @@
  */
 package edu.nagojudge.live.web.mbeans;
 
-import edu.nagojudge.live.business.entity.dao.ChallengeDAO;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
@@ -24,13 +22,13 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class ClientMonitorBoardBean implements Serializable {
+public class NavegationWorkspaceBean implements Serializable {
 
-    private final Logger logger = Logger.getLogger(ClientMonitorBoardBean.class);
+    private final Logger logger = Logger.getLogger(NavegationWorkspaceBean.class);
 
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
-    public ClientMonitorBoardBean() {
+    public NavegationWorkspaceBean() {
     }
 
     public String actionRedirectContentBoard() {
@@ -47,7 +45,7 @@ public class ClientMonitorBoardBean implements Serializable {
             Calendar endTimeChallenge = Calendar.getInstance();
             Date currentTime = Calendar.getInstance().getTime();
             HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
-            Date dateStarted = (Date) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_STARTED);
+            Date dateStarted = (Date) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_END);
             endTimeChallenge.setTimeInMillis(dateStarted.getTime() - currentTime.getTime());
             logger.debug("TIME LEFT [" + endTimeChallenge.getTime() + "]");
             return (60 * 60 * 24 * (endTimeChallenge.get(Calendar.DATE) - 1))

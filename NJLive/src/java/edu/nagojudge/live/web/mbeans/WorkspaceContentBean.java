@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.live.web.mbeans;
 
-import edu.nagojudge.live.business.entity.dao.ChallengeProblemDAO;
+import edu.nagojudge.live.business.entity.facade.dao.ChallengeProblemDAO;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
@@ -26,18 +26,18 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class ClientContentBean implements Serializable {
+public class WorkspaceContentBean implements Serializable {
 
     @EJB
     private ChallengeProblemDAO challengeProblemFacade;
 
-    private final Logger logger = Logger.getLogger(ClientContentBean.class);
+    private final Logger logger = Logger.getLogger(WorkspaceContentBean.class);
 
     private List<ProblemMessage> listProblems = new ArrayList<ProblemMessage>();
 
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
-    public ClientContentBean() {
+    public WorkspaceContentBean() {
     }
 
     @PostConstruct

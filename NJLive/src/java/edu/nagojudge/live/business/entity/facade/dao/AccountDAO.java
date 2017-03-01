@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.live.business.entity.dao;
+package edu.nagojudge.live.business.entity.facade.dao;
 
-import edu.nagojudge.live.business.entity.CategoryProblem;
+import edu.nagojudge.live.business.entity.Account;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author andres.garcia
  */
 @Stateless
-public class CategoryProblemDAO extends AbstractDAO<CategoryProblem> {
+public class AccountDAO extends AbstractDAO<Account> {
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class CategoryProblemDAO extends AbstractDAO<CategoryProblem> {
         return em;
     }
 
-    public CategoryProblemDAO() {
-        super(CategoryProblem.class);
+    public AccountDAO() {
+        super(Account.class);
     }
     
 }

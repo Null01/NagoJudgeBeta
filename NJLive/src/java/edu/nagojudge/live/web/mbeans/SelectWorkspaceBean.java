@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.live.web.mbeans;
 
-import edu.nagojudge.live.business.entity.dao.ChallengeDAO;
+import edu.nagojudge.live.business.entity.facade.dao.ChallengeDAO;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
@@ -26,17 +26,17 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class ClientConfigurationInitBean implements Serializable {
+public class SelectWorkspaceBean implements Serializable {
 
     @EJB
     private ChallengeDAO challengeDAO;
 
-    private final Logger logger = Logger.getLogger(ClientConfigurationInitBean.class);
+    private final Logger logger = Logger.getLogger(SelectWorkspaceBean.class);
 
     private List<SelectItem> challengeMessageItems = new ArrayList<SelectItem>();
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
-    public ClientConfigurationInitBean() {
+    public SelectWorkspaceBean() {
     }
 
     @PostConstruct
@@ -51,7 +51,7 @@ public class ClientConfigurationInitBean implements Serializable {
     public String actionRedirectInitConfigBoard() {
         HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
         currentSession.setAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID, challengeMessageView.getIdChallenge());
-        currentSession.setAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_STARTED, challengeMessageView.getDateStart());
+        currentSession.setAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_END, challengeMessageView.getDateEnd());
         return "/challenge/content.xhtml?faces-redirect=true&includeViewParams=true";
     }
 

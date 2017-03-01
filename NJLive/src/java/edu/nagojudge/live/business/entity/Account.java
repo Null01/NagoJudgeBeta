@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "account", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a")})
+    @NamedQuery(name = "Account1_1.findAll", query = "SELECT a FROM Account1_1 a")})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,9 +51,9 @@ public class Account implements Serializable {
     @Column(name = "NICKNAME")
     private String nickname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<AccountSubmit> accountSubmitList;
+    private List<ChallengeTeam> challengeTeamList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<TeamAccount> teamAccountList;
+    private List<AccountSubmit> accountSubmitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<User> userList;
 
@@ -94,21 +94,21 @@ public class Account implements Serializable {
     }
 
     @XmlTransient
+    public List<ChallengeTeam> getChallengeTeamList() {
+        return challengeTeamList;
+    }
+
+    public void setChallengeTeamList(List<ChallengeTeam> challengeTeamList) {
+        this.challengeTeamList = challengeTeamList;
+    }
+
+    @XmlTransient
     public List<AccountSubmit> getAccountSubmitList() {
         return accountSubmitList;
     }
 
     public void setAccountSubmitList(List<AccountSubmit> accountSubmitList) {
         this.accountSubmitList = accountSubmitList;
-    }
-
-    @XmlTransient
-    public List<TeamAccount> getTeamAccountList() {
-        return teamAccountList;
-    }
-
-    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
-        this.teamAccountList = teamAccountList;
     }
 
     @XmlTransient
@@ -142,7 +142,7 @@ public class Account implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.live.business.entity.Account[ idAccount=" + idAccount + " ]";
+        return "edu.nagojudge.live.business.entity.Account1_1[ idAccount=" + idAccount + " ]";
     }
     
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.live.business.entity.dao;
+package edu.nagojudge.live.business.entity.facade.dao;
 
 import edu.nagojudge.live.business.entity.Team;
 import javax.ejb.Stateless;

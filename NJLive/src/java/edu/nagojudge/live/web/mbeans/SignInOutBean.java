@@ -6,6 +6,7 @@
 package edu.nagojudge.live.web.mbeans;
 
 import edu.nagojudge.live.web.utils.FacesUtil;
+import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
@@ -35,6 +36,8 @@ public class SignInOutBean implements Serializable {
 
     public void actionSignInSession(ActionEvent event) {
         try {
+            HttpSession session = FacesUtil.getFacesUtil().getSession(true);
+            session.setAttribute(IKeysApplication.KEY_SESSION_USER_EMAIL, username);
             FacesUtil.getFacesUtil().redirect(TARGET_PATH_NEXT_STEP_LOGIN);
         } catch (IOException ex) {
             logger.error(ex);

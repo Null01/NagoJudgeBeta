@@ -53,9 +53,9 @@ public class Team implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTeam", fetch = FetchType.LAZY)
-    private List<TeamChallengeSubmit> teamChallengeSubmitList;
+    private List<ChallengeTeam> challengeTeamList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTeam", fetch = FetchType.LAZY)
-    private List<TeamAccount> teamAccountList;
+    private List<ChallengeSubmit> challengeSubmitList;
 
     public Team() {
     }
@@ -94,21 +94,21 @@ public class Team implements Serializable {
     }
 
     @XmlTransient
-    public List<TeamChallengeSubmit> getTeamChallengeSubmitList() {
-        return teamChallengeSubmitList;
+    public List<ChallengeTeam> getChallengeTeamList() {
+        return challengeTeamList;
     }
 
-    public void setTeamChallengeSubmitList(List<TeamChallengeSubmit> teamChallengeSubmitList) {
-        this.teamChallengeSubmitList = teamChallengeSubmitList;
+    public void setChallengeTeamList(List<ChallengeTeam> challengeTeamList) {
+        this.challengeTeamList = challengeTeamList;
     }
 
     @XmlTransient
-    public List<TeamAccount> getTeamAccountList() {
-        return teamAccountList;
+    public List<ChallengeSubmit> getChallengeSubmitList() {
+        return challengeSubmitList;
     }
 
-    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
-        this.teamAccountList = teamAccountList;
+    public void setChallengeSubmitList(List<ChallengeSubmit> challengeSubmitList) {
+        this.challengeSubmitList = challengeSubmitList;
     }
 
     @Override

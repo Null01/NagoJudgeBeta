@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.live.business.entity.dao;
+package edu.nagojudge.live.business.entity.facade.dao;
 
-import edu.nagojudge.live.business.entity.TeamChallengeSubmit;
+import edu.nagojudge.live.business.entity.Submit;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author andres.garcia
  */
 @Stateless
-public class TeamChallengeSubmitDAO extends AbstractDAO<TeamChallengeSubmit> {
+public class SubmitDAO extends AbstractDAO<Submit> {
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class TeamChallengeSubmitDAO extends AbstractDAO<TeamChallengeSubmit> {
         return em;
     }
 
-    public TeamChallengeSubmitDAO() {
-        super(TeamChallengeSubmit.class);
+    public SubmitDAO() {
+        super(Submit.class);
     }
     
 }
