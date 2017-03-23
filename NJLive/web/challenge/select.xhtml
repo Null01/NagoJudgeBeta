@@ -25,13 +25,13 @@
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-pushpin"></i></span>
                                             <p:selectOneMenu id="select-challenge"
-                                                             value="#{selectWorkspaceBean.challengeMessageView}"
+                                                             value="#{selectRoomBean.challengeMessageView}"
                                                              style="width:100%;"
                                                              converter="challengeMessageConvertJSF"
                                                              required="true">
                                                 <f:selectItem value="#{null}" itemLabel="Select one challenge" />
                                                 <f:selectItems var="item"
-                                                               value="#{selectWorkspaceBean.challengeMessageItems}" />
+                                                               value="#{selectRoomBean.challengeMessageItems}" />
                                             </p:selectOneMenu>
                                         </div>
                                         <div class="form-group">
@@ -39,7 +39,7 @@
                                             <div class="col-sm-12 text-center">
                                                 <p:commandButton styleClass="btn btn-primary"
                                                                  value="ready"
-                                                                 action="#{selectWorkspaceBean.actionRedirectInitConfigBoard}"
+                                                                 action="#{selectRoomBean.actionRedirectInitConfigBoard}"
                                                                  update="panel-config-challenge"/>
                                             </div>
                                         </div>

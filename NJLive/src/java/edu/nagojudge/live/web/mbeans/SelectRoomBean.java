@@ -26,17 +26,17 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class SelectWorkspaceBean implements Serializable {
+public class SelectRoomBean implements Serializable {
 
     @EJB
     private ChallengeDAO challengeDAO;
 
-    private final Logger logger = Logger.getLogger(SelectWorkspaceBean.class);
+    private final Logger logger = Logger.getLogger(SelectRoomBean.class);
 
     private List<SelectItem> challengeMessageItems = new ArrayList<SelectItem>();
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
-    public SelectWorkspaceBean() {
+    public SelectRoomBean() {
     }
 
     @PostConstruct

@@ -22,13 +22,13 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @ViewScoped
-public class NavegationWorkspaceBean implements Serializable {
+public class NavegationRoomBean implements Serializable {
 
-    private final Logger logger = Logger.getLogger(NavegationWorkspaceBean.class);
+    private final Logger logger = Logger.getLogger(NavegationRoomBean.class);
 
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
-    public NavegationWorkspaceBean() {
+    public NavegationRoomBean() {
     }
 
     public String actionRedirectContentBoard() {

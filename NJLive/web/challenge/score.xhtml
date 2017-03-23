@@ -16,7 +16,7 @@
                         <p:dataTable id="table-score-client"
                                      widgetVar="widgetScoreClient"
                                      tableStyleClass="table table-striped table-hover"
-                                     value="#{workspaceScoreBean.listScoreTeams}"
+                                     value="#{roomScoreBean.listScoreTeams}"
                                      var="p"
                                      styleClass="center-block"
                                      rowKey="#{p.team.idTeam}"
@@ -25,6 +25,15 @@
                                      emptyMessage="#{msg['general.table.noinfo']}">
                             <p:column headerText="Name Team" width="300">
                                 <h:commandLink value="#{p.team.nameTeam}" />
+                            </p:column>
+
+
+                            <p:column headerText="OKTeam" width="300">
+                                <ui:repeat value="#{p.scoreTeam.list}" var="problem" >
+                                   
+                                        #{problem.solved}/#{problem.tries}
+
+                                </ui:repeat>
                             </p:column>
                         </p:dataTable>
                     </h:form>

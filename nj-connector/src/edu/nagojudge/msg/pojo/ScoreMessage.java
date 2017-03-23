@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.msg.pojo;
 
-import edu.nagojudge.msg.pojo.collections.ListGenericType;
+import edu.nagojudge.msg.pojo.collections.ListTypeMessage;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ScoreMessage {
 
     private TeamMessage team;
-    private ListGenericType<InfoScore> listResult = new ListGenericType<InfoScore>();
+    private ListTypeMessage<InfoScoreMessage> scoreTeam = new ListTypeMessage<InfoScoreMessage>();
 
     public TeamMessage getTeam() {
         return team;
@@ -26,44 +26,12 @@ public class ScoreMessage {
         this.team = team;
     }
 
-    public ListGenericType<InfoScore> getListResult() {
-        return listResult;
+    public ListTypeMessage<InfoScoreMessage> getScoreTeam() {
+        return scoreTeam;
     }
 
-    public void setListResult(ListGenericType<InfoScore> listResult) {
-        this.listResult = listResult;
-    }
-
-}
-
-class InfoScore {
-
-    private boolean solved;
-    private int attemps;
-    private long timeToBeSolved;
-
-    public boolean isSolved() {
-        return solved;
-    }
-
-    public void setSolved(boolean solved) {
-        this.solved = solved;
-    }
-
-    public int getAttemps() {
-        return attemps;
-    }
-
-    public void setAttemps(int attemps) {
-        this.attemps = attemps;
-    }
-
-    public long getTimeToBeSolved() {
-        return timeToBeSolved;
-    }
-
-    public void setTimeToBeSolved(long timeToBeSolved) {
-        this.timeToBeSolved = timeToBeSolved;
+    public void setScoreTeam(ListTypeMessage<InfoScoreMessage> scoreTeam) {
+        this.scoreTeam = scoreTeam;
     }
 
 }

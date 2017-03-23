@@ -6,6 +6,7 @@
 package edu.nagojudge.live.business.entity.facade.dao;
 
 import edu.nagojudge.live.business.entity.ChallengeProblem;
+import edu.nagojudge.live.business.entity.Problem;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,20 @@ public class ChallengeProblemDAO extends AbstractDAO<ChallengeProblem> {
 
     public List<ProblemMessage> findProblemsByChallenge(Long challengeId) {
         List<ProblemMessage> outome = new ArrayList<ProblemMessage>();
+        List<Problem> problems = em.createQuery("SELECT a.idProblem FROM ChallengeProblem a WHERE a.idChallenge.idChallenge = :id_challenge ", Problem.class)
+                .setParameter("id_challenge", challengeId).getResultList();
+        for (Problem problem : problems) {
+            outome.add(parseProblemEntityToMessage(problem));
+        }
         return outome;
+    }
+
+    private ProblemMessage parseProblemEntityToMessage(Problem problem) {
+        ProblemMessage problemMessage = new ProblemMessage();
+        problemMessage.setIdProblem(problem.getIdProblem());
+        problemMessage.setNameProblem(problem.getNameProblem());
+        problemMessage.setNameCategory(problem.getIdCategory().getNameCategory());
+        return problemMessage;
     }
 
 }

@@ -24,10 +24,10 @@
                         <div class="navbar-form navbar-left text-center">
                             <h:commandLink styleClass="btn btn-default" style="width: 160px;"
                                            value="Problems"
-                                           action="#{navegationWorkspaceBean.actionRedirectContentBoard}" />
+                                           action="#{navegationRoomBean.actionRedirectContentBoard}" />
                             <h:commandLink styleClass="btn btn-default" style="width: 160px;"
                                            value="Score"
-                                           action="#{navegationWorkspaceBean.actionRedirectScoreBoard}" />
+                                           action="#{navegationRoomBean.actionRedirectScoreBoard}" />
                         </div>
                         <ul class="nav navbar-nav navbar-right">
                             <li>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-md-12 text-center">
                     <h3>
-                        <pe:timer timeout="#{navegationWorkspaceBean.timeEndingChallenge}"
+                        <pe:timer timeout="#{navegationRoomBean.timeEndingChallenge}"
                                   format="[Running:] DD [days] HH:mm:ss" />
                     </h3>
                 </div>
