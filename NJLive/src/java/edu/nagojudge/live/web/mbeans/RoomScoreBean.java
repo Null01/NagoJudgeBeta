@@ -33,6 +33,7 @@ public class RoomScoreBean implements Serializable {
     private final Logger logger = Logger.getLogger(RoomScoreBean.class);
 
     private List<ScoreMessage> listScoreTeams = new ArrayList<ScoreMessage>();
+    private int sizeListScoreTeam;
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
     public RoomScoreBean() {
@@ -41,7 +42,14 @@ public class RoomScoreBean implements Serializable {
     @PostConstruct
     public void init() {
         Long challengeId = (Long) FacesUtil.getFacesUtil().getAttributeCurrentSession(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
-        listScoreTeams = new ArrayList<ScoreMessage>(challengeSubmitDAO.findScoreAllTeamFromChallenge(challengeId));
+        this.listScoreTeams = new ArrayList<ScoreMessage>(challengeSubmitDAO.findScoreAllTeamFromChallenge(challengeId));
+        if (listScoreTeams != null && !listScoreTeams.isEmpty()) {
+            this.sizeListScoreTeam = listScoreTeams.get(0).getResumeScore().getList().size();
+        }
+    }
+
+    public int getSizeListScoreTeam() {
+        return sizeListScoreTeam;
     }
 
     public ChallengeMessage getChallengeMessageView() {

@@ -14,16 +14,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class InfoScoreMessage {
 
-    private String idProblem;
+    private long idProblem;
     private boolean solved;
     private int tries;
     private long time;
 
-    public String getIdProblem() {
+    public void isSolve(boolean tempSolve) {
+        this.solved = this.solved ? this.solved : tempSolve;
+    }
+
+    public void addTry() {
+        this.tries = this.tries + 1;
+    }
+
+    public long getIdProblem() {
         return idProblem;
     }
 
-    public void setIdProblem(String idProblem) {
+    public void setIdProblem(long idProblem) {
         this.idProblem = idProblem;
     }
 

@@ -21,19 +21,51 @@
                                      styleClass="center-block"
                                      rowKey="#{p.team.idTeam}"
                                      paginator="false"
-                                     paginatorPosition="bottom"                                     
+                                     paginatorPosition="bottom"
                                      emptyMessage="#{msg['general.table.noinfo']}">
-                            <p:column headerText="Name Team" width="300">
-                                <h:commandLink value="#{p.team.nameTeam}" />
+                            <p:column headerText="Name Team" width="30%">
+                                <h:outputText value="#{p.team.nameTeam}" />
                             </p:column>
 
+                            <p:column headerText="A" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 1}" >
+                                <h:outputText value="#{p.resumeScore.list[0].solved?'1':''}/#{p.resumeScore.list[0].tries}" />
+                            </p:column>
+                            <p:column headerText="B" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 2}" >
+                                <h:outputText value="#{p.resumeScore.list[1].solved?'1':''}/#{p.resumeScore.list[1].tries}" />
+                            </p:column>
+                            <p:column headerText="C" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 3}" >
+                                <h:outputText value="#{p.resumeScore.list[2].solved?'1':''}/#{p.resumeScore.list[2].tries}" />
+                            </p:column>
+                            <p:column headerText="D" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 4}" >
+                                <h:outputText value="#{p.resumeScore.list[3].solved?'1':''}/#{p.resumeScore.list[3].tries}" />
+                            </p:column>
+                            <p:column headerText="E" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 5}" >
+                                <h:outputText value="#{p.resumeScore.list[4].solved?'1':''}/#{p.resumeScore.list[4].tries}" />
+                            </p:column>
+                            <p:column headerText="F" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 6}" >
+                                <h:outputText value="#{p.resumeScore.list[5].solved?'1':''}/#{p.resumeScore.list[5].tries}" />
+                            </p:column>
+                            <p:column headerText="G" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 7}" >
+                                <h:outputText value="#{p.resumeScore.list[6].solved?'1':''}/#{p.resumeScore.list[6].tries}" />
+                            </p:column>
+                            <p:column headerText="H" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 8}" >
+                                <h:outputText value="#{p.resumeScore.list[7].solved?'1':''}/#{p.resumeScore.list[7].tries}" />
+                            </p:column>
+                            <p:column headerText="I" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 9}" >
+                                <h:outputText value="#{p.resumeScore.list[8].solved?'1':''}/#{p.resumeScore.list[8].tries}" />
+                            </p:column>
+                            <p:column headerText="J" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 10}" >
+                                <h:outputText value="#{p.resumeScore.list[9].solved?'1':''}/#{p.resumeScore.list[9].tries}" />
+                            </p:column>
+                            <p:column headerText="K" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 11}" >
+                                <h:outputText value="#{p.resumeScore.list[10].solved?'1':''}/#{p.resumeScore.list[10].tries eq 0? '-':p.resumeScore.list[10].tries}" />
+                            </p:column>
+                            <p:column headerText="L" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 12}" >
+                                <h:outputText value="#{p.resumeScore.list[11].solved?'1':''}/#{p.resumeScore.list[11].tries}" />
+                            </p:column>
 
-                            <p:column headerText="OKTeam" width="300">
-                                <ui:repeat value="#{p.scoreTeam.list}" var="problem" >
-                                   
-                                        #{problem.solved}/#{problem.tries}
-
-                                </ui:repeat>
+                            <p:column headerText="Time" width="20%" >
+                                <h:outputText value="#{p.time}" />
                             </p:column>
                         </p:dataTable>
                     </h:form>

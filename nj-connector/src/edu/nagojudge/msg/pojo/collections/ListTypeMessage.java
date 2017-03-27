@@ -6,6 +6,7 @@
 package edu.nagojudge.msg.pojo.collections;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,7 +24,14 @@ public class ListTypeMessage<E> {
 
     public boolean add(E t) {
         return list.add(t);
+    }
 
+    public Iterator<E> getIterator() {
+        return list.iterator();
+    }
+
+    public int getSize() {
+        return list.size();
     }
 
     public List<E> getList() {

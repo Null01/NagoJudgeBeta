@@ -16,7 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ScoreMessage {
 
     private TeamMessage team;
-    private ListTypeMessage<InfoScoreMessage> scoreTeam = new ListTypeMessage<InfoScoreMessage>();
+    private ListTypeMessage<InfoScoreMessage> resumeScore = new ListTypeMessage<InfoScoreMessage>();
+    private Long time;
 
     public TeamMessage getTeam() {
         return team;
@@ -26,12 +27,20 @@ public class ScoreMessage {
         this.team = team;
     }
 
-    public ListTypeMessage<InfoScoreMessage> getScoreTeam() {
-        return scoreTeam;
+    public ListTypeMessage<InfoScoreMessage> getResumeScore() {
+        return resumeScore;
     }
 
-    public void setScoreTeam(ListTypeMessage<InfoScoreMessage> scoreTeam) {
-        this.scoreTeam = scoreTeam;
+    public void setResumeScore(ListTypeMessage<InfoScoreMessage> resumeScore) {
+        this.resumeScore = resumeScore;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
     }
 
 }
