@@ -4,7 +4,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
-    xmlns:fn="http://java.sun.com/jsp/jstl/core"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
     template="template/begins.xhtml">
 
     <ui:define name="content">
@@ -20,25 +20,46 @@
                                      var="p"
                                      styleClass="center-block"
                                      rowKey="#{p.team.idTeam}"
+                                     rowIndexVar="indexKey"
                                      paginator="false"
                                      paginatorPosition="bottom"
                                      emptyMessage="#{msg['general.table.noinfo']}">
-                            <p:column headerText="Name Team" width="30%">
+                            <p:column headerText="#" width="5%">
+                                #{indexKey + 1}
+                            </p:column>
+
+                            <p:column headerText="Team" width="30%">
                                 <h:outputText value="#{p.team.nameTeam}" />
                             </p:column>
 
                             <p:column headerText="A" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 1}" >
-                                <h:outputText value="#{p.resumeScore.list[0].solved?'1':''}/#{p.resumeScore.list[0].tries}" />
+                                <ui:fragment rendered="#{p.resumeScore.list[0].solved}">
+                                    <img id="gA" src="/now/img/globes/draw-globe.svg" class="globe" />
+                                </ui:fragment>
+                                <h:outputText value="#{p.resumeScore.list[0].tries}/#{p.resumeScore.list[0].time}" />
                             </p:column>
+
                             <p:column headerText="B" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 2}" >
-                                <h:outputText value="#{p.resumeScore.list[1].solved?'1':''}/#{p.resumeScore.list[1].tries}" />
+                                <ui:fragment rendered="#{p.resumeScore.list[1].solved}">
+                                    <img id="gB" src="/now/img/globes/draw-globe.svg" class="globe" />
+                                </ui:fragment>
+                                <h:outputText value="#{p.resumeScore.list[1].tries}/#{p.resumeScore.list[1].time}" />
                             </p:column>
+
                             <p:column headerText="C" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 3}" >
-                                <h:outputText value="#{p.resumeScore.list[2].solved?'1':''}/#{p.resumeScore.list[2].tries}" />
+                                <ui:fragment rendered="#{p.resumeScore.list[2].solved}">
+                                    <img id="gC" src="/now/img/globes/draw-globe.svg" class="globe" />
+                                </ui:fragment>
+                                <h:outputText value="#{p.resumeScore.list[2].tries}/#{p.resumeScore.list[2].time}" />
                             </p:column>
+
                             <p:column headerText="D" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 4}" >
-                                <h:outputText value="#{p.resumeScore.list[3].solved?'1':''}/#{p.resumeScore.list[3].tries}" />
+                                <ui:fragment rendered="#{p.resumeScore.list[3].solved}">
+                                    <img id="gD" src="/now/img/globes/draw-globe.svg" class="globe" />
+                                </ui:fragment>
+                                <h:outputText value="#{p.resumeScore.list[3].tries}/#{p.resumeScore.list[3].time}" />
                             </p:column>
+
                             <p:column headerText="E" width="10%" rendered="#{roomScoreBean.sizeListScoreTeam ge 5}" >
                                 <h:outputText value="#{p.resumeScore.list[4].solved?'1':''}/#{p.resumeScore.list[4].tries}" />
                             </p:column>
@@ -64,7 +85,7 @@
                                 <h:outputText value="#{p.resumeScore.list[11].solved?'1':''}/#{p.resumeScore.list[11].tries}" />
                             </p:column>
 
-                            <p:column headerText="Time" width="20%" >
+                            <p:column headerText="Total" width="20%" >
                                 <h:outputText value="#{p.time}" />
                             </p:column>
                         </p:dataTable>
@@ -72,6 +93,28 @@
                 </div>
             </fieldset> 
         </div>
+        <script type="text/javascript">
+           /* $(document).ready(function () {
+                $('#gA').each(function () {
+                    var $img = $(this);
+                    var imgID = $(this).attr('id');
+                    var imgClass = $(this).attr('class');
+                    var imgURL = $(this).attr('src');
+                    $.get(imgURL, function (data) {
+                        // Get the SVG tag, ignore the rest
+                        var $svg = $(data).find('svg');
+                        console.log($svg);
+                        // Add replaced image's classes to the new SVG
+                        $svg = $svg.attr('fill', '#FFFFFF');
+                        $svg = $svg.attr('class', 'globe');
+                        // Replace image with new SVG
+                        $img.replaceWith($svg);
+                    });
+                    $img = $img.attr('class', 'globe');
+                });
+            });
+            */
+        </script>
     </ui:define>
 </ui:composition>
 

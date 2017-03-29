@@ -110,3 +110,25 @@ body {
     opacity: 0.3;
     padding: 8px;
 }
+
+/* --- GLOBE ---- */
+.globe{
+    width: 52px !important;
+    height: 80px !important;
+}
+
+.globe-blue{
+    fill: #050594;
+}
+.globe-purple{
+    fill: #9A1553;
+}
+.globe-pink{
+    fill: #FF98FF;
+}
+.globe-black{
+    fill: #000000;
+}
+.globe-yellow{
+    fill: #F5F500;
+}

@@ -39,6 +39,10 @@ public class NavegationRoomBean implements Serializable {
         return "/challenge/score.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
+    public String actionRedirectSubmitsBoard() {
+        return "/challenge/submits.xhtml?faces-redirect=true&includeViewParams=true";
+    }
+
     public long getTimeEndingChallenge() {
         try {
             logger.debug("INICIA METODO - getTimeEndingChallenge()");

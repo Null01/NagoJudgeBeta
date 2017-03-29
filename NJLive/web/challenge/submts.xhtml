@@ -1,0 +1,39 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/core"
+    template="template/begins.xhtml">
+
+    <ui:define name="content">
+        <div class="well">
+            <fieldset>
+                <div class="form-group">
+                    <h:form id="form-problems-client" class="form-horizontal">
+                        <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                        <p:dataTable id="table-problems-client"
+                                     widgetVar="widgetProblemsClient"
+                                     tableStyleClass="table table-striped table-hover"
+                                     value="#{roomContentBean.listProblems}"
+                                     var="p"
+                                     styleClass="center-block"
+                                     rowKey="#{p.idProblem}"
+                                     paginator="false"
+                                     paginatorPosition="bottom"                                     
+                                     emptyMessage="#{msg['general.table.noinfo']}">
+                            <p:column headerText="Name problem" width="300">
+                                <h:commandLink value="#{p.nameProblem}" />
+                            </p:column>
+                            <p:column headerText="Category" width="200" >
+                                <h:outputText styleClass="label label-success" value="#{p.nameCategory}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </fieldset> 
+        </div>
+    </ui:define>
+</ui:composition>
+
