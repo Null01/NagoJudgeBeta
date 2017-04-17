@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -28,14 +27,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "ATTACHMENTS")
+@Table(name = "attachments", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Attachments.findAll", query = "SELECT a FROM Attachments a")})
 public class Attachments implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,18 +44,17 @@ public class Attachments implements Serializable {
     private Long idAttachment;
     @Basic(optional = false)
     @NotNull
-    @Lob
-    @Size(min = 1, max = 65535)
+    @Size(min = 1, max = 300)
     @Column(name = "CHECKSUM")
     private String checksum;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "DATE_LOAD")
+    @Column(name = "DATE_CREATED")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateLoad;
+    private Date dateCreated;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 20)
     @Column(name = "TYPE_FILE_SERVER")
     private String typeFileServer;
     @JoinColumn(name = "ID_PROBLEM", referencedColumnName = "ID_PROBLEM")
@@ -69,10 +68,10 @@ public class Attachments implements Serializable {
         this.idAttachment = idAttachment;
     }
 
-    public Attachments(Long idAttachment, String checksum, Date dateLoad, String typeFileServer) {
+    public Attachments(Long idAttachment, String checksum, Date dateCreated, String typeFileServer) {
         this.idAttachment = idAttachment;
         this.checksum = checksum;
-        this.dateLoad = dateLoad;
+        this.dateCreated = dateCreated;
         this.typeFileServer = typeFileServer;
     }
 
@@ -92,12 +91,12 @@ public class Attachments implements Serializable {
         this.checksum = checksum;
     }
 
-    public Date getDateLoad() {
-        return dateLoad;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setDateLoad(Date dateLoad) {
-        this.dateLoad = dateLoad;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public String getTypeFileServer() {
@@ -138,7 +137,7 @@ public class Attachments implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.business.db.entity.Attachments[ idAttachment=" + idAttachment + " ]";
+        return "edu.nagojudge.business.dao.entity.Attachments[ idAttachment=" + idAttachment + " ]";
     }
     
 }

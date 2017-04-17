@@ -5,7 +5,10 @@
  */
 package edu.nagojudge.business.dao.beans;
 
+import edu.nagojudge.business.dao.entity.AccountSubmit;
 import edu.nagojudge.business.dao.entity.Attachments;
+import edu.nagojudge.business.dao.entity.ChallengeSubmit;
+import edu.nagojudge.business.dao.entity.ChallengeTeam;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
@@ -24,9 +27,9 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class AttachmentsFacade extends AbstractFacade<Attachments> {
+public class AttachmentsDAOFacade extends AbstractFacade<Attachments> {
 
-    private final Logger logger = Logger.getLogger(AttachmentsFacade.class);
+    private final Logger logger = Logger.getLogger(AttachmentsDAOFacade.class);
 
     @PersistenceContext(unitName = "NJBusinessPU")
     private EntityManager em;
@@ -36,28 +39,27 @@ public class AttachmentsFacade extends AbstractFacade<Attachments> {
         return em;
     }
 
-    public AttachmentsFacade() {
+    public AttachmentsDAOFacade() {
         super(Attachments.class);
     }
 
     public StringBuilder getCodeSource(String idSubmit) throws IOException, BusinessException {
         StringBuilder outcome = new StringBuilder();
-        EntityManager em = null;
         BufferedReader bufferedReader = null;
         try {
             logger.debug("INICIA METODO - getCodeSource()");
-            em = getEntityManager();
-            Submit submit = em.find(Submit.class, Long.parseLong(idSubmit));
+            AccountSubmit accountSubmit = em.createQuery("SELECT s FROM AccountSubmit s WHERE s.idSubmit = :id_submit", AccountSubmit.class).setParameter("id_submit", idSubmit).getSingleResult();
+            Submit submit = accountSubmit.getIdSubmit();
             logger.debug("FIND_SUBMIT_ID=" + idSubmit);
             if (submit == null) {
                 throw new BusinessException("ID_SUBMIT [" + idSubmit + "] NO EXISTE.");
             }
-            logger.debug("FIND_VISIBLE_WEB=" + submit.getVisibleWeb());
-            if (submit.getVisibleWeb().compareTo(TypeStateEnum.PRIVATE.getType()) == 0) {
+            logger.debug("FIND_VISIBLE_WEB=" + accountSubmit.getVisibleWeb());
+            if (accountSubmit.getVisibleWeb().compareTo(TypeStateEnum.PRIVATE.getType()) == 0) {
                 return new StringBuilder("Actualmente este código fuente, no es visible para todo el publico.");
             }
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT ID_EMAIL FROM USER WHERE ID_ACCOUNT = ").append(submit.getIdAccount().getIdAccount());
+            sql.append("SELECT ID_EMAIL FROM USER WHERE ID_ACCOUNT = ").append(accountSubmit.getIdAccount().getIdAccount());
             logger.debug("QUERY=" + sql.toString());
             String email = (String) em.createNativeQuery(sql.toString()).getSingleResult();
 

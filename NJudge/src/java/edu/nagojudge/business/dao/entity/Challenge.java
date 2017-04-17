@@ -9,18 +9,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,14 +30,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "CHALLENGE")
+@Table(name = "challenge", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Challenge.findAll", query = "SELECT c FROM Challenge c")})
 public class Challenge implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,32 +56,27 @@ public class Challenge implements Serializable {
     private long idAccountOrganizer;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "QUANTITY_PROBLEMS")
-    private short quantityProblems;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "DATE_CHALLENGE")
+    @Column(name = "DATE_START")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateChallenge;
+    private Date dateStart;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "DURATION_MIN")
-    private int durationMin;
+    @Column(name = "DATE_END")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateEnd;
     @Lob
     @Size(max = 65535)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Size(min = 1, max = 65535)
-    @Column(name = "IDS_PROBLEMS")
-    private String idsProblems;
-    @JoinTable(name = "CHALLENGE_USER", joinColumns = {
-        @JoinColumn(name = "ID_CHALLENGE", referencedColumnName = "ID_CHALLENGE")}, inverseJoinColumns = {
-        @JoinColumn(name = "ID_TEAM_CONTEST", referencedColumnName = "ID_TEAM_CONTEST")})
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<TeamContest> teamContestList;
+    @Column(name = "DATE_CREATED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
+    private List<ChallengeTeam> challengeTeamList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
+    private List<ChallengeProblem> challengeProblemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
+    private List<ChallengeSubmit> challengeSubmitList;
 
     public Challenge() {
     }
@@ -90,14 +85,12 @@ public class Challenge implements Serializable {
         this.idChallenge = idChallenge;
     }
 
-    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, short quantityProblems, Date dateChallenge, int durationMin, String idsProblems) {
+    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, Date dateStart, Date dateEnd) {
         this.idChallenge = idChallenge;
         this.nameChallenge = nameChallenge;
         this.idAccountOrganizer = idAccountOrganizer;
-        this.quantityProblems = quantityProblems;
-        this.dateChallenge = dateChallenge;
-        this.durationMin = durationMin;
-        this.idsProblems = idsProblems;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
     }
 
     public Long getIdChallenge() {
@@ -124,28 +117,20 @@ public class Challenge implements Serializable {
         this.idAccountOrganizer = idAccountOrganizer;
     }
 
-    public short getQuantityProblems() {
-        return quantityProblems;
+    public Date getDateStart() {
+        return dateStart;
     }
 
-    public void setQuantityProblems(short quantityProblems) {
-        this.quantityProblems = quantityProblems;
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
     }
 
-    public Date getDateChallenge() {
-        return dateChallenge;
+    public Date getDateEnd() {
+        return dateEnd;
     }
 
-    public void setDateChallenge(Date dateChallenge) {
-        this.dateChallenge = dateChallenge;
-    }
-
-    public int getDurationMin() {
-        return durationMin;
-    }
-
-    public void setDurationMin(int durationMin) {
-        this.durationMin = durationMin;
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
     }
 
     public String getDescription() {
@@ -156,21 +141,39 @@ public class Challenge implements Serializable {
         this.description = description;
     }
 
-    public String getIdsProblems() {
-        return idsProblems;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setIdsProblems(String idsProblems) {
-        this.idsProblems = idsProblems;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     @XmlTransient
-    public List<TeamContest> getTeamContestList() {
-        return teamContestList;
+    public List<ChallengeTeam> getChallengeTeamList() {
+        return challengeTeamList;
     }
 
-    public void setTeamContestList(List<TeamContest> teamContestList) {
-        this.teamContestList = teamContestList;
+    public void setChallengeTeamList(List<ChallengeTeam> challengeTeamList) {
+        this.challengeTeamList = challengeTeamList;
+    }
+
+    @XmlTransient
+    public List<ChallengeProblem> getChallengeProblemList() {
+        return challengeProblemList;
+    }
+
+    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
+        this.challengeProblemList = challengeProblemList;
+    }
+
+    @XmlTransient
+    public List<ChallengeSubmit> getChallengeSubmitList() {
+        return challengeSubmitList;
+    }
+
+    public void setChallengeSubmitList(List<ChallengeSubmit> challengeSubmitList) {
+        this.challengeSubmitList = challengeSubmitList;
     }
 
     @Override
@@ -195,7 +198,7 @@ public class Challenge implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.business.db.entity.Challenge[ idChallenge=" + idChallenge + " ]";
+        return "edu.nagojudge.business.dao.entity.Challenge[ idChallenge=" + idChallenge + " ]";
     }
     
 }

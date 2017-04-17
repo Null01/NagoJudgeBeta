@@ -5,9 +5,9 @@
  */
 package edu.nagojudge.business.servicios.restful;
 
-import edu.nagojudge.business.dao.beans.AttachmentsFacade;
-import edu.nagojudge.business.dao.beans.AuthenticationFacade;
-import edu.nagojudge.business.dao.beans.JudgeFacade;
+import edu.nagojudge.business.dao.beans.AttachmentsDAOFacade;
+import edu.nagojudge.business.dao.beans.AuthenticationDAOFacade;
+import edu.nagojudge.business.dao.beans.JudgeDAOFacade;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.SubmitMessage;
@@ -31,13 +31,13 @@ import org.apache.log4j.Logger;
 public class SubmitService {
 
     @EJB
-    private AuthenticationFacade authenticationFacade;
+    private AuthenticationDAOFacade authenticationFacade;
 
     @EJB
-    private JudgeFacade judgeFacade;
+    private JudgeDAOFacade judgeFacade;
 
     @EJB
-    private AttachmentsFacade attachmentsFacade;
+    private AttachmentsDAOFacade attachmentsFacade;
 
     private final Logger logger = Logger.getLogger(SubmitService.class);
 
@@ -115,15 +115,11 @@ public class SubmitService {
         SubmitMessage submitMessage = new SubmitMessage();
         submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
         submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
-        submitMessage.setIdAccount(submit.getIdAccount().getIdAccount());
         submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
         submitMessage.setIdSubmit(submit.getIdSubmit());
         submitMessage.setMsgJudge(submit.getMsgJudge());
         submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
         submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
-        submitMessage.setNickname(submit.getIdAccount().getNickname());
-        submitMessage.setStatusSubmit(submit.getStatusSubmit());
-        submitMessage.setVisibleWeb(submit.getVisibleWeb());
         return submitMessage;
     }
 

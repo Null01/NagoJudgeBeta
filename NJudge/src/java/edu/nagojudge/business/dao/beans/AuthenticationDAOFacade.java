@@ -13,7 +13,7 @@ import javax.naming.AuthenticationException;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class AuthenticationFacade {
+public class AuthenticationDAOFacade {
 
     private final String TOKEN = "asd";
 

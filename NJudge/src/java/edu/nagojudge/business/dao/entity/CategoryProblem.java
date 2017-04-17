@@ -26,20 +26,21 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "CATEGORY_PROBLEM")
+@Table(name = "category_problem", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CategoryProblem.findAll", query = "SELECT c FROM CategoryProblem c")})
 public class CategoryProblem implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID_CATEGORY")
-    private Long idCategory;
+    private Integer idCategory;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -51,20 +52,20 @@ public class CategoryProblem implements Serializable {
     public CategoryProblem() {
     }
 
-    public CategoryProblem(Long idCategory) {
+    public CategoryProblem(Integer idCategory) {
         this.idCategory = idCategory;
     }
 
-    public CategoryProblem(Long idCategory, String nameCategory) {
+    public CategoryProblem(Integer idCategory, String nameCategory) {
         this.idCategory = idCategory;
         this.nameCategory = nameCategory;
     }
 
-    public Long getIdCategory() {
+    public Integer getIdCategory() {
         return idCategory;
     }
 
-    public void setIdCategory(Long idCategory) {
+    public void setIdCategory(Integer idCategory) {
         this.idCategory = idCategory;
     }
 
@@ -107,7 +108,7 @@ public class CategoryProblem implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.business.db.entity.CategoryProblem[ idCategory=" + idCategory + " ]";
+        return "edu.nagojudge.business.dao.entity.CategoryProblem[ idCategory=" + idCategory + " ]";
     }
     
 }

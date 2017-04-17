@@ -26,14 +26,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "LANGUAGE_PROGRAMMING")
+@Table(name = "language_programming", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LanguageProgramming.findAll", query = "SELECT l FROM LanguageProgramming l")})
 public class LanguageProgramming implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,17 +43,17 @@ public class LanguageProgramming implements Serializable {
     private Long idLanguage;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 100)
     @Column(name = "NAME_LANGUAGE")
     private String nameLanguage;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 100)
     @Column(name = "VERSION")
     private String version;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 100)
     @Column(name = "EXTENSION")
     private String extension;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLanguage", fetch = FetchType.LAZY)
@@ -135,7 +136,7 @@ public class LanguageProgramming implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.business.db.entity.LanguageProgramming[ idLanguage=" + idLanguage + " ]";
+        return "edu.nagojudge.business.dao.entity.LanguageProgramming[ idLanguage=" + idLanguage + " ]";
     }
     
 }

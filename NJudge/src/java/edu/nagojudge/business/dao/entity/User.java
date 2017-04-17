@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,16 +27,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "USER")
+@Table(name = "user", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")})
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID_USER")
+    private Long idUser;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -43,8 +50,8 @@ public class User implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "KEY_USER")
-    private String keyUser;
+    @Column(name = "PASSWORD_USER")
+    private String passwordUser;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -56,7 +63,7 @@ public class User implements Serializable {
     @Column(name = "LAST_NAME")
     private String lastName;
     @Column(name = "DATE_BIRTHDAY")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date dateBirthday;
     @JoinColumn(name = "ID_ACCOUNT", referencedColumnName = "ID_ACCOUNT")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -68,15 +75,24 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String idEmail) {
-        this.idEmail = idEmail;
+    public User(Long idUser) {
+        this.idUser = idUser;
     }
 
-    public User(String idEmail, String keyUser, String firstName, String lastName) {
+    public User(Long idUser, String idEmail, String passwordUser, String firstName, String lastName) {
+        this.idUser = idUser;
         this.idEmail = idEmail;
-        this.keyUser = keyUser;
+        this.passwordUser = passwordUser;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
     }
 
     public String getIdEmail() {
@@ -87,12 +103,12 @@ public class User implements Serializable {
         this.idEmail = idEmail;
     }
 
-    public String getKeyUser() {
-        return keyUser;
+    public String getPasswordUser() {
+        return passwordUser;
     }
 
-    public void setKeyUser(String keyUser) {
-        this.keyUser = keyUser;
+    public void setPasswordUser(String passwordUser) {
+        this.passwordUser = passwordUser;
     }
 
     public String getFirstName() {
@@ -138,7 +154,7 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idEmail != null ? idEmail.hashCode() : 0);
+        hash += (idUser != null ? idUser.hashCode() : 0);
         return hash;
     }
 
@@ -149,7 +165,7 @@ public class User implements Serializable {
             return false;
         }
         User other = (User) object;
-        if ((this.idEmail == null && other.idEmail != null) || (this.idEmail != null && !this.idEmail.equals(other.idEmail))) {
+        if ((this.idUser == null && other.idUser != null) || (this.idUser != null && !this.idUser.equals(other.idUser))) {
             return false;
         }
         return true;
@@ -157,7 +173,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.business.db.entity.User[ idEmail=" + idEmail + " ]";
+        return "edu.nagojudge.business.dao.entity.User[ idUser=" + idUser + " ]";
     }
     
 }

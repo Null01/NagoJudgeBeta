@@ -6,6 +6,7 @@
 package edu.nagojudge.business.dao.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -22,6 +23,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,14 +32,15 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "PROBLEM")
+@Table(name = "problem", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Problem.findAll", query = "SELECT p FROM Problem p")})
 public class Problem implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +49,7 @@ public class Problem implements Serializable {
     private Long idProblem;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 200)
     @Column(name = "NAME_PROBLEM")
     private String nameProblem;
     @Basic(optional = false)
@@ -61,16 +65,21 @@ public class Problem implements Serializable {
     @NotNull
     @Column(name = "TIME_LIMIT_SEG")
     private int timeLimitSeg;
+    @Column(name = "DATE_CREATED")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Attachments> attachmentsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Submit> submitList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<ChallengeProblem> challengeProblemList;
     @JoinColumn(name = "ID_DIFFICULTY", referencedColumnName = "ID_DIFFICULTY")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private DifficultyLevel idDifficulty;
     @JoinColumn(name = "ID_CATEGORY", referencedColumnName = "ID_CATEGORY")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CategoryProblem idCategory;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Attachments> attachmentsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
 
     public Problem() {
     }
@@ -126,20 +135,12 @@ public class Problem implements Serializable {
         this.timeLimitSeg = timeLimitSeg;
     }
 
-    public DifficultyLevel getIdDifficulty() {
-        return idDifficulty;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setIdDifficulty(DifficultyLevel idDifficulty) {
-        this.idDifficulty = idDifficulty;
-    }
-
-    public CategoryProblem getIdCategory() {
-        return idCategory;
-    }
-
-    public void setIdCategory(CategoryProblem idCategory) {
-        this.idCategory = idCategory;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     @XmlTransient
@@ -158,6 +159,31 @@ public class Problem implements Serializable {
 
     public void setSubmitList(List<Submit> submitList) {
         this.submitList = submitList;
+    }
+
+    @XmlTransient
+    public List<ChallengeProblem> getChallengeProblemList() {
+        return challengeProblemList;
+    }
+
+    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
+        this.challengeProblemList = challengeProblemList;
+    }
+
+    public DifficultyLevel getIdDifficulty() {
+        return idDifficulty;
+    }
+
+    public void setIdDifficulty(DifficultyLevel idDifficulty) {
+        this.idDifficulty = idDifficulty;
+    }
+
+    public CategoryProblem getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(CategoryProblem idCategory) {
+        this.idCategory = idCategory;
     }
 
     @Override
@@ -182,7 +208,7 @@ public class Problem implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.business.db.entity.Problem[ idProblem=" + idProblem + " ]";
+        return "edu.nagojudge.business.dao.entity.Problem[ idProblem=" + idProblem + " ]";
     }
     
 }

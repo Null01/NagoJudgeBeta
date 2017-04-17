@@ -13,8 +13,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -29,22 +27,21 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @Entity
-@Table(name = "ACCOUNT")
+@Table(name = "account", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a")})
 public class Account implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID_ACCOUNT")
-    private Long idAccount;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "ID_ACCOUNT")
+    private Long idAccount;
     @Column(name = "DATE_REGISTER")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
@@ -54,9 +51,9 @@ public class Account implements Serializable {
     @Column(name = "NICKNAME")
     private String nickname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
+    private List<ChallengeTeam> challengeTeamList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<TeamContest> teamContestList;
+    private List<AccountSubmit> accountSubmitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<User> userList;
 
@@ -67,9 +64,8 @@ public class Account implements Serializable {
         this.idAccount = idAccount;
     }
 
-    public Account(Long idAccount, Date dateRegister, String nickname) {
+    public Account(Long idAccount, String nickname) {
         this.idAccount = idAccount;
-        this.dateRegister = dateRegister;
         this.nickname = nickname;
     }
 
@@ -98,21 +94,21 @@ public class Account implements Serializable {
     }
 
     @XmlTransient
-    public List<Submit> getSubmitList() {
-        return submitList;
+    public List<ChallengeTeam> getChallengeTeamList() {
+        return challengeTeamList;
     }
 
-    public void setSubmitList(List<Submit> submitList) {
-        this.submitList = submitList;
+    public void setChallengeTeamList(List<ChallengeTeam> challengeTeamList) {
+        this.challengeTeamList = challengeTeamList;
     }
 
     @XmlTransient
-    public List<TeamContest> getTeamContestList() {
-        return teamContestList;
+    public List<AccountSubmit> getAccountSubmitList() {
+        return accountSubmitList;
     }
 
-    public void setTeamContestList(List<TeamContest> teamContestList) {
-        this.teamContestList = teamContestList;
+    public void setAccountSubmitList(List<AccountSubmit> accountSubmitList) {
+        this.accountSubmitList = accountSubmitList;
     }
 
     @XmlTransient
@@ -146,7 +142,7 @@ public class Account implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.business.db.entity.Account[ idAccount=" + idAccount + " ]";
+        return "edu.nagojudge.business.dao.entity.Account[ idAccount=" + idAccount + " ]";
     }
     
 }

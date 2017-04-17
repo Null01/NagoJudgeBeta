@@ -8,6 +8,7 @@ package edu.nagojudge.business.dao.beans;
 import edu.nagojudge.business.dao.entity.Account;
 import edu.nagojudge.business.dao.entity.Attachments;
 import edu.nagojudge.business.dao.entity.Submit;
+import edu.nagojudge.business.dao.entity.SubmitStatus;
 import edu.nagojudge.business.logic.java.JudgeServiceJava;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
@@ -29,9 +30,9 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class JudgeFacade {
+public class JudgeDAOFacade {
 
-    private final Logger logger = Logger.getLogger(JudgeFacade.class);
+    private final Logger logger = Logger.getLogger(JudgeDAOFacade.class);
 
     public final String PATH_SAVE_CODE_SOURCE = getPathWorkspaceNJ();
     public final String PATH_SAVE_INPUT_SOURCE = getPathWorkspaceNJInputs();
@@ -58,9 +59,8 @@ public class JudgeFacade {
             }
 
             logger.debug("getIdSubmit()=" + submit.getIdSubmit());
-            logger.debug("getIdSubmit()=" + submit.getIdAccount());
             logger.debug("getIdLanguage()=" + submit.getIdLanguage());
-            logger.debug("getStatusSubmit()=" + submit.getStatusSubmit());
+            logger.debug("getIdStatus()=" + submit.getIdStatus().getNameStatus());
             logger.debug("getIdProblem()=" + submit.getIdProblem());
             String pathFileCodeSource = PATH_SAVE_CODE_SOURCE + java.io.File.separatorChar + String.valueOf(email)
                     + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
@@ -92,7 +92,9 @@ public class JudgeFacade {
 
             logger.debug("JUDGE_FINALLY=" + stateJudge.getValue());
             submit.setDateJudge(Calendar.getInstance().getTime());
-            submit.setStatusSubmit(stateJudge.getValue());
+            submit.setIdStatus(em.createQuery("SELECT ss FROM SubmitStatus ss WHERE ss.keyStatus = :statusSubmit ", SubmitStatus.class)
+                    .setParameter("statusSubmit", stateJudge.getValue())
+                    .getSingleResult());
             em.merge(submit);
 
             return submit;
