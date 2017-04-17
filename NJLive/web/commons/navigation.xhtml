@@ -17,7 +17,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#">Nago Judge</a>
+                        <a class="navbar-brand text-center" href="#">Nago Judge</a>
                     </div>
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -32,8 +32,12 @@
                                            value="Submits"
                                            action="#{navegationRoomBean.actionRedirectSubmitsBoard}" />
                         </div>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>
+                        <ul class="nav navbar-nav navbar-form navbar-right text-center">
+                            <li style="margin-top: 8px; margin-right: 10px;">
+                                <h:outputText styleClass="label label-default" style="font-size: 20px; font-weight: bold;"
+                                               value="#{navegationRoomBean.nameTeamInSession}"  />
+                            </li>
+                            <li class="text-center" style="margin-top: -5px;">
                                 <p:commandLink styleClass="glyphicon glyphicon-off"
                                                actionListener="#{signInOutBean.actionSignOutSession}"
                                                ajax="false">

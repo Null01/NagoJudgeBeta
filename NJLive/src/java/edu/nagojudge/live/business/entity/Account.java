@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "account", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Account1_1.findAll", query = "SELECT a FROM Account1_1 a")})
+    @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a")})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -142,7 +142,7 @@ public class Account implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.live.business.entity.Account1_1[ idAccount=" + idAccount + " ]";
+        return "edu.nagojudge.live.business.entity.Account[ idAccount=" + idAccount + " ]";
     }
     
 }

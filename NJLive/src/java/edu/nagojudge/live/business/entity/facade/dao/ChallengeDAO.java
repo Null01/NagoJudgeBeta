@@ -37,18 +37,17 @@ public class ChallengeDAO extends AbstractDAO<Challenge> {
         super(Challenge.class);
     }
 
-    public List<ChallengeMessage> findChallengeAviableByUser(String email) {
+    public List<ChallengeMessage> findChallengeAviableByTeam(Long idTeam) {
         List<ChallengeMessage> challengeMessages = new ArrayList<ChallengeMessage>();
         try {
-            logger.debug("INICIA METODO - findChallengeAviableByUser()");
-            logger.debug("email [" + email + "]");
+            logger.debug("INICIA METODO - findChallengeAviableByTeam()");
+            logger.debug("idTeam [" + idTeam + "]");
             logger.debug("currentTime [" + Calendar.getInstance().getTime() + "]");
             EntityManager manager = getEntityManager();
             List<Challenge> challenges
                     = manager.createQuery("SELECT a FROM Challenge a WHERE (a.dateEnd >= :currentDate AND a.dateStart <= :currentDate) "
-                            + "AND (a.idChallenge IN (SELECT b.idChallenge.idChallenge FROM ChallengeTeam b WHERE b.idAccount.idAccount = "
-                            + "(SELECT c.idAccount.idAccount FROM User c WHERE c.idEmail = :email) ) )")
-                            .setParameter("email", email)
+                            + "AND (a.idChallenge IN (SELECT b.idChallenge.idChallenge FROM ChallengeTeam b WHERE b.idTeam.idTeam = :idTeam GROUP BY b.idTeam.idTeam)) ")
+                            .setParameter("idTeam", idTeam)
                             .setParameter("currentDate", new Timestamp(Calendar.getInstance().getTimeInMillis()))
                             .getResultList();
             for (Challenge challenge : challenges) {
@@ -56,7 +55,7 @@ public class ChallengeDAO extends AbstractDAO<Challenge> {
             }
             logger.debug("outcome [" + challengeMessages.size() + "]");
         } finally {
-            logger.debug("FINALIZA METODO - findChallengeAviableByUser()");
+            logger.debug("FINALIZA METODO - findChallengeAviableByTeam()");
         }
         return challengeMessages;
     }

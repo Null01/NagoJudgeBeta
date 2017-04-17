@@ -1,0 +1,114 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/core"
+    template="template/begins.xhtml">
+
+    <ui:define name="content">
+
+        <div class="well">
+            <h:form id="form-submit-sourcecode" class="form-horizontal" enctype="multipart/form-data">
+                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                <fieldset>
+                    <div class="form-group">
+                        <label for="select-problem" class="col-md-1 control-label">Problem</label>
+                        <div class="col-md-5">
+                            <p:selectOneMenu id="select-problem"
+                                             styleClass="selected-list form-control"
+                                             style="width: 100%;"
+                                             converter="pairConvertJSF"
+                                             value="#{roomSubmitBean.pairMessageView}"
+                                             required="true" >
+                                <f:selectItem value="#{null}" itemLabel="Select one problem" />
+                                <f:selectItems value="#{roomSubmitBean.listProblemItems}" />                                               
+                            </p:selectOneMenu>
+                        </div>
+                        <label for="select-language" class="col-md-1 control-label">Language</label>
+                        <div class="col-md-5">
+                            <p:selectOneMenu id="select-language"
+                                             styleClass="selected-list form-control"
+                                             style="width: 100%;"
+                                             converter="languageProgrammingConvertJSF"
+                                             value="#{roomSubmitBean.languageProgrammingMessage}"
+                                             required="true" >
+                                <f:selectItem value="#{null}" itemLabel="Select one language" />
+                                <f:selectItems value="#{roomSubmitBean.listLanguageProgrammingItems}" />                                               
+                            </p:selectOneMenu>
+                        </div>
+                        <label for="upload-sourceCode" class="col-md-1 control-label">Source Code</label>
+                        <div class="col-md-5">
+                            <p:fileUpload id="upload-sourceCode"
+                                          styleClass="form-control center-block"
+                                          value="#{roomSubmitBean.fileSourceCode}"
+                                          mode="simple"
+                                          required="true"
+                                          allowTypes="/(\.|\/)(java|cpp|c)$/"
+                                          label="#{msg['general.label.archivo.upload']}" />
+
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <p:commandButton styleClass="btn btn-default btn-sm center-block text-center"
+                                         value="Send solution"
+                                         action="#{roomSubmitBean.actionSubmitSourceCode}"
+                                         ajax="false"
+                                         update="msgs, @form"/>
+                    </div>
+                </fieldset>
+            </h:form>
+        </div>
+
+        <div class="well">
+            <fieldset>
+                <div class="form-group">
+                    <h:form id="form-submits-client" class="form-horizontal" >
+                        <p:dataTable id="table-problems-client"
+                                     widgetVar="widgetSubmitsClient"
+                                     tableStyleClass="table table-striped table-hover"
+                                     value="#{roomSubmitBean.listSubmits}"
+                                     var="s"
+                                     styleClass="center-block"
+                                     rowKey="#{s.idSubmit}"
+                                     rowIndexVar="indexKey"
+                                     paginator="false"
+                                     paginatorPosition="bottom"                                     
+                                     emptyMessage="#{msg['general.table.noinfo']}">
+                            <p:column headerText="#" width="5%" styleClass="text-center" >
+                                #{indexKey + 1}
+                            </p:column>
+                            <p:column headerText="Key" width="5%" styleClass="text-center" >
+                                <h:outputText value="#{roomSubmitBean.mapLettersGlobs[s.idProblem]}" />
+                            </p:column>
+                            <p:column headerText="Problem" width="20%" styleClass="text-left" >
+                                <h:outputText value="#{s.nameProblem}" />
+                            </p:column>
+                            <p:column headerText="Language" width="10%" styleClass="text-center" >
+                                <h:outputText value="#{s.nameLanguage}" />
+                            </p:column>
+                            <p:column headerText="Date Submit" width="15%" styleClass="text-center" >
+                                <h:outputText value="#{s.dateSubmit}" >
+                                    <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Status" width="20%" styleClass="text-center" >
+                                <h:outputText value="#{s.nameStatus}" />
+                            </p:column>
+                            <p:column width="10%" styleClass="text-center" >
+                                <ui:fragment rendered="#{s.idStatus eq 'AC'}" >
+                                    <img src="#{roomSubmitBean.mapColorsGlogs[s.idProblem]}" class="globe-center"  />
+                                </ui:fragment>
+                                <ui:fragment rendered="#{s.idStatus ne 'AC'}" >
+                                    <h:outputText value="-/-" styleClass="text-center" />
+                                </ui:fragment>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </fieldset> 
+        </div>
+    </ui:define>
+</ui:composition>
+

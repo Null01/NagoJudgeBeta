@@ -52,8 +52,9 @@ public class Challenge implements Serializable {
     private String nameChallenge;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "ID_ACCOUNT_ORGANIZER")
-    private long idAccountOrganizer;
+    @Size(min = 1, max = 255)
+    @Column(name = "EMAIL_ORGANIZER")
+    private String emailOrganizer;
     @Basic(optional = false)
     @NotNull
     @Column(name = "DATE_START")
@@ -85,10 +86,10 @@ public class Challenge implements Serializable {
         this.idChallenge = idChallenge;
     }
 
-    public Challenge(Long idChallenge, String nameChallenge, long idAccountOrganizer, Date dateStart, Date dateEnd) {
+    public Challenge(Long idChallenge, String nameChallenge, String emailOrganizer, Date dateStart, Date dateEnd) {
         this.idChallenge = idChallenge;
         this.nameChallenge = nameChallenge;
-        this.idAccountOrganizer = idAccountOrganizer;
+        this.emailOrganizer = emailOrganizer;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
     }
@@ -109,12 +110,12 @@ public class Challenge implements Serializable {
         this.nameChallenge = nameChallenge;
     }
 
-    public long getIdAccountOrganizer() {
-        return idAccountOrganizer;
+    public String getEmailOrganizer() {
+        return emailOrganizer;
     }
 
-    public void setIdAccountOrganizer(long idAccountOrganizer) {
-        this.idAccountOrganizer = idAccountOrganizer;
+    public void setEmailOrganizer(String emailOrganizer) {
+        this.emailOrganizer = emailOrganizer;
     }
 
     public Date getDateStart() {

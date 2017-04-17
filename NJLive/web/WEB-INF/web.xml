@@ -19,7 +19,7 @@
     </context-param>
     <context-param>
         <param-name>primefaces.UPLOADER</param-name>
-        <param-value>commons</param-value>
+        <param-value>commons|auto</param-value>
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
@@ -29,6 +29,15 @@
         <param-name>log4j-config</param-name>
         <param-value>WEB-INF/log4j.properties</param-value>
     </context-param>
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <listener>
         <description>InitializeAppListener</description>
         <listener-class>edu.nagojudge.live.web.listeners.InitializeAppListener</listener-class>

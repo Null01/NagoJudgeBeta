@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.live.web.utils.converters;
 
-import edu.nagojudge.msg.pojo.ChallengeMessage;
+import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import java.util.Iterator;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,8 +17,8 @@ import javax.faces.model.SelectItem;
  *
  * @author andresfelipegarciaduran
  */
-@FacesConverter("challengeMessageConvertJSF")
-public class ChallengeMessageConvertJSF extends AbstractConvertJSF implements Converter {
+@FacesConverter("languageProgrammingConvertJSF")
+public class LanguageProgrammingConvertJSF extends AbstractConvertJSF implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
@@ -35,8 +35,7 @@ public class ChallengeMessageConvertJSF extends AbstractConvertJSF implements Co
         if (value == null || value.equals("")) {
             return "";
         } else {
-            return String.valueOf(((ChallengeMessage) value).getIdChallenge());
+            return String.valueOf(((LanguageProgrammingMessage) value).getIdLanguage());
         }
     }
-
 }

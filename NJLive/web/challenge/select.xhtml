@@ -12,6 +12,20 @@
             <script type="text/javascript" src="/js/particleground.js"></script>
         </h:head>
         <h:body id="main-body">
+
+            <ui:define name="metadata">
+                <f:metadata>
+                    <f:viewParam id="select-idTeam"
+                                 name="idTeam" 
+                                 value="#{selectRoomBean.teamMessageView.idTeam}"
+                                 required="true">
+                        <f:validateLength minimum="1" maximum="30" />
+                    </f:viewParam>
+                    <f:event type="preRenderView"
+                             listener="#{selectRoomBean.actionListenerPreRender}" />
+                </f:metadata>
+            </ui:define>
+
             <div class="container">
                 <div class="container">
                     <div id="box-float" class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3"> 

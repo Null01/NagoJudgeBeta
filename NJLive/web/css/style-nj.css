@@ -113,22 +113,24 @@ body {
 
 /* --- GLOBE ---- */
 .globe{
-    width: 52px !important;
-    height: 80px !important;
+    float: right;
+    width: 45px !important;
+    height: 65px !important;
 }
 
-.globe-blue{
-    fill: #050594;
+.globe-center{
+    width: 45px !important;
+    height: 65px !important;
 }
-.globe-purple{
-    fill: #9A1553;
+
+/* TEXT - GLOBES*/
+.text-score-unit{
+    display: block;
+    padding-top: 60px;
+    text-align: center;
 }
-.globe-pink{
-    fill: #FF98FF;
-}
-.globe-black{
-    fill: #000000;
-}
-.globe-yellow{
-    fill: #F5F500;
+
+.selected-list{
+    border-radius: 0 !important;
+    padding-top: 7px !important;
 }

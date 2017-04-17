@@ -5,7 +5,8 @@
  */
 package edu.nagojudge.live.web.utils.converters;
 
-import edu.nagojudge.msg.pojo.ChallengeMessage;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Iterator;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,8 +18,8 @@ import javax.faces.model.SelectItem;
  *
  * @author andresfelipegarciaduran
  */
-@FacesConverter("challengeMessageConvertJSF")
-public class ChallengeMessageConvertJSF extends AbstractConvertJSF implements Converter {
+@FacesConverter("numberConvertJSF")
+public class NumberConvertJSF extends AbstractConvertJSF implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
@@ -35,8 +36,19 @@ public class ChallengeMessageConvertJSF extends AbstractConvertJSF implements Co
         if (value == null || value.equals("")) {
             return "";
         } else {
-            return String.valueOf(((ChallengeMessage) value).getIdChallenge());
+            if (value instanceof BigDecimal) {
+                return String.valueOf((BigDecimal) value);
+            }
+            if (value instanceof BigInteger) {
+                return String.valueOf((BigInteger) value);
+            }
+            if (value instanceof Long) {
+                return String.valueOf((Long) value);
+            }
+            if (value instanceof Integer) {
+                return String.valueOf((Integer) value);
+            }
+            return String.valueOf(value);
         }
     }
-
 }

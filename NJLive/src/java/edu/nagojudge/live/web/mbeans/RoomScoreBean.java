@@ -12,7 +12,9 @@ import edu.nagojudge.msg.pojo.ChallengeMessage;
 import edu.nagojudge.msg.pojo.ScoreMessage;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -32,24 +34,54 @@ public class RoomScoreBean implements Serializable {
 
     private final Logger logger = Logger.getLogger(RoomScoreBean.class);
 
+    private int sizeListScoreTeams;
     private List<ScoreMessage> listScoreTeams = new ArrayList<ScoreMessage>();
-    private int sizeListScoreTeam;
+
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
+
+    private Map<Long, String> mapColorsGlogs = new HashMap<Long, String>();
+    private Map<Long, String> mapLettersGlobs = new HashMap<Long, String>();
 
     public RoomScoreBean() {
     }
 
     @PostConstruct
     public void init() {
-        Long challengeId = (Long) FacesUtil.getFacesUtil().getAttributeCurrentSession(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
-        this.listScoreTeams = new ArrayList<ScoreMessage>(challengeSubmitDAO.findScoreAllTeamFromChallenge(challengeId));
-        if (listScoreTeams != null && !listScoreTeams.isEmpty()) {
-            this.sizeListScoreTeam = listScoreTeams.get(0).getResumeScore().getList().size();
+        try {
+            Long challengeId = (Long) FacesUtil.getFacesUtil().getAttributeCurrentSession(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
+            this.listScoreTeams = new ArrayList<ScoreMessage>(challengeSubmitDAO.calculateScoreByChallenge(challengeId));
+            if (listScoreTeams != null && !listScoreTeams.isEmpty()) {
+                this.sizeListScoreTeams = listScoreTeams.get(0).getResumeScore().getList().size();
+                mapColorsGlogs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_GLOBES);
+                mapLettersGlobs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_LETTERS);
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
     }
 
-    public int getSizeListScoreTeam() {
-        return sizeListScoreTeam;
+    public int getSizeListScoreTeams() {
+        return sizeListScoreTeams;
+    }
+
+    public void setSizeListScoreTeams(int sizeListScoreTeams) {
+        this.sizeListScoreTeams = sizeListScoreTeams;
+    }
+
+    public Map<Long, String> getMapColorsGlogs() {
+        return mapColorsGlogs;
+    }
+
+    public void setMapColorsGlogs(Map<Long, String> mapColorsGlogs) {
+        this.mapColorsGlogs = mapColorsGlogs;
+    }
+
+    public Map<Long, String> getMapLettersGlobs() {
+        return mapLettersGlobs;
+    }
+
+    public void setMapLettersGlobs(Map<Long, String> mapLettersGlobs) {
+        this.mapLettersGlobs = mapLettersGlobs;
     }
 
     public ChallengeMessage getChallengeMessageView() {

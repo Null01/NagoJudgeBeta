@@ -9,6 +9,7 @@ import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
@@ -17,10 +18,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 
 /**
  *
@@ -77,6 +81,21 @@ public class FacesUtil {
         return requestMap;
     }
 
+    public Map<String, String[]> getRequestHeaderValuesMap() {
+        Map<String, String[]> requestHeaderValuesMap = FacesContext.getCurrentInstance().getExternalContext().getRequestHeaderValuesMap();
+        return requestHeaderValuesMap;
+    }
+
+    public Map<String, String[]> getRequestParameterValuesMap() {
+        Map<String, String[]> requestHeaderValuesMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterValuesMap();
+        return requestHeaderValuesMap;
+    }
+
+    public Map<String, Object> getRequestCookieMap() {
+        Map<String, Object> requestHeaderValuesMap = FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap();
+        return requestHeaderValuesMap;
+    }
+
     public Flash getFlash() {
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         return flash;
@@ -125,6 +144,33 @@ public class FacesUtil {
     public boolean isValidationFailed() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         return !facesContext.isPostback() && facesContext.isValidationFailed();
+    }
+
+    public void addCookie(String key, Object value) {
+        try {
+            HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+            ObjectMapper mapper = new ObjectMapper();
+            String valueJson = mapper.writeValueAsString(value);
+            logger.debug(valueJson);
+            Cookie cookie = new Cookie(key, valueJson);
+            response.addCookie(cookie);
+        } catch (IOException ex) {
+            logger.error(ex);
+        }
+    }
+
+    public Map<Long, String> getCookieMap(String key) {
+        Map<Long, String> outcome = new HashMap<Long, String>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> requestCookieMap = getRequestCookieMap();
+            Cookie cookie = (Cookie) requestCookieMap.get(key);
+            outcome = mapper.readValue(cookie.getValue(), new TypeReference<Map<Long, String>>() {
+            });
+        } catch (IOException ex) {
+            logger.error(ex);
+        }
+        return outcome;
     }
 
     public void printErrorResponse(String message) {

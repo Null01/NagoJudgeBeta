@@ -40,7 +40,7 @@ public class NavegationRoomBean implements Serializable {
     }
 
     public String actionRedirectSubmitsBoard() {
-        return "/challenge/submits.xhtml?faces-redirect=true&includeViewParams=true";
+        return "/challenge/submit.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public long getTimeEndingChallenge() {
@@ -70,6 +70,11 @@ public class NavegationRoomBean implements Serializable {
 
     public void setChallengeMessageView(ChallengeMessage challengeMessageView) {
         this.challengeMessageView = challengeMessageView;
+    }
+
+    public String getNameTeamInSession() {
+        Object nameTeam = FacesUtil.getFacesUtil().getSessionMap().get(IKeysApplication.KEY_SESSION_TEAM_NAME_ID);
+        return String.valueOf(nameTeam);
     }
 
 }

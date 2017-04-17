@@ -11,8 +11,12 @@ package edu.nagojudge.live.web.utils.constants;
  */
 public interface IKeysApplication {
 
-    public final String KEY_SESSION_USER_EMAIL = "data-email";
+    public final String KEY_SESSION_TEAM_ID = "data-idteam";
+    public final String KEY_SESSION_TEAM_NAME_ID = "data-team";
     public final String KEY_SESSION_CHALLENGE_ID = "data-challenge";
     public final String KEY_SESSION_CHALLENGE_DATE_END = "data-date-started";
+
+    public final String KEY_COOKIE_GLOBES = "cook-globes";
+    public final String KEY_COOKIE_LETTERS = "cook-letters";
 
 }

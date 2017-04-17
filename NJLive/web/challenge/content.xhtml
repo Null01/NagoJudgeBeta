@@ -20,14 +20,20 @@
                                      var="p"
                                      styleClass="center-block"
                                      rowKey="#{p.idProblem}"
+                                     rowIndexVar="indexKey"
                                      paginator="false"
                                      paginatorPosition="bottom"                                     
                                      emptyMessage="#{msg['general.table.noinfo']}">
-                            <p:column headerText="Name problem" width="300">
+                            <p:column headerText="#" width="5%" styleClass="text-center">
+                                <h:outputText value="&amp;&#35;#{64+(indexKey+1)};" escape="false"/>
+                            </p:column>
+                            <p:column headerText="Name problem" width="45%" styleClass="text-left" >
                                 <h:commandLink value="#{p.nameProblem}" />
                             </p:column>
-                            <p:column headerText="Category" width="200" >
-                                <h:outputText styleClass="label label-success" value="#{p.nameCategory}" />
+                            <p:column headerText="Category" width="50%" styleClass="text-left" >
+                                <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory">
+                                    <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':'label-info'}" value="#{c.nameCategory} " /> 
+                                </ui:repeat>
                             </p:column>
                         </p:dataTable>
                     </h:form>
@@ -36,4 +42,5 @@
         </div>
     </ui:define>
 </ui:composition>
+
 
