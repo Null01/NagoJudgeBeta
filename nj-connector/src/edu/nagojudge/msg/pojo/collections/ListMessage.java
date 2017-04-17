@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param <T>
  */
 @XmlRootElement
-public class ListTypeMessage<E> {
+public class ListMessage<E> {
 
     @XmlElement
     private List<E> list = new ArrayList<E>();

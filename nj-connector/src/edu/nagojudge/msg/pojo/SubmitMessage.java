@@ -16,32 +16,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SubmitMessage implements Serializable {
 
     private Long idSubmit;
-    private String statusSubmit;
+    private String _idStatus;
+    private String nameStatus;
+    private String nameLanguage;
+    private Long _idProblem;
+    private String nameProblem;
     private Long dateSubmit;
     private Long dateJudge;
     private String msgJudge;
     private String visibleWeb;
-    private Long idAccount;
-    private String nickname;
-    private String nameLanguage;
-    private Long idProblem;
-    private String nameProblem;
+    private AccountMessage accountMessage;
 
     public SubmitMessage() {
     }
 
-    public SubmitMessage(Long idSubmit, String statusSubmit, Long dateSubmit, Long dateJudge, String msgJudge, String visibleWeb, Long idAccount, String nickname, String nameLanguage, Long idProblem, String nameProblem) {
+    public SubmitMessage(Long idSubmit, String _idStatus, String nameStatus, String nameLanguage, Long _idProblem, String nameProblem, Long dateSubmit, Long dateJudge, String msgJudge, String visibleWeb, AccountMessage accountMessage) {
         this.idSubmit = idSubmit;
-        this.statusSubmit = statusSubmit;
+        this._idStatus = _idStatus;
+        this.nameStatus = nameStatus;
+        this.nameLanguage = nameLanguage;
+        this._idProblem = _idProblem;
+        this.nameProblem = nameProblem;
         this.dateSubmit = dateSubmit;
         this.dateJudge = dateJudge;
         this.msgJudge = msgJudge;
         this.visibleWeb = visibleWeb;
-        this.idAccount = idAccount;
-        this.nickname = nickname;
-        this.nameLanguage = nameLanguage;
-        this.idProblem = idProblem;
-        this.nameProblem = nameProblem;
+        this.accountMessage = accountMessage;
     }
 
     public Long getIdSubmit() {
@@ -52,12 +52,44 @@ public class SubmitMessage implements Serializable {
         this.idSubmit = idSubmit;
     }
 
-    public String getStatusSubmit() {
-        return statusSubmit;
+    public String getIdStatus() {
+        return _idStatus;
     }
 
-    public void setStatusSubmit(String statusSubmit) {
-        this.statusSubmit = statusSubmit;
+    public void setIdStatus(String _idStatus) {
+        this._idStatus = _idStatus;
+    }
+
+    public String getNameStatus() {
+        return nameStatus;
+    }
+
+    public void setNameStatus(String nameStatus) {
+        this.nameStatus = nameStatus;
+    }
+
+    public String getNameLanguage() {
+        return nameLanguage;
+    }
+
+    public void setNameLanguage(String nameLanguage) {
+        this.nameLanguage = nameLanguage;
+    }
+
+    public Long getIdProblem() {
+        return _idProblem;
+    }
+
+    public void setIdProblem(Long _idProblem) {
+        this._idProblem = _idProblem;
+    }
+
+    public String getNameProblem() {
+        return nameProblem;
+    }
+
+    public void setNameProblem(String nameProblem) {
+        this.nameProblem = nameProblem;
     }
 
     public Long getDateSubmit() {
@@ -92,44 +124,12 @@ public class SubmitMessage implements Serializable {
         this.visibleWeb = visibleWeb;
     }
 
-    public Long getIdAccount() {
-        return idAccount;
+    public AccountMessage getAccountMessage() {
+        return accountMessage;
     }
 
-    public void setIdAccount(Long idAccount) {
-        this.idAccount = idAccount;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getNameLanguage() {
-        return nameLanguage;
-    }
-
-    public void setNameLanguage(String nameLanguage) {
-        this.nameLanguage = nameLanguage;
-    }
-
-    public Long getIdProblem() {
-        return idProblem;
-    }
-
-    public void setIdProblem(Long idProblem) {
-        this.idProblem = idProblem;
-    }
-
-    public String getNameProblem() {
-        return nameProblem;
-    }
-
-    public void setNameProblem(String nameProblem) {
-        this.nameProblem = nameProblem;
+    public void setAccountMessage(AccountMessage accountMessage) {
+        this.accountMessage = accountMessage;
     }
 
 }

@@ -15,11 +15,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author andresfelipegarciaduran
  */
 @XmlRootElement
-public class ChallengeMessage  implements Serializable{
+public class ChallengeMessage implements Serializable {
 
     private Long idChallenge;
     private String nameChallenge;
-    private long idAccountOrganizer;
+    private String emailOrganizer;
     private Date dateStart;
     private Date dateEnd;
     private String description;
@@ -29,14 +29,15 @@ public class ChallengeMessage  implements Serializable{
     public ChallengeMessage() {
     }
 
-    public ChallengeMessage(Long idChallenge, String nameChallenge, long idAccountOrganizer, Date dateStart, Date dateEnd, String description, Date dateCreated) {
+    public ChallengeMessage(Long idChallenge, String nameChallenge, String emailOrganizer, Date dateStart, Date dateEnd, String description, Date dateCreated, List<ProblemMessage> problemMessages) {
         this.idChallenge = idChallenge;
         this.nameChallenge = nameChallenge;
-        this.idAccountOrganizer = idAccountOrganizer;
+        this.emailOrganizer = emailOrganizer;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.description = description;
         this.dateCreated = dateCreated;
+        this.problemMessages = problemMessages;
     }
 
     public Long getIdChallenge() {
@@ -55,12 +56,12 @@ public class ChallengeMessage  implements Serializable{
         this.nameChallenge = nameChallenge;
     }
 
-    public long getIdAccountOrganizer() {
-        return idAccountOrganizer;
+    public String getEmailOrganizer() {
+        return emailOrganizer;
     }
 
-    public void setIdAccountOrganizer(long idAccountOrganizer) {
-        this.idAccountOrganizer = idAccountOrganizer;
+    public void setEmailOrganizer(String emailOrganizer) {
+        this.emailOrganizer = emailOrganizer;
     }
 
     public Date getDateStart() {

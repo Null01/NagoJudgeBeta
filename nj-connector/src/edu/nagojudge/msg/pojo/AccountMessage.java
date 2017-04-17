@@ -15,25 +15,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class AccountMessage implements Serializable {
 
-    private Long id;
+    private Long idAccount;
     private String nickname;
     private Long dateRegister;
 
     public AccountMessage() {
     }
 
-    public AccountMessage(Long id, String nickname, Long dateRegister) {
-        this.id = id;
+    public AccountMessage(Long idAccount, String nickname, Long dateRegister) {
+        this.idAccount = idAccount;
         this.nickname = nickname;
         this.dateRegister = dateRegister;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdAccount() {
+        return idAccount;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdAccount(Long idAccount) {
+        this.idAccount = idAccount;
     }
 
     public String getNickname() {

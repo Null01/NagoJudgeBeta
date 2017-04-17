@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.msg.pojo;
 
+import edu.nagojudge.msg.pojo.collections.ListMessage;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,7 +19,7 @@ public class ProblemMessage implements Serializable {
     private Long idProblem;
     private String nameProblem;
     private String author;
-    private String nameCategory;
+    private ListMessage<CategoryMessage> listCategoryMessage;
     private String nameDifficulty;
     private String description;
     private int timeLimitSeg;
@@ -34,11 +35,10 @@ public class ProblemMessage implements Serializable {
     public ProblemMessage() {
     }
 
-    public ProblemMessage(Long idProblem, String nameProblem, String author, String nameCategory, String nameDifficulty, String description, int timeLimitSeg, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
+    public ProblemMessage(Long idProblem, String nameProblem, String author, String nameDifficulty, String description, int timeLimitSeg, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
         this.idProblem = idProblem;
         this.nameProblem = nameProblem;
         this.author = author;
-        this.nameCategory = nameCategory;
         this.nameDifficulty = nameDifficulty;
         this.description = description;
         this.timeLimitSeg = timeLimitSeg;
@@ -58,6 +58,14 @@ public class ProblemMessage implements Serializable {
 
     public void setIdProblem(Long idProblem) {
         this.idProblem = idProblem;
+    }
+
+    public ListMessage<CategoryMessage> getListCategoryMessage() {
+        return listCategoryMessage;
+    }
+
+    public void setListCategoryMessage(ListMessage<CategoryMessage> listCategoryMessage) {
+        this.listCategoryMessage = listCategoryMessage;
     }
 
     public String getNameProblem() {
@@ -154,14 +162,6 @@ public class ProblemMessage implements Serializable {
 
     public void setTotalStatus(int totalStatus) {
         this.totalStatus = totalStatus;
-    }
-
-    public String getNameCategory() {
-        return nameCategory;
-    }
-
-    public void setNameCategory(String nameCategory) {
-        this.nameCategory = nameCategory;
     }
 
     public String getNameDifficulty() {

@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.msg.pojo;
 
-import edu.nagojudge.msg.pojo.collections.ListTypeMessage;
+import edu.nagojudge.msg.pojo.collections.ListMessage;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,8 +16,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ScoreMessage {
 
     private TeamMessage team;
-    private ListTypeMessage<InfoScoreMessage> resumeScore = new ListTypeMessage<InfoScoreMessage>();
+    private ListMessage<InfoScoreMessage> resumeScore = new ListMessage<InfoScoreMessage>();
     private Long time;
+    private Long solved;
 
     public TeamMessage getTeam() {
         return team;
@@ -27,12 +28,20 @@ public class ScoreMessage {
         this.team = team;
     }
 
-    public ListTypeMessage<InfoScoreMessage> getResumeScore() {
+    public ListMessage<InfoScoreMessage> getResumeScore() {
         return resumeScore;
     }
 
-    public void setResumeScore(ListTypeMessage<InfoScoreMessage> resumeScore) {
+    public void setResumeScore(ListMessage<InfoScoreMessage> resumeScore) {
         this.resumeScore = resumeScore;
+    }
+
+    public Long getSolved() {
+        return solved;
+    }
+
+    public void setSolved(Long solved) {
+        this.solved = solved;
     }
 
     public Long getTime() {

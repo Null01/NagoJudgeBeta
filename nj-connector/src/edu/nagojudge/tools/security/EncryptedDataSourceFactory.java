@@ -35,9 +35,16 @@ public class EncryptedDataSourceFactory extends DataSourceFactory {
     public EncryptedDataSourceFactory() {
         try {
             encryptor = new Encryptor(); // If you've used your own secret key, pass it in...
-        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException ex) {
+        } catch (InvalidKeyException ex) {
+            throw new RuntimeException(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            throw new RuntimeException(ex);
+        } catch (NoSuchPaddingException ex) {
+            throw new RuntimeException(ex);
+        } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
+
     }
 
     @Override

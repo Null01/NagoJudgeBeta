@@ -18,6 +18,7 @@ public class TeamMessage implements Serializable {
 
     private Long idTeam;
     private String nameTeam;
+    private String passwordTeam;
     private Date dateRegister;
 
     public Long getIdTeam() {
@@ -26,6 +27,14 @@ public class TeamMessage implements Serializable {
 
     public void setIdTeam(Long idTeam) {
         this.idTeam = idTeam;
+    }
+
+    public String getPasswordTeam() {
+        return passwordTeam;
+    }
+
+    public void setPasswordTeam(String passwordTeam) {
+        this.passwordTeam = passwordTeam;
     }
 
     public String getNameTeam() {
