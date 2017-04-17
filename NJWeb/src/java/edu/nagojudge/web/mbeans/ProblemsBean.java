@@ -8,7 +8,7 @@ package edu.nagojudge.web.mbeans;
 import edu.nagojudge.app.business.dao.beans.ProblemFacade;
 import edu.nagojudge.app.business.dao.beans.SubmitFacade;
 import edu.nagojudge.app.business.dao.entities.Account;
-import edu.nagojudge.app.business.dao.entities.CategoryProblem;
+import edu.nagojudge.app.business.dao.entities.Category;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.utils.FacesUtil;
@@ -48,7 +48,7 @@ public class ProblemsBean implements Serializable {
     private List<ProblemMessage> filteredProblems;
     private String searchParameter;
 
-    private CategoryProblem categoryProblemView = new CategoryProblem();
+    private Category categoryProblemView = new Category();
     private DifficultyLevel difficultyLevel = new DifficultyLevel();
 
     private Problem problemView = new Problem();
@@ -66,7 +66,7 @@ public class ProblemsBean implements Serializable {
     @PostConstruct
     public void init() {
         if (problemView.getIdProblem() == null) {
-            this.listProblems = problemFacade.findProblemEntitiesPojo();
+            this.listProblems = problemFacade.findProblemMessage();
         }
     }
 
@@ -113,7 +113,6 @@ public class ProblemsBean implements Serializable {
     }
 
     public void actionViewCode(Object idSubmit) {
-        logger.debug("idSubmit [" + idSubmit + "]");
         String codeText = submitFacadeDAO.findAttachmentSubmit(String.valueOf(idSubmit));
         setTextCode(codeText);
     }
@@ -178,11 +177,11 @@ public class ProblemsBean implements Serializable {
         this.searchParameter = searchParameter;
     }
 
-    public CategoryProblem getCategoryProblemView() {
+    public Category getCategoryProblemView() {
         return categoryProblemView;
     }
 
-    public void setCategoryProblemView(CategoryProblem categoryProblemView) {
+    public void setCategoryProblemView(Category categoryProblemView) {
         this.categoryProblemView = categoryProblemView;
     }
 
@@ -227,10 +226,6 @@ public class ProblemsBean implements Serializable {
         }
 
         return true;
-    }
-
-    private void clearObjects() {
-        this.problemView = new Problem();
     }
 
     public UploadedFile getProblemFile() {

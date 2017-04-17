@@ -59,8 +59,10 @@
                             <p:column headerText="TL" width="40" filterBy="#{p.timeLimitSeg}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.timeLimitSeg}" />
                             </p:column>
-                            <p:column headerText="Categoria" width="200" sortBy="#{p.nameCategory}" filterBy="#{p.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
-                                <h:outputText value="#{p.nameCategory}" />
+                            <p:column headerText="Categoria" width="200"  filterStyle="display:none;" filterMatchMode="contains">
+                                <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory">
+                                    <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':'label-info'}" value="#{c.nameCategory} " /> 
+                                </ui:repeat>
                             </p:column>
                             <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}" filterBy="#{p.nameDifficulty}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.nameDifficulty}" />

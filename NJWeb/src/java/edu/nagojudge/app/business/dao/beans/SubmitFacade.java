@@ -14,6 +14,7 @@ import edu.nagojudge.app.business.dao.entities.SubmitStatus;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.constants.IKeysApplication;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
+import edu.nagojudge.msg.pojo.AccountMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
@@ -63,14 +64,13 @@ public class SubmitFacade extends AbstractFacade<Submit> {
 
     public List<SubmitMessage> findLast100Results() {
         List<SubmitMessage> outcome = new ArrayList<SubmitMessage>();
-        StringBuilder sql = new StringBuilder();
-        int TOP = 100;
-        sql.append("SELECT * FROM SUBMIT ORDER BY DATE_SUBMIT DESC LIMIT ").append(TOP);
-        Query query = em.createNativeQuery(sql.toString(), Submit.class);
-        List<Submit> resultList = query.getResultList();
-        if (resultList != null && !resultList.isEmpty()) {
-            for (Submit submit : resultList) {
-                SubmitMessage submitMessage = parseSubmitEntityToMessage(submit);
+        final int TOP = 100;
+        List<AccountSubmit> accountSubmits = em.createQuery("SELECT s FROM AccountSubmit s ORDER BY s.idSubmit.dateSubmit", AccountSubmit.class)
+                .setMaxResults(TOP)
+                .getResultList();
+        if (accountSubmits != null && !accountSubmits.isEmpty()) {
+            for (AccountSubmit accountSubmit : accountSubmits) {
+                SubmitMessage submitMessage = parseAccountSubmitEntityToMessage(accountSubmit);
                 outcome.add(submitMessage);
             }
         }
@@ -105,7 +105,6 @@ public class SubmitFacade extends AbstractFacade<Submit> {
             final Long idSubmit = submit.getIdSubmit();
 
             final Thread thread = new Thread(new Runnable() {
-
                 @Override
                 public void run() {
                     String path = "submit/verdict/{email}/{idSubmit}";
@@ -118,7 +117,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
             });
             thread.start();
 
-            return parseSubmitEntityToMessage(submit);
+            return parseAccountSubmitEntityToMessage(accountSubmit);
         } catch (IOException ex) {
             logger.error(ex);
             throw ex;
@@ -132,13 +131,12 @@ public class SubmitFacade extends AbstractFacade<Submit> {
 
     public List<SubmitMessage> findSubmitEntitiesByAccount(long idAccount) {
         List<SubmitMessage> outcome = new ArrayList<SubmitMessage>();
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM SUBMIT WHERE ID_ACCOUNT = ? ORDER BY DATE_SUBMIT DESC");
-        Query query = em.createNativeQuery(sql.toString(), Submit.class).setParameter(1, idAccount);
-        List<Submit> resultList = query.getResultList();
-        if (resultList != null && !resultList.isEmpty()) {
-            for (Submit submit : resultList) {
-                SubmitMessage submitMessage = parseSubmitEntityToMessage(submit);
+        List<AccountSubmit> accountSubmits = em.createQuery("SELECT ass FROM AccountSubmit ass WHERE ass.idAccount.idAccount = :id_account ORDER BY ass.idSubmit.dateSubmit DESC", AccountSubmit.class)
+                .setParameter("id_account", idAccount)
+                .getResultList();
+        if (accountSubmits != null && !accountSubmits.isEmpty()) {
+            for (AccountSubmit accountSubmit : accountSubmits) {
+                SubmitMessage submitMessage = parseAccountSubmitEntityToMessage(accountSubmit);
                 outcome.add(submitMessage);
             }
         }
@@ -194,7 +192,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
             sql.append("select p from AccountSubmit p where p.idSubmit = :id_submit and p.idAccount = :id_account");
             Query query = em.createQuery(sql.toString(), AccountSubmit.class)
                     .setParameter("id_submit", submitMessage.getIdProblem())
-                    .setParameter("id_account", submitMessage.getIdAccount());
+                    .setParameter("id_account", submitMessage.getAccountMessage().getIdAccount());
             AccountSubmit accountSubmit = (AccountSubmit) query.getSingleResult();
             accountSubmit.setVisibleWeb(submitMessage.getVisibleWeb());
             accountSubmitFacade.edit(accountSubmit);
@@ -206,21 +204,26 @@ public class SubmitFacade extends AbstractFacade<Submit> {
         }
     }
 
-    private SubmitMessage parseSubmitEntityToMessage(Submit submit) {
+    private SubmitMessage parseAccountSubmitEntityToMessage(AccountSubmit accountSubmit) {
         SubmitMessage submitMessage = new SubmitMessage();
+
+        AccountMessage accountMessage = new AccountMessage();
+        accountMessage.setIdAccount(accountSubmit.getIdAccount().getIdAccount());
+        accountMessage.setNickname(accountSubmit.getIdAccount().getNickname());
+        submitMessage.setAccountMessage(accountMessage);
+        submitMessage.setVisibleWeb(accountSubmit.getVisibleWeb());
+
+        Submit submit = accountSubmit.getIdSubmit();
         submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
         submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
-        List<AccountSubmit> accountSubmits = submit.getAccountSubmitList();
-        AccountSubmit accountSubmit = accountSubmits.get(0);
-        submitMessage.setIdAccount(accountSubmit.getIdAccount().getIdAccount());
         submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
         submitMessage.setIdSubmit(submit.getIdSubmit());
         submitMessage.setMsgJudge(submit.getMsgJudge());
         submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
         submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
-        submitMessage.setNickname(accountSubmit.getIdAccount().getNickname());
-        submitMessage.setStatusSubmit(submitMessage.getStatusSubmit());
-        submitMessage.setVisibleWeb(accountSubmit.getVisibleWeb());
+        submitMessage.setIdStatus(submit.getIdStatus().getKeyStatus());
+        submitMessage.setNameStatus(submit.getIdStatus().getNameStatus());
+
         return submitMessage;
     }
 

@@ -63,8 +63,12 @@ public class Problem implements Serializable {
     private String description;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "TIME_LIMIT_SEG")
-    private int timeLimitSeg;
+    @Column(name = "TIME_LIMIT")
+    private int timeLimit;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "MEMO_LIMIT")
+    private int memoLimit;
     @Column(name = "DATE_CREATED")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
@@ -73,6 +77,8 @@ public class Problem implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
     private List<Submit> submitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<ProblemCategory> problemCategoryList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
     private List<ChallengeProblem> challengeProblemList;
     @JoinColumn(name = "ID_COMPLEXITY_ALGORITHM", referencedColumnName = "ID_COMPLEXITY_ALGORITHM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -80,9 +86,8 @@ public class Problem implements Serializable {
     @JoinColumn(name = "ID_DIFFICULTY", referencedColumnName = "ID_DIFFICULTY")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private DifficultyLevel idDifficulty;
-    @JoinColumn(name = "ID_CATEGORY", referencedColumnName = "ID_CATEGORY")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private CategoryProblem idCategory;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<TestCaseProblem> testCaseProblemList;
 
     public Problem() {
     }
@@ -91,11 +96,12 @@ public class Problem implements Serializable {
         this.idProblem = idProblem;
     }
 
-    public Problem(Long idProblem, String nameProblem, String author, int timeLimitSeg) {
+    public Problem(Long idProblem, String nameProblem, String author, int timeLimit, int memoLimit) {
         this.idProblem = idProblem;
         this.nameProblem = nameProblem;
         this.author = author;
-        this.timeLimitSeg = timeLimitSeg;
+        this.timeLimit = timeLimit;
+        this.memoLimit = memoLimit;
     }
 
     public Long getIdProblem() {
@@ -130,12 +136,20 @@ public class Problem implements Serializable {
         this.description = description;
     }
 
-    public int getTimeLimitSeg() {
-        return timeLimitSeg;
+    public int getTimeLimit() {
+        return timeLimit;
     }
 
-    public void setTimeLimitSeg(int timeLimitSeg) {
-        this.timeLimitSeg = timeLimitSeg;
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public int getMemoLimit() {
+        return memoLimit;
+    }
+
+    public void setMemoLimit(int memoLimit) {
+        this.memoLimit = memoLimit;
     }
 
     public Date getDateCreated() {
@@ -165,6 +179,15 @@ public class Problem implements Serializable {
     }
 
     @XmlTransient
+    public List<ProblemCategory> getProblemCategoryList() {
+        return problemCategoryList;
+    }
+
+    public void setProblemCategoryList(List<ProblemCategory> problemCategoryList) {
+        this.problemCategoryList = problemCategoryList;
+    }
+
+    @XmlTransient
     public List<ChallengeProblem> getChallengeProblemList() {
         return challengeProblemList;
     }
@@ -189,12 +212,13 @@ public class Problem implements Serializable {
         this.idDifficulty = idDifficulty;
     }
 
-    public CategoryProblem getIdCategory() {
-        return idCategory;
+    @XmlTransient
+    public List<TestCaseProblem> getTestCaseProblemList() {
+        return testCaseProblemList;
     }
 
-    public void setIdCategory(CategoryProblem idCategory) {
-        this.idCategory = idCategory;
+    public void setTestCaseProblemList(List<TestCaseProblem> testCaseProblemList) {
+        this.testCaseProblemList = testCaseProblemList;
     }
 
     @Override

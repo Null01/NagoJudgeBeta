@@ -7,9 +7,10 @@ package edu.nagojudge.app.business.dao.beans;
 
 import edu.nagojudge.app.business.dao.entities.AccountSubmit;
 import edu.nagojudge.app.business.dao.entities.Attachments;
-import edu.nagojudge.app.business.dao.entities.CategoryProblem;
+import edu.nagojudge.app.business.dao.entities.Category;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
+import edu.nagojudge.app.business.dao.entities.ProblemCategory;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.ValidatorUtil;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
@@ -97,7 +98,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         return mapStatisticsStatus;
     }
 
-    public List<ProblemMessage> findProblemEntitiesPojo() {
+    public List<ProblemMessage> findProblemMessage() {
         Map<Long, Map<String, Long>> map = new HashMap<Long, Map<String, Long>>();
         EntityManager em = getEntityManager();
 
@@ -121,8 +122,8 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         List<ProblemMessage> problemPojos = new ArrayList<ProblemMessage>();
         List<Problem> problems = findProblemEntities(true, -1, -1);
         for (Problem p : problems) {
-            ProblemMessage problemPojo = new ProblemMessage(p.getIdProblem(), p.getNameProblem(), p.getAuthor(), p.getIdCategory().getNameCategory(), p.getIdDifficulty().getNameDifficulty(),
-                    p.getDescription(), p.getTimeLimitSeg(), 0, 0, 0, 0, 0, 0, 0, 0);
+            ProblemMessage problemPojo = new ProblemMessage(p.getIdProblem(), p.getNameProblem(), p.getAuthor(), p.getIdDifficulty().getNameDifficulty(),
+                    p.getDescription(), p.getTimeLimit(), 0, 0, 0, 0, 0, 0, 0, 0);
             Map<String, Long> mapValues = map.get(problemPojo.getIdProblem());
             if (mapValues != null) {
                 int sumTotal = 0;
@@ -163,7 +164,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         sql.append("SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT WHERE  ID_ACCOUNT = ").append(idAccount).append(")");
         List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
         if (resultList != null && resultList.size() >= 1) {
-            logger.debug(resultList.get(0).getIdCategory());
+            logger.debug(resultList.get(0).getProblemCategoryList());
         }
         return resultList;
 
@@ -179,11 +180,18 @@ public class ProblemFacade extends AbstractFacade<Problem> {
 
     }
 
-    public String createProblem(Problem problemView, CategoryProblem categoryProblemView, DifficultyLevel difficultyLevel, byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
+    public String createProblem(Problem problemView, List<Category> categoryProblem, DifficultyLevel difficultyLevel, byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
         try {
             logger.debug("INICIA METODO - createProblem()");
-            problemView.setIdCategory(categoryProblemView);
-            logger.debug(" CAMPO getIdCategory=" + problemView.getIdCategory() + " @ECHO");
+            List<ProblemCategory> problemCategorys = new ArrayList<ProblemCategory>();
+            for (Category category : categoryProblem) {
+                ProblemCategory problemCategory = new ProblemCategory();
+                problemCategory.setIdCategory(category);
+                problemCategory.setIdProblem(problemView);
+                problemCategorys.add(problemCategory);
+            }
+            problemView.setProblemCategoryList(problemCategorys);
+            logger.debug(" CAMPO getProblemCategoryList=" + problemView.getProblemCategoryList().size() + " @ECHO");
             problemView.setIdDifficulty(difficultyLevel);
             logger.debug(" CAMPO getIdDifficulty=" + problemView.getIdDifficulty() + " @ECHO");
             ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getAuthor());
@@ -193,7 +201,8 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             problemView.setNameProblem(problemView.getNameProblem());
             logger.debug("VALACION CAMPO getNameProblem=" + problemView.getNameProblem() + " @ECHO");
             logger.debug(" CAMPO getDescription=" + problemView.getDescription() + " @ECHO");
-            logger.debug(" CAMPO getTimeLimitSeg=" + problemView.getTimeLimitSeg() + " @ECHO");
+            logger.debug(" CAMPO getTimeLimit=" + problemView.getTimeLimit() + " @ECHO");
+            logger.debug(" CAMPO getMemoLimit=" + problemView.getMemoLimit() + " @ECHO");
 
             create(problemView);
             logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problemView.getIdProblem() + " @ECHO");

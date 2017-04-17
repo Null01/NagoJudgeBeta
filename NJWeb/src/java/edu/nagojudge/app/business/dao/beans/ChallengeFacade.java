@@ -8,8 +8,11 @@ package edu.nagojudge.app.business.dao.beans;
 import edu.nagojudge.app.business.dao.entities.Challenge;
 import edu.nagojudge.app.business.dao.entities.ChallengeProblem;
 import edu.nagojudge.app.business.dao.entities.Problem;
+import edu.nagojudge.app.business.dao.entities.ProblemCategory;
+import edu.nagojudge.msg.pojo.CategoryMessage;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
+import edu.nagojudge.msg.pojo.collections.ListMessage;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,10 +76,9 @@ public class ChallengeFacade extends AbstractFacade<Challenge> {
             challenge.setChallengeProblemList(challengeProblems);
             challenge.setDateCreated(Calendar.getInstance().getTime());
 
-            logger.debug("getIdAccountOrganizer()=" + challenge.getIdAccountOrganizer());
+            logger.debug("getIdAccountOrganizer()=" + challenge.getEmailOrganizer());
             logger.debug("getNameChallenge()=" + challenge.getNameChallenge());
             logger.debug("getDescription()=" + challenge.getDescription());
-            logger.debug("getTeamAccountList()=" + challenge.getTeamAccountList());
             logger.debug("getChallengeProblemList()=" + challenge.getChallengeProblemList());
             logger.debug("getDateCreated()=" + challenge.getDateCreated());
             logger.debug("getDateStart()=" + challenge.getDateStart());
@@ -121,7 +123,7 @@ public class ChallengeFacade extends AbstractFacade<Challenge> {
             challengeMessage.setDateEnd(challenge.getDateEnd());
             challengeMessage.setDateStart(challenge.getDateStart());
             challengeMessage.setDescription(challenge.getDescription());
-            challengeMessage.setIdAccountOrganizer(challenge.getIdAccountOrganizer());
+            challengeMessage.setEmailOrganizer(challenge.getEmailOrganizer());
             challengeMessage.setIdChallenge(challenge.getIdChallenge());
             challengeMessage.setNameChallenge(challenge.getNameChallenge());
 
@@ -130,7 +132,15 @@ public class ChallengeFacade extends AbstractFacade<Challenge> {
             for (ChallengeProblem challengeProblem : challengeProblems) {
                 ProblemMessage problemMessage = new ProblemMessage();
                 problemMessage.setIdProblem(challengeProblem.getIdProblem().getIdProblem());
-                problemMessage.setNameCategory(challengeProblem.getIdProblem().getIdCategory().getNameCategory());
+                List<ProblemCategory> problemCategorys = challengeProblem.getIdProblem().getProblemCategoryList();
+                ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
+                for (ProblemCategory category : problemCategorys) {
+                    CategoryMessage categoryMessage = new CategoryMessage();
+                    categoryMessage.setIdCategory(category.getIdCategory().getIdCategory());
+                    categoryMessage.setNameCategory(category.getIdCategory().getNameCategory());
+                    listMessage.add(categoryMessage);
+                }
+                problemMessage.setListCategoryMessage(listMessage);
                 problemMessage.setNameDifficulty(challengeProblem.getIdProblem().getIdDifficulty().getNameDifficulty());
                 problemMessage.setAuthor(challengeProblem.getIdProblem().getAuthor());
                 problemMessage.setNameProblem(challengeProblem.getIdProblem().getNameProblem());

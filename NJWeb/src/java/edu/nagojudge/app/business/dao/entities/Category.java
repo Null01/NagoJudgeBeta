@@ -29,11 +29,11 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author andres.garcia
  */
 @Entity
-@Table(name = "category_problem", catalog = "njlive", schema = "")
+@Table(name = "category", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CategoryProblem.findAll", query = "SELECT c FROM CategoryProblem c")})
-public class CategoryProblem implements Serializable {
+    @NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c")})
+public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,16 +47,16 @@ public class CategoryProblem implements Serializable {
     @Column(name = "NAME_CATEGORY")
     private String nameCategory;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCategory", fetch = FetchType.LAZY)
-    private List<Problem> problemList;
+    private List<ProblemCategory> problemCategoryList;
 
-    public CategoryProblem() {
+    public Category() {
     }
 
-    public CategoryProblem(Integer idCategory) {
+    public Category(Integer idCategory) {
         this.idCategory = idCategory;
     }
 
-    public CategoryProblem(Integer idCategory, String nameCategory) {
+    public Category(Integer idCategory, String nameCategory) {
         this.idCategory = idCategory;
         this.nameCategory = nameCategory;
     }
@@ -78,12 +78,12 @@ public class CategoryProblem implements Serializable {
     }
 
     @XmlTransient
-    public List<Problem> getProblemList() {
-        return problemList;
+    public List<ProblemCategory> getProblemCategoryList() {
+        return problemCategoryList;
     }
 
-    public void setProblemList(List<Problem> problemList) {
-        this.problemList = problemList;
+    public void setProblemCategoryList(List<ProblemCategory> problemCategoryList) {
+        this.problemCategoryList = problemCategoryList;
     }
 
     @Override
@@ -96,10 +96,10 @@ public class CategoryProblem implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CategoryProblem)) {
+        if (!(object instanceof Category)) {
             return false;
         }
-        CategoryProblem other = (CategoryProblem) object;
+        Category other = (Category) object;
         if ((this.idCategory == null && other.idCategory != null) || (this.idCategory != null && !this.idCategory.equals(other.idCategory))) {
             return false;
         }
@@ -108,7 +108,7 @@ public class CategoryProblem implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.app.business.dao.entities.CategoryProblem[ idCategory=" + idCategory + " ]";
+        return "edu.nagojudge.app.business.dao.entities.Category[ idCategory=" + idCategory + " ]";
     }
     
 }

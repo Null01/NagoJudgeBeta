@@ -39,11 +39,11 @@
                 <p:dataTable id="table-submit-live"
                              widgetVar="tableMyScoreContest"
                              tableStyleClass="table table-striped table-hover"
-                             rowStyleClass="#{s.statusSubmit eq 'ACCEPTED'?
-                                              'success': (s.statusSubmit eq 'WRONG ANSWER'?
-                                              'danger': (s.statusSubmit eq 'TIME LIMIT'?
-                                              'warning': (s.statusSubmit eq 'RUNTIME ERROR'?
-                                              'info': (s.statusSubmit eq 'COMPILATION ERROR'?
+                             rowStyleClass="#{s.nameStatus eq 'ACCEPTED'?
+                                              'success': (s.nameStatus eq 'WRONG ANSWER'?
+                                              'danger': (s.nameStatus eq 'TIME LIMIT'?
+                                              'warning': (s.nameStatus eq 'RUNTIME ERROR'?
+                                              'info': (s.nameStatus eq 'COMPILATION ERROR'?
                                               'warning': null)))) }"
                              value="#{submitBean.submitsAll}"
                              var="s"

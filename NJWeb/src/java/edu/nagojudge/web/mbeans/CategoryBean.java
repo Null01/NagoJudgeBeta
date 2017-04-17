@@ -6,7 +6,7 @@
 package edu.nagojudge.web.mbeans;
 
 import edu.nagojudge.app.business.dao.beans.CategoryProblemFacade;
-import edu.nagojudge.app.business.dao.entities.CategoryProblem;
+import edu.nagojudge.app.business.dao.entities.Category;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class CategoryBean implements Serializable {
     private CategoryProblemFacade categoryProblemFacade;
 
     private List<SelectItem> categoryProblemItems;
-    private CategoryProblem categoryProblemView = new CategoryProblem();
+    private Category categoryProblemView = new Category();
 
     public CategoryBean() {
     }
@@ -43,11 +43,11 @@ public class CategoryBean implements Serializable {
         }
     }
 
-    public CategoryProblem getCategoryProblemView() {
+    public Category getCategoryProblemView() {
         return categoryProblemView;
     }
 
-    public void setCategoryProblemView(CategoryProblem categoryProblemView) {
+    public void setCategoryProblemView(Category categoryProblemView) {
         this.categoryProblemView = categoryProblemView;
     }
 
@@ -59,9 +59,9 @@ public class CategoryBean implements Serializable {
         this.categoryProblemItems = categoryProblemItems;
     }
 
-    private List<SelectItem> parceToSelectItemCategoryProblem(List<CategoryProblem> findCategoryProblemEntities) {
+    private List<SelectItem> parceToSelectItemCategoryProblem(List<Category> findCategoryProblemEntities) {
         List<SelectItem> outcome = new ArrayList<SelectItem>();
-        for (CategoryProblem s : findCategoryProblemEntities) {
+        for (Category s : findCategoryProblemEntities) {
             outcome.add(new SelectItem(s, s.getNameCategory()));
         }
         return outcome;

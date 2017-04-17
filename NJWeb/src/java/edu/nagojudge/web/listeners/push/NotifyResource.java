@@ -24,7 +24,7 @@ public class NotifyResource {
     public SubmitMessage onMessage(SubmitMessage submitMessage) {
         logger.debug("> request @echo");
         logger.debug(submitMessage);
-        logger.debug(submitMessage.getIdAccount());
+        logger.debug(submitMessage.getAccountMessage().getIdAccount());
         logger.debug(submitMessage.getIdSubmit());
         logger.debug(submitMessage.getIdProblem());
         return submitMessage;

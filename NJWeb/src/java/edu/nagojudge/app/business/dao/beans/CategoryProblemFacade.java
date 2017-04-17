@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.app.business.dao.beans;
 
-import edu.nagojudge.app.business.dao.entities.CategoryProblem;
+import edu.nagojudge.app.business.dao.entities.Category;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author andresfelipegarciaduran
  */
 @Stateless
-public class CategoryProblemFacade extends AbstractFacade<CategoryProblem> {
+public class CategoryProblemFacade extends AbstractFacade<Category> {
 
     @PersistenceContext(unitName = "NJWebPU")
     private EntityManager em;
@@ -26,7 +26,7 @@ public class CategoryProblemFacade extends AbstractFacade<CategoryProblem> {
     }
 
     public CategoryProblemFacade() {
-        super(CategoryProblem.class);
+        super(Category.class);
     }
-    
+
 }

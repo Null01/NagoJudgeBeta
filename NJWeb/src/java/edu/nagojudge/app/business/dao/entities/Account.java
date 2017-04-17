@@ -51,9 +51,9 @@ public class Account implements Serializable {
     @Column(name = "NICKNAME")
     private String nickname;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<AccountSubmit> accountSubmitList;
+    private List<ChallengeTeam> challengeTeamList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
-    private List<TeamAccount> teamAccountList;
+    private List<AccountSubmit> accountSubmitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.LAZY)
     private List<User> userList;
 
@@ -94,21 +94,21 @@ public class Account implements Serializable {
     }
 
     @XmlTransient
+    public List<ChallengeTeam> getChallengeTeamList() {
+        return challengeTeamList;
+    }
+
+    public void setChallengeTeamList(List<ChallengeTeam> challengeTeamList) {
+        this.challengeTeamList = challengeTeamList;
+    }
+
+    @XmlTransient
     public List<AccountSubmit> getAccountSubmitList() {
         return accountSubmitList;
     }
 
     public void setAccountSubmitList(List<AccountSubmit> accountSubmitList) {
         this.accountSubmitList = accountSubmitList;
-    }
-
-    @XmlTransient
-    public List<TeamAccount> getTeamAccountList() {
-        return teamAccountList;
-    }
-
-    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
-        this.teamAccountList = teamAccountList;
     }
 
     @XmlTransient

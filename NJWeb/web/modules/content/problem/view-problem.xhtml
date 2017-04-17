@@ -28,23 +28,80 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <h:form rendered="#{problemsBean.pathSourceProblem != null}">
+                        <iframe src="#{problemsBean.pathSourceProblem}"
+                                style="width: 100%;"
+                                height="600"
+                                rendered="#{problemsBean.pathSourceProblem != null}"></iframe>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="panelMySubmitsContest" class="panel panel-default">
+                <div class="panel panel-default">
+                    <div class="panel-heading"></div>
+                    <div class="panel-body">
+                        <h:form id="formPanelMySubmitsContest" class="form-horizontal">
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="nameProblem" class="col-md-1 control-label">Problema</label>
+                                    <div class="col-md-5">
+                                        <p:inputText id="nameProblem"
+                                                     styleClass="form-control"
+                                                     readonly="true"
+                                                     value="#{utilBean.formatIdProblem(submitBean.problemView.idProblem)} - #{submitBean.problemView.nameProblem}"/>
+                                    </div>
+                                    <label for="select-2" class="col-md-1 control-label">Lenguaje</label>
+                                    <div class="col-md-5">
+                                        <p:selectOneMenu id="select-2"
+                                                         styleClass="form-control"
+                                                         style="width: 100%;"
+                                                         converter="languageProgrammingConvertJSF"
+                                                         value="#{submitBean.languageProgrammingView}"
+                                                         required="true" >
+                                            <f:selectItems value="#{languageBean.listLanguageProgrammingItems}" />                                               
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <label for="problemSolve" class="col-md-1 control-label">Codigo Fuente</label>
+                                    <div class="col-md-5">
+                                        <p:fileUpload id="problemSolve"                                             
+                                                      styleClass="form-control center-block"
+                                                      value="#{submitBean.codeSourceFile}"
+
+                                                      allowTypes="/(\.|\/)(java|cpp|c)$/"
+                                                      skinSimple="true"
+                                                      required="true"
+                                                      auto="true"
+                                                      label="#{msg['general.label.archivo.upload']}"
+                                                      dragDropSupport="false"
+                                                      update="messages, @form">
+                                        </p:fileUpload>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p:outputLabel id="labelFileName" styleClass="control-label"
+                                                       rendered="#{submitBean.codeSourceFile != null}" value="#{submitBean.codeSourceFile.fileName}" />                                
+                                    </div>
+
+                                </div>
+
+                                <p:commandButton styleClass="btn btn-default btn-sm center-block text-center col-md-12"
+                                                 value="Enviar"
+                                                 action="#{submitBean.actionSubmitSolution}" 
+                                                 update="messages, @form"/>
+
+                            </fieldset>
+
                             <p:messages id="messages"
                                         autoUpdate="true"
                                         closable="true"/>
-                            <iframe src="#{problemsBean.pathSourceProblem}" style="width: 100%;" height="600" ></iframe>
-                            <p:spacer/>
+
                         </h:form>
                     </div>
                 </div>
             </div>
 
-            <ui:include src="../../board/submit.xhtml" />
-
         </ui:fragment>
 
     </ui:define>
 </ui:composition>
-
-
-

@@ -25,18 +25,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author andres.garcia
  */
 @Entity
-@Table(name = "team_account", catalog = "njlive", schema = "")
+@Table(name = "challenge_team", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TeamAccount.findAll", query = "SELECT t FROM TeamAccount t")})
-public class TeamAccount implements Serializable {
+    @NamedQuery(name = "ChallengeTeam.findAll", query = "SELECT c FROM ChallengeTeam c")})
+public class ChallengeTeam implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "ID_TEAM_ACCOUNT")
-    private Long idTeamAccount;
+    @Column(name = "ID_CHALENGE_TEAM")
+    private Long idChalengeTeam;
     @JoinColumn(name = "ID_ACCOUNT", referencedColumnName = "ID_ACCOUNT")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Account idAccount;
@@ -47,19 +47,19 @@ public class TeamAccount implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Team idTeam;
 
-    public TeamAccount() {
+    public ChallengeTeam() {
     }
 
-    public TeamAccount(Long idTeamAccount) {
-        this.idTeamAccount = idTeamAccount;
+    public ChallengeTeam(Long idChalengeTeam) {
+        this.idChalengeTeam = idChalengeTeam;
     }
 
-    public Long getIdTeamAccount() {
-        return idTeamAccount;
+    public Long getIdChalengeTeam() {
+        return idChalengeTeam;
     }
 
-    public void setIdTeamAccount(Long idTeamAccount) {
-        this.idTeamAccount = idTeamAccount;
+    public void setIdChalengeTeam(Long idChalengeTeam) {
+        this.idChalengeTeam = idChalengeTeam;
     }
 
     public Account getIdAccount() {
@@ -89,18 +89,18 @@ public class TeamAccount implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTeamAccount != null ? idTeamAccount.hashCode() : 0);
+        hash += (idChalengeTeam != null ? idChalengeTeam.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TeamAccount)) {
+        if (!(object instanceof ChallengeTeam)) {
             return false;
         }
-        TeamAccount other = (TeamAccount) object;
-        if ((this.idTeamAccount == null && other.idTeamAccount != null) || (this.idTeamAccount != null && !this.idTeamAccount.equals(other.idTeamAccount))) {
+        ChallengeTeam other = (ChallengeTeam) object;
+        if ((this.idChalengeTeam == null && other.idChalengeTeam != null) || (this.idChalengeTeam != null && !this.idChalengeTeam.equals(other.idChalengeTeam))) {
             return false;
         }
         return true;
@@ -108,7 +108,7 @@ public class TeamAccount implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.app.business.dao.entities.TeamAccount[ idTeamAccount=" + idTeamAccount + " ]";
+        return "edu.nagojudge.app.business.dao.entities.ChallengeTeam[ idChalengeTeam=" + idChalengeTeam + " ]";
     }
     
 }

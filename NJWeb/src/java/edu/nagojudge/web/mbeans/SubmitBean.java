@@ -76,7 +76,7 @@ public class SubmitBean implements Serializable {
 
     public void actionSubmitSolution() {
         try {
-            logger.debug("Incia metdo - actionSubmitSolution()");
+            logger.debug("INICIA METODO - actionSubmitSolution()");
             logger.debug("codeSourceFile [" + codeSourceFile + "]");
             if (codeSourceFile == null) {
                 String msg = FacesUtil.getFacesUtil().getResourceBundle("validacion.arhivo.noseleccionado",
@@ -95,7 +95,7 @@ public class SubmitBean implements Serializable {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } finally {
-            logger.debug("Finaliza metdo - actionSubmitSolution()");
+            logger.debug("FINALIZA METODO - actionSubmitSolution()");
         }
     }
 

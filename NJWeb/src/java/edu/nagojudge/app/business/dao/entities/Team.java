@@ -47,15 +47,20 @@ public class Team implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "ID_NAME_TEAM")
-    private String idNameTeam;
+    @Column(name = "NAME_TEAM")
+    private String nameTeam;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "PASSWORD_TEAM")
+    private String passwordTeam;
     @Column(name = "DATE_REGISTER")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTeam", fetch = FetchType.LAZY)
-    private List<TeamChallengeSubmit> teamChallengeSubmitList;
+    private List<ChallengeTeam> challengeTeamList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTeam", fetch = FetchType.LAZY)
-    private List<TeamAccount> teamAccountList;
+    private List<ChallengeSubmit> challengeSubmitList;
 
     public Team() {
     }
@@ -64,9 +69,10 @@ public class Team implements Serializable {
         this.idTeam = idTeam;
     }
 
-    public Team(Long idTeam, String idNameTeam) {
+    public Team(Long idTeam, String nameTeam, String passwordTeam) {
         this.idTeam = idTeam;
-        this.idNameTeam = idNameTeam;
+        this.nameTeam = nameTeam;
+        this.passwordTeam = passwordTeam;
     }
 
     public Long getIdTeam() {
@@ -77,12 +83,20 @@ public class Team implements Serializable {
         this.idTeam = idTeam;
     }
 
-    public String getIdNameTeam() {
-        return idNameTeam;
+    public String getNameTeam() {
+        return nameTeam;
     }
 
-    public void setIdNameTeam(String idNameTeam) {
-        this.idNameTeam = idNameTeam;
+    public void setNameTeam(String nameTeam) {
+        this.nameTeam = nameTeam;
+    }
+
+    public String getPasswordTeam() {
+        return passwordTeam;
+    }
+
+    public void setPasswordTeam(String passwordTeam) {
+        this.passwordTeam = passwordTeam;
     }
 
     public Date getDateRegister() {
@@ -94,21 +108,21 @@ public class Team implements Serializable {
     }
 
     @XmlTransient
-    public List<TeamChallengeSubmit> getTeamChallengeSubmitList() {
-        return teamChallengeSubmitList;
+    public List<ChallengeTeam> getChallengeTeamList() {
+        return challengeTeamList;
     }
 
-    public void setTeamChallengeSubmitList(List<TeamChallengeSubmit> teamChallengeSubmitList) {
-        this.teamChallengeSubmitList = teamChallengeSubmitList;
+    public void setChallengeTeamList(List<ChallengeTeam> challengeTeamList) {
+        this.challengeTeamList = challengeTeamList;
     }
 
     @XmlTransient
-    public List<TeamAccount> getTeamAccountList() {
-        return teamAccountList;
+    public List<ChallengeSubmit> getChallengeSubmitList() {
+        return challengeSubmitList;
     }
 
-    public void setTeamAccountList(List<TeamAccount> teamAccountList) {
-        this.teamAccountList = teamAccountList;
+    public void setChallengeSubmitList(List<ChallengeSubmit> challengeSubmitList) {
+        this.challengeSubmitList = challengeSubmitList;
     }
 
     @Override

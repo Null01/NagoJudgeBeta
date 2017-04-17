@@ -6,6 +6,8 @@
 package edu.nagojudge.web.utils.jsf;
 
 import edu.nagojudge.app.business.dao.entities.Category;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Iterator;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,8 +19,8 @@ import javax.faces.model.SelectItem;
  *
  * @author andresfelipegarciaduran
  */
-@FacesConverter("categoryProblemConvertJSF")
-public class CategoryProblemConvertJSF extends AbstractConvertJsf implements Converter {
+@FacesConverter("numberConvertJSF")
+public class NumberConvertJSF extends AbstractConvertJsf implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
@@ -35,8 +37,19 @@ public class CategoryProblemConvertJSF extends AbstractConvertJsf implements Con
         if (value == null || value.equals("")) {
             return "";
         } else {
-            return String.valueOf(((Category) value).getIdCategory());
+            if (value instanceof BigDecimal) {
+                return String.valueOf((BigDecimal) value);
+            }
+            if (value instanceof BigInteger) {
+                return String.valueOf((BigInteger) value);
+            }
+            if (value instanceof Long) {
+                return String.valueOf((Long) value);
+            }
+            if (value instanceof Integer) {
+                return String.valueOf((Integer) value);
+            }
+            return String.valueOf(value);
         }
     }
-
 }
