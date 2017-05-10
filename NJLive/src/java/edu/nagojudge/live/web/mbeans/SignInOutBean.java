@@ -56,7 +56,7 @@ public class SignInOutBean implements Serializable {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
-        return "";
+        return null;
     }
 
     public void actionSignOutSession(ActionEvent event) {

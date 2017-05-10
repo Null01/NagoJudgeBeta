@@ -34,6 +34,18 @@
                                 <div class="panel-title text-center"> Welcome To Nago Judge </div>
                             </div>
                             <div class="panel-body" >
+
+                                <p:ajaxStatus onstart="PF('dialogLoader').show();"
+                                              onsuccess="PF('dialogLoader').hide();" />
+
+                                <p:dialog widgetVar="dialogLoader"
+                                          modal="true"
+                                          draggable="false"
+                                          closable="false"
+                                          resizable="false" showHeader="false">
+                                    <img src="/img/utils/load-box.gif" />
+                                </p:dialog>
+
                                 <h:form id="form-select" styleClass="form-horizontal" >
                                     <p:panel id="panel-config-challenge">
                                         <div class="input-group">

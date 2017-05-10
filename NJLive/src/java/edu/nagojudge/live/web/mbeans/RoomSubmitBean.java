@@ -8,12 +8,13 @@ package edu.nagojudge.live.web.mbeans;
 import edu.nagojudge.live.business.entity.LanguageProgramming;
 import edu.nagojudge.live.business.entity.facade.dao.ChallengeSubmitDAO;
 import edu.nagojudge.live.business.entity.facade.dao.LanguageProgrammingDAO;
+import edu.nagojudge.live.business.entity.facade.dao.SubmitDAO;
+import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.PairMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -37,6 +37,9 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean
 @ViewScoped
 public class RoomSubmitBean implements Serializable {
+
+    @EJB
+    private SubmitDAO submitDAO;
 
     @EJB
     private LanguageProgrammingDAO languageProgrammingDAO;
@@ -65,6 +68,7 @@ public class RoomSubmitBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            logger.debug("INICIA METODO - init()");
             HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
             Long challengeId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
             Long teamId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_TEAM_ID);
@@ -83,6 +87,8 @@ public class RoomSubmitBean implements Serializable {
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        } finally {
+            logger.debug("FINALIZA METODO - init()");
         }
     }
 
@@ -93,24 +99,20 @@ public class RoomSubmitBean implements Serializable {
             if (fileSourceCode == null) {
 
             } else {
-
+                HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
+                Long challengeId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
+                Long teamId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_TEAM_ID);
+                submitDAO.sendSubmit(challengeId, teamId,
+                        Long.parseLong(pairMessageView.getFirst()), languageProgrammingMessage.getIdLanguage(), fileSourceCode.getContents());
+                listSubmits = new ArrayList<SubmitMessage>(challengeSubmitDAO.findAllSubmitByTeam(teamId, challengeId));
             }
-        } catch (Exception ex) {
+        } catch (NagoJudgeLiveException ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } finally {
+
             logger.debug("FINALIZA METODO - actionSubmitSourceCode()");
         }
-    }
-
-    public void actionHandleFileUpload(FileUploadEvent event) {
-        logger.debug("INICIA METODO - actionHandleFileUpload()");
-        logger.debug("[" + event.getFile() + "]");
-        logger.debug("[" + event.getSource() + "]");
-        if (fileSourceCode != null) {
-            logger.debug("fileSourceCode [" + fileSourceCode + "]");
-        }
-        logger.debug("FINALIZA METODO - actionHandleFileUpload()");
     }
 
     public UploadedFile getFileSourceCode() {

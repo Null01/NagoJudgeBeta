@@ -16,6 +16,7 @@ import edu.nagojudge.msg.pojo.TeamMessage;
 import edu.nagojudge.msg.pojo.collections.ListMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
                     + " (select t.name_team from team t where t.id_team = cs.id_team) as team,\n"
                     + " s.id_problem as problem,\n"
                     + " (select ss.key_status from submit_status ss where ss.id_status = s.id_status) as status, \n"
-                    + " min(extract(minute from (s.date_submit - c.date_start)) + (extract(hour from (s.date_submit - c.date_start)) * 60)) as minutes,\n"
+                    + " min(timestampdiff(minute, c.date_start, s.date_submit)) as minutes,\n"
                     + " count(0) as n\n"
                     + "from challenge_submit cs left join submit s on (cs.id_submit = s.id_submit)\n"
                     + "left join challenge c on(c.id_challenge = cs.id_challenge)\n"
@@ -91,6 +92,7 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
             try {
                 Map<String, Map<Long, InfoScoreMessage>> map = new HashMap<String, Map<Long, InfoScoreMessage>>();
                 for (Object[] row : objects) {
+                    logger.debug(Arrays.toString(row));
                     if (map.get((String) row[0]) == null) {
                         map.put((String) row[0], crashCopyStructAllProblemsToChallenge(infoScore));
                     }
