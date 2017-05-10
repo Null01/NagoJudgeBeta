@@ -12,8 +12,16 @@
             <script type="text/javascript" src="/js/particleground.js"></script>
         </h:head>
         <h:body id="main-body">
+            <ui:define name="metadata">
+                <f:metadata>
+                    <f:viewParam id="signin-idTeam"
+                                 name="idTeam" 
+                                 value="#{signInOutBean.teamMessage.idTeam}" >
+                        <f:validateLength minimum="1" maximum="30" />
+                    </f:viewParam>
+                </f:metadata>
+            </ui:define>
             <div class="container">
-
                 <div class="container">
                     <div id="box-float"
                          class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3"> 
@@ -22,6 +30,18 @@
                                 <div class="panel-title text-center"> Welcome to Nago Judge </div>
                             </div>
                             <div class="panel-body" >
+
+                                <p:ajaxStatus onstart="PF('dialogLoader').show();"
+                                              onsuccess="PF('dialogLoader').hide();" />
+
+                                <p:dialog widgetVar="dialogLoader"
+                                          modal="true"
+                                          draggable="false"
+                                          closable="false"
+                                          resizable="false" showHeader="false">
+                                    <img src="/img/utils/load-box.gif" />
+                                </p:dialog>
+
                                 <h:form id="form-login" styleClass="form-horizontal" >
                                     <p:panel id="panel-login">
                                         <div class="input-group">
@@ -29,9 +49,9 @@
                                             <p:inputText id="username"
                                                          styleClass="form-control"
                                                          placeholder="User"
-                                                         value="#{signInOutBean.username}"
+                                                         value="#{signInOutBean.teamMessage.nameTeam}"
                                                          required="true" >
-                                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                                <f:validateLength minimum="3" maximum="254" />
                                             </p:inputText>
                                         </div>
 
@@ -40,9 +60,9 @@
                                             <p:password id="password"
                                                         styleClass="form-control"
                                                         placeholder="Password"
-                                                        value="#{signInOutBean.password}"
+                                                        value="#{signInOutBean.teamMessage.passwordTeam}"
                                                         required="true" >
-                                                <f:validateLength minimum="3" maximum="15" />
+                                                <f:validateLength minimum="3" maximum="20" />
                                             </p:password>
                                         </div>                                                                  
 
@@ -51,7 +71,7 @@
                                             <div class="col-sm-12 controls">
                                                 <p:commandButton styleClass="btn btn-primary pull-right"
                                                                  value="sign in"
-                                                                 actionListener="#{signInOutBean.actionSignInSession}"
+                                                                 action="#{signInOutBean.actionSignInSession}"
                                                                  update="panel-login"/>
                                             </div>
                                         </div>
