@@ -19,7 +19,7 @@ public class ClientService {
 
     private Logger logger = Logger.getLogger(ClientService.class);
 
-    private final String BASE_ADDRESS_RESTFUL = "http://localhost:8484/ask";
+    private final String BASE_ADDRESS_RESTFUL_NJ = "http://localhost:8484/ask";
 
     private static ClientService instance;
 
@@ -37,7 +37,7 @@ public class ClientService {
             logger.debug("objects [" + Arrays.toString(objects) + "]");
             logger.debug("params [" + params + "]");
             logger.debug("class [" + t.getName() + "]");
-            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL, false)
+            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL_NJ, false)
                     .path(path, objects)
                     .accept(MediaType.APPLICATION_JSON)
                     .type(MediaType.APPLICATION_JSON);
@@ -59,7 +59,7 @@ public class ClientService {
             logger.debug("class [" + t.getName() + "]");
             logger.debug("params [" + params + "]");
 
-            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL, false)
+            WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL_NJ, false)
                     .path(path, objects)
                     .accept(MediaType.APPLICATION_JSON)
                     .type(MediaType.APPLICATION_JSON);

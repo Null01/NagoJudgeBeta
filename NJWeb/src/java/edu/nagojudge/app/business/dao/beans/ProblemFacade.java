@@ -8,6 +8,7 @@ package edu.nagojudge.app.business.dao.beans;
 import edu.nagojudge.app.business.dao.entities.AccountSubmit;
 import edu.nagojudge.app.business.dao.entities.Attachments;
 import edu.nagojudge.app.business.dao.entities.Category;
+import edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.ProblemCategory;
@@ -180,7 +181,8 @@ public class ProblemFacade extends AbstractFacade<Problem> {
 
     }
 
-    public String createProblem(Problem problemView, List<Category> categoryProblem, DifficultyLevel difficultyLevel, byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
+    public String createProblem(Problem problemView, List<Category> categoryProblem, DifficultyLevel difficultyLevel,
+            byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
         try {
             logger.debug("INICIA METODO - createProblem()");
             List<ProblemCategory> problemCategorys = new ArrayList<ProblemCategory>();
@@ -191,18 +193,21 @@ public class ProblemFacade extends AbstractFacade<Problem> {
                 problemCategorys.add(problemCategory);
             }
             problemView.setProblemCategoryList(problemCategorys);
-            logger.debug(" CAMPO getProblemCategoryList=" + problemView.getProblemCategoryList().size() + " @ECHO");
+            problemView.setDateCreated(Calendar.getInstance().getTime());
+            problemView.setIdComplexityAlgorithm(em.find(ComplexityAlgorithm.class, new String("1")));
             problemView.setIdDifficulty(difficultyLevel);
-            logger.debug(" CAMPO getIdDifficulty=" + problemView.getIdDifficulty() + " @ECHO");
+            
             ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getAuthor());
             problemView.setAuthor(problemView.getAuthor());
-            logger.debug("VALACION CAMPO getAuthor=" + problemView.getAuthor() + " @ECHO");
             ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getNameProblem());
             problemView.setNameProblem(problemView.getNameProblem());
-            logger.debug("VALACION CAMPO getNameProblem=" + problemView.getNameProblem() + " @ECHO");
-            logger.debug(" CAMPO getDescription=" + problemView.getDescription() + " @ECHO");
-            logger.debug(" CAMPO getTimeLimit=" + problemView.getTimeLimit() + " @ECHO");
-            logger.debug(" CAMPO getMemoLimit=" + problemView.getMemoLimit() + " @ECHO");
+            
+            logger.debug(" getIdDifficulty=" + problemView.getIdDifficulty() + " @ECHO");
+            logger.debug(" getAuthor=" + problemView.getAuthor() + " @ECHO");
+            logger.debug(" getNameProblem=" + problemView.getNameProblem() + " @ECHO");
+            logger.debug(" getDescription=" + problemView.getDescription() + " @ECHO");
+            logger.debug(" getTimeLimit=" + problemView.getTimeLimit() + " @ECHO");
+            logger.debug(" getMemoLimit=" + problemView.getMemoLimit() + " @ECHO");
 
             create(problemView);
             logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problemView.getIdProblem() + " @ECHO");

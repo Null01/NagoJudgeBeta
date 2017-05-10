@@ -49,7 +49,8 @@
                                 <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
                             </p:column>
                             <p:column headerText="Problem" width="220">
-                                <h:commandLink value="#{p.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
+                                <h:commandLink value="#{p.nameProblem}"
+                                               action="#{problemsBean.actionRedirectViewToSubmitProblem}">
                                     <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{p.idProblem}" />
                                 </h:commandLink>
                             </p:column>
