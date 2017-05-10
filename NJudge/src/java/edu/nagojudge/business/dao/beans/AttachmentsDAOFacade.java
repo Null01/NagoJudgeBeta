@@ -7,8 +7,6 @@ package edu.nagojudge.business.dao.beans;
 
 import edu.nagojudge.business.dao.entity.AccountSubmit;
 import edu.nagojudge.business.dao.entity.Attachments;
-import edu.nagojudge.business.dao.entity.ChallengeSubmit;
-import edu.nagojudge.business.dao.entity.ChallengeTeam;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;

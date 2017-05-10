@@ -43,6 +43,38 @@ public class SubmitService {
 
     /**
      *
+     * @param idTeam Correo electronico - Llave del usuario.
+     * @param idSubmit Llave del envio.
+     * @param idChallenge
+     * @param token Identificador de seguridad.
+     * @return proceso asincrono/sincrono no devuelve una respuesta
+     * inmediatamente.
+     * @throws AuthenticationException Se genera, si el identificador de
+     * seguridad no es valido.
+     * @throws BusinessException Se genera, si la información es incorrecta o no
+     * existe, validaciones de negocio.
+     */
+    @GET
+    @Path("/verdict/team/{idTeam}/{idSubmit}")
+    public SubmitMessage judgmentLiveOnlyVerdict(@PathParam("idTeam") String idTeam,
+            @PathParam("idSubmit") String idSubmit,
+            @QueryParam("idChallenge") String idChallenge,
+            @QueryParam("token") String token) throws AuthenticationException, BusinessException {
+        try {
+            logger.debug("INICIA SERVICIO - judgmentLiveOnlyVerdictTeam()");
+            authenticationFacade.authentication(token);
+            Submit startJudge = judgeFacade.startJudgeATeam(
+                    Long.parseLong(idChallenge),
+                    Long.parseLong(idSubmit),
+                    Long.parseLong(idTeam));
+            return parseSubmitEntityToMessage(startJudge);
+        } finally {
+            logger.debug("FINALIZA SERVICIO - judgmentLiveOnlyVerdictTeam()");
+        }
+    }
+
+    /**
+     *
      * @param email Correo electronico - Llave del usuario.
      * @param idSubmit Llave del envio.
      * @param token Identificador de seguridad.
@@ -54,7 +86,7 @@ public class SubmitService {
      * existe, validaciones de negocio.
      */
     @GET
-    @Path("/verdict/{email}/{idSubmit}")
+    @Path("/verdict/user/{email}/{idSubmit}")
     public SubmitMessage judgmentLiveOnlyVerdict(@PathParam("email") String email,
             @PathParam("idSubmit") String idSubmit,
             @QueryParam("token") String token) throws AuthenticationException, BusinessException {

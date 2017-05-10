@@ -47,8 +47,13 @@ public class Team implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "ID_NAME_TEAM")
-    private String idNameTeam;
+    @Column(name = "NAME_TEAM")
+    private String nameTeam;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "PASSWORD_TEAM")
+    private String passwordTeam;
     @Column(name = "DATE_REGISTER")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateRegister;
@@ -64,9 +69,10 @@ public class Team implements Serializable {
         this.idTeam = idTeam;
     }
 
-    public Team(Long idTeam, String idNameTeam) {
+    public Team(Long idTeam, String nameTeam, String passwordTeam) {
         this.idTeam = idTeam;
-        this.idNameTeam = idNameTeam;
+        this.nameTeam = nameTeam;
+        this.passwordTeam = passwordTeam;
     }
 
     public Long getIdTeam() {
@@ -77,12 +83,20 @@ public class Team implements Serializable {
         this.idTeam = idTeam;
     }
 
-    public String getIdNameTeam() {
-        return idNameTeam;
+    public String getNameTeam() {
+        return nameTeam;
     }
 
-    public void setIdNameTeam(String idNameTeam) {
-        this.idNameTeam = idNameTeam;
+    public void setNameTeam(String nameTeam) {
+        this.nameTeam = nameTeam;
+    }
+
+    public String getPasswordTeam() {
+        return passwordTeam;
+    }
+
+    public void setPasswordTeam(String passwordTeam) {
+        this.passwordTeam = passwordTeam;
     }
 
     public Date getDateRegister() {
