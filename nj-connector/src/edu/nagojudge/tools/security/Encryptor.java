@@ -92,14 +92,13 @@ public class Encryptor {
         return buf;
     }
 
-    /*
-     public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-     String plainText = "root";
-     String secretKey = "NagoJudge";
-     Encryptor aes = new Encryptor(secretKey);
-     String encryptedString = aes.encrypt(plainText);
-     System.out.println(plainText + ":" + encryptedString);
+        String plainText = "wrichard";
+        String secretKey = "NagoJudge";
+        Encryptor aes = new Encryptor(secretKey);
+        String encryptedString = aes.encrypt(plainText);
+        System.out.println(plainText + ":" + encryptedString);
 
-     }*/
+    }
 }
