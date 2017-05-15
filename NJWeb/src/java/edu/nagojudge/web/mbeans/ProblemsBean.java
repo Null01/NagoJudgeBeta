@@ -9,6 +9,7 @@ import edu.nagojudge.app.business.dao.beans.ProblemFacade;
 import edu.nagojudge.app.business.dao.beans.SubmitFacade;
 import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.Category;
+import edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
@@ -52,6 +53,7 @@ public class ProblemsBean implements Serializable {
     private List<ProblemMessage> filteredProblems;
     private String searchParameter;
 
+    private ComplexityAlgorithm complexityAlgorithmView = new ComplexityAlgorithm();
     private Category categoryProblemView = new Category();
     private DifficultyLevel difficultyLevel = new DifficultyLevel();
 
@@ -84,7 +86,7 @@ public class ProblemsBean implements Serializable {
         return "/modules/user/profile.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
-    public void actionCreateOneProblem(ActionEvent event) {
+    public void actionCreateProblem() {
         try {
             boolean validateTypeFile_I_O = validateTypeFile_I_O();
             if (validateTypeFile_I_O) {
@@ -92,7 +94,9 @@ public class ProblemsBean implements Serializable {
                 List<Category> categorys = new ArrayList<Category>();
                 categorys.add(categoryProblemView);
 
-                String idProblemCreated = problemFacade.createProblem(problemView, categorys, difficultyLevel, problemFile.getContents(), inputFile.getContents(), outputFile.getContents());
+                String idProblemCreated = problemFacade.createProblem(problemView, categorys, 
+                        difficultyLevel, complexityAlgorithmView,
+                        problemFile.getContents(), inputFile.getContents(), outputFile.getContents());
                 FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Problema #" + idProblemCreated);
                 FacesUtil.getFacesUtil().redirect(TARGET_PATH);
             }
@@ -247,6 +251,14 @@ public class ProblemsBean implements Serializable {
 
     public void setOutputFile(UploadedFile outputFile) {
         this.outputFile = outputFile;
+    }
+
+    public ComplexityAlgorithm getComplexityAlgorithmView() {
+        return complexityAlgorithmView;
+    }
+
+    public void setComplexityAlgorithmView(ComplexityAlgorithm complexityAlgorithmView) {
+        this.complexityAlgorithmView = complexityAlgorithmView;
     }
 
 }

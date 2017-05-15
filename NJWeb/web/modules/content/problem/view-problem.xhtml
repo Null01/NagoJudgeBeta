@@ -28,7 +28,6 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <h:outputText value="#{problemsBean.pathSourceProblem}" />
                         <iframe src="#{problemsBean.pathSourceProblem}"
                                 style="width: 100%;"
                                 height="600"
@@ -42,20 +41,20 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"></div>
                     <div class="panel-body">
-                        <h:form id="formPanelMySubmitsContest" class="form-horizontal">
-
+                        <h:form id="form-submit-sourcecode" class="form-horizontal" enctype="multipart/form-data">
+                            <p:messages id="msgs" autoUpdate="true" closable="true"/>
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="nameProblem" class="col-md-1 control-label">Problema</label>
-                                    <div class="col-md-5">
+                                    <label for="nameProblem" class="col-md-1 control-label">Problem</label>
+                                    <div class="col-md-2">
                                         <p:inputText id="nameProblem"
                                                      styleClass="form-control"
                                                      readonly="true"
                                                      value="#{utilBean.formatIdProblem(submitBean.problemView.idProblem)} - #{submitBean.problemView.nameProblem}"/>
                                     </div>
-                                    <label for="select-2" class="col-md-1 control-label">Lenguaje</label>
-                                    <div class="col-md-5">
-                                        <p:selectOneMenu id="select-2"
+                                    <label for="select-language" class="col-md-1 control-label">Lenguaje</label>
+                                    <div class="col-md-3">
+                                        <p:selectOneMenu id="select-language"
                                                          styleClass="form-control"
                                                          style="width: 100%;"
                                                          converter="languageProgrammingConvertJSF"
@@ -64,39 +63,27 @@
                                             <f:selectItems value="#{languageBean.listLanguageProgrammingItems}" />                                               
                                         </p:selectOneMenu>
                                     </div>
-                                    <label for="problemSolve" class="col-md-1 control-label">Codigo Fuente</label>
-                                    <div class="col-md-5">
-                                        <p:fileUpload id="problemSolve"                                             
+                                    <label for="upload-sourceCode" class="col-md-1 control-label">Codigo Fuente</label>
+                                    <div class="col-md-4">
+                                        <p:fileUpload id="upload-sourceCode"
                                                       styleClass="form-control center-block"
                                                       value="#{submitBean.codeSourceFile}"
-
-                                                      allowTypes="/(\.|\/)(java|cpp|c)$/"
-                                                      skinSimple="true"
+                                                      mode="simple"
+                                                      skinSimple="false"
                                                       required="true"
-                                                      auto="true"
-                                                      label="#{msg['general.label.archivo.upload']}"
-                                                      dragDropSupport="false"
-                                                      update="messages, @form">
-                                        </p:fileUpload>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <p:outputLabel id="labelFileName" styleClass="control-label"
-                                                       rendered="#{submitBean.codeSourceFile != null}" value="#{submitBean.codeSourceFile.fileName}" />                                
+                                                      allowTypes="/(\.|\/)(java|cpp|c)$/"
+                                                      label="#{msg['general.label.archivo.upload']}"/>
                                     </div>
 
                                 </div>
-
-                                <p:commandButton styleClass="btn btn-default btn-sm center-block text-center col-md-12"
-                                                 value="Enviar"
-                                                 action="#{submitBean.actionSubmitSolution}" 
-                                                 update="messages, @form"/>
-
+                                <div class="form-group text-center">
+                                    <p:commandButton styleClass="btn btn-default btn-sm center-block text-center col-md-12"
+                                                     value="Send solution"
+                                                     ajax="false"
+                                                     action="#{submitBean.actionSubmitSolution}"
+                                                     update="messages, @form"/>
+                                </div>
                             </fieldset>
-
-                            <p:messages id="messages"
-                                        autoUpdate="true"
-                                        closable="true"/>
-
                         </h:form>
                     </div>
                 </div>

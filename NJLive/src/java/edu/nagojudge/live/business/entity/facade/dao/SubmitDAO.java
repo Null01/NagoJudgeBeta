@@ -78,7 +78,7 @@ public class SubmitDAO extends AbstractDAO<Submit> {
             Long idLanguage, byte[] contentCodeSource) throws NagoJudgeLiveException {
         try {
             logger.debug("INICIA METODO - createSubmitSolve()");
-            
+
             Submit submit = new Submit();
             submit.setIdProblem(em.find(Problem.class, idProblem));
             submit.setIdLanguage(em.find(LanguageProgramming.class, idLanguage));
@@ -87,7 +87,7 @@ public class SubmitDAO extends AbstractDAO<Submit> {
                     .getSingleResult());
             submit.setDateSubmit(Calendar.getInstance().getTime());
             submit.setDateJudge(Calendar.getInstance().getTime());
-          
+
             this.create(submit);
             logger.debug("getMsgJudge [" + submit.getMsgJudge() + "]");
             logger.debug("getDateJudge [" + submit.getDateJudge() + "]");
@@ -110,7 +110,6 @@ public class SubmitDAO extends AbstractDAO<Submit> {
             FileUtil.getInstance().createFile(contentCodeSource, pathFile, nameFile);
 
             final Long idSubmit = submit.getIdSubmit();
-
             final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -124,7 +123,6 @@ public class SubmitDAO extends AbstractDAO<Submit> {
                 }
             });
             thread.start();
-
         } catch (IOException ex) {
             logger.error(ex);
             throw new NagoJudgeLiveException(ex);

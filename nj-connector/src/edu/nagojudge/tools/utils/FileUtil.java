@@ -34,6 +34,9 @@ public class FileUtil implements Serializable {
     private static FileUtil fileUtil;
     private final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
+    public FileUtil() {
+    }
+
     public static FileUtil getInstance() {
         if (fileUtil == null) {
             fileUtil = new FileUtil();
@@ -189,6 +192,9 @@ public class FileUtil implements Serializable {
 
     public void copyFile(Reader input, Writer output) throws IOException {
         try {
+            if (input == null || output == null) {
+                throw new IOException("#NJ - OBJETOS READER/WRITER NO SE ENCUENTRAN INICIALIZADOS");
+            }
             char[] buffer = new char[DEFAULT_BUFFER_SIZE];
             int n;
             while ((n = input.read(buffer)) != -1) {
@@ -209,6 +215,9 @@ public class FileUtil implements Serializable {
 
     public void copyFile(String fullPathFrom, String fullPathTo) throws IOException {
         File sourceFile = new File(fullPathFrom);
+        if (!sourceFile.exists()) {
+            throw new IOException("#NJ - NO EXISTE EL ARCHIVO [" + fullPathFrom + "]");
+        }
         File targetFile = new File(fullPathTo);
         copyDirectory(sourceFile, targetFile);
     }
@@ -228,10 +237,10 @@ public class FileUtil implements Serializable {
             try {
                 inputStream = new FileInputStream(sourceFile);
                 outputStream = new FileOutputStream(targetFile);
-                byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
-                int len;
-                while ((len = inputStream.read(buf)) > 0) {
-                    outputStream.write(buf, 0, len);
+                byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+                int n;
+                while ((n = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, n);
                 }
                 outputStream.flush();
 

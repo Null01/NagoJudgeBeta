@@ -84,7 +84,7 @@ public class SubmitBean implements Serializable {
                 throw new Exception(msg);
             } else {
                 SubmitMessage submitMessage = submitFacade.createSubmitSolve(submitView, problemView, languageProgrammingView, codeSourceFile.getContents());
-                actionSendPushBoardLive(submitMessage);
+                //actionSendPushBoardLive(submitMessage);
                 logger.debug("redirect [" + TARGET_PATH + "]");
                 FacesUtil.getFacesUtil().redirect(TARGET_PATH);
             }
@@ -97,11 +97,6 @@ public class SubmitBean implements Serializable {
         } finally {
             logger.debug("FINALIZA METODO - actionSubmitSolution()");
         }
-    }
-
-    public void handleFileUpload(FileUploadEvent event) {
-        this.codeSourceFile = event.getFile();
-        logger.debug("getFileName() [" + codeSourceFile.getFileName() + "]");
     }
 
     public Problem getProblemView() {

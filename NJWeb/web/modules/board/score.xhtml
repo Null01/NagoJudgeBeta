@@ -39,12 +39,12 @@
                 <p:dataTable id="table-submit-live"
                              widgetVar="tableMyScoreContest"
                              tableStyleClass="table table-striped table-hover"
-                             rowStyleClass="#{s.nameStatus eq 'ACCEPTED'?
-                                              'success': (s.nameStatus eq 'WRONG ANSWER'?
-                                              'danger': (s.nameStatus eq 'TIME LIMIT'?
-                                              'warning': (s.nameStatus eq 'RUNTIME ERROR'?
-                                              'info': (s.nameStatus eq 'COMPILATION ERROR'?
-                                              'warning': null)))) }"
+                             rowStyleClass="#{s.idStatus eq 'AC'?
+                                              'success': (s.idStatus eq 'WR'?
+                                              'danger': (s.idStatus eq 'TL'?
+                                              'info': (s.idStatus eq 'RE'?
+                                              'warning': (s.idStatus eq 'CE'?
+                                              'color-CE': null)))) }"
                              value="#{submitBean.submitsAll}"
                              var="s"
                              emptyMessage="#{msg['general.table.noinfo']}">
@@ -53,20 +53,21 @@
                         <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
                     </p:column>
                     <p:column headerText="#{msg['problem.label.nameProblem']}" width="200">
-                        <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem)} - #{s.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                            <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem}" />
+                        <h:commandLink value="#{utilBean.formatIdProblem(s.problemMessage.idProblem)} - #{s.problemMessage.nameProblem}"
+                                       action="#{problemsBean.actionRedirectViewToSubmitProblem}">
+                            <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.problemMessage.idProblem}" />
                         </h:commandLink>
                     </p:column>
                     <p:column headerText="#{msg['account.label.nameAccount']}" width="120">
-                        <h:commandLink value="#{s.nickname}" action="#{problemsBean.actionRedirectViewToProfile}">
-                            <f:setPropertyActionListener target="#{problemsBean.accountView.idAccount}" value="#{s.idAccount}" />
+                        <h:commandLink value="#{s.accountMessage.nickname}" action="#{problemsBean.actionRedirectViewToProfile}">
+                            <f:setPropertyActionListener target="#{problemsBean.accountView.idAccount}" value="#{s.accountMessage.idAccount}" />
                         </h:commandLink>
                     </p:column>
                     <p:column headerText="#{msg['submit.label.nameStatus']}" styleClass="bold-font" width="150">
-                        <h:outputText value="#{s.statusSubmit}" />
+                        <h:outputText value="#{s.nameStatus}" />
                     </p:column>
                     <p:column headerText="#{msg['submit.label.nameLanguag']}" width="60">
-                        <h:outputText value="#{s.nameLanguage}" />
+                        <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
                     </p:column>
                     <p:column headerText="#{msg['submit.label.dateSubmit']}" width="120">
                         <h:outputText value="#{s.dateSubmit}" >
@@ -82,8 +83,7 @@
                         <p:commandLink styleClass="glyphicon glyphicon-paperclip"
                                        oncomplete="PF('wv-view-code').show();"
                                        action="#{problemsBean.actionViewCode(s.idSubmit)}" 
-                                       update=":form-dlg-view-code"
-                                       />
+                                       update=":form-dlg-view-code" />
                     </p:column>
                 </p:dataTable>
 
@@ -141,7 +141,7 @@
                     console.log('refreshTextAreaViewCode - @echo');
                 }
             </script>
-        
+
         </div>
     </ui:define>
 </ui:composition>

@@ -8,10 +8,10 @@ package edu.nagojudge.business.servicios.restful;
 import edu.nagojudge.business.dao.beans.AttachmentsDAOFacade;
 import edu.nagojudge.business.dao.beans.AuthenticationDAOFacade;
 import edu.nagojudge.business.dao.beans.JudgeDAOFacade;
-import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import java.io.IOException;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.naming.AuthenticationException;
 import javax.ws.rs.GET;
@@ -56,18 +56,19 @@ public class SubmitService {
      */
     @GET
     @Path("/verdict/team/{idTeam}/{idSubmit}")
-    public SubmitMessage judgmentLiveOnlyVerdict(@PathParam("idTeam") String idTeam,
+    public SubmitMessage judgmentLiveOnlyVerdict(
+            @PathParam("idTeam") String idTeam,
             @PathParam("idSubmit") String idSubmit,
             @QueryParam("idChallenge") String idChallenge,
             @QueryParam("token") String token) throws AuthenticationException, BusinessException {
         try {
             logger.debug("INICIA SERVICIO - judgmentLiveOnlyVerdictTeam()");
             authenticationFacade.authentication(token);
-            Submit startJudge = judgeFacade.startJudgeATeam(
+            SubmitMessage startJudge = judgeFacade.startJudgeATeam(
                     Long.parseLong(idChallenge),
                     Long.parseLong(idSubmit),
                     Long.parseLong(idTeam));
-            return parseSubmitEntityToMessage(startJudge);
+            return startJudge;
         } finally {
             logger.debug("FINALIZA SERVICIO - judgmentLiveOnlyVerdictTeam()");
         }
@@ -87,14 +88,15 @@ public class SubmitService {
      */
     @GET
     @Path("/verdict/user/{email}/{idSubmit}")
-    public SubmitMessage judgmentLiveOnlyVerdict(@PathParam("email") String email,
+    public SubmitMessage judgmentLiveOnlyVerdict(
+            @PathParam("email") String email,
             @PathParam("idSubmit") String idSubmit,
             @QueryParam("token") String token) throws AuthenticationException, BusinessException {
         try {
             logger.debug("INICIA SERVICIO - judgmentLiveOnlyVerdict()");
             authenticationFacade.authentication(token);
-            Submit startJudge = judgeFacade.startJudge(idSubmit, email);
-            return parseSubmitEntityToMessage(startJudge);
+            SubmitMessage startJudge = judgeFacade.startJudge(idSubmit, email);
+            return startJudge;
         } catch (AuthenticationException ex) {
             logger.error(ex);
             throw ex;
@@ -122,7 +124,8 @@ public class SubmitService {
      */
     @GET
     @Path("/codeSource/{idSubmit}")
-    public String getCodeSourceByIdSubmit(@PathParam("idSubmit") String idSubmit,
+    public String getCodeSourceByIdSubmit(
+            @PathParam("idSubmit") String idSubmit,
             @QueryParam("token") String token) throws IOException, BusinessException, AuthenticationException {
         try {
             logger.debug("INICIA SERVICIO - getCodeSourceByIdSubmit()");
@@ -141,18 +144,6 @@ public class SubmitService {
         } finally {
             logger.debug("FINALIZA SERVICIO - getCodeSourceByIdSubmit()");
         }
-    }
-
-    private SubmitMessage parseSubmitEntityToMessage(Submit submit) {
-        SubmitMessage submitMessage = new SubmitMessage();
-        submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
-        submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
-        submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
-        submitMessage.setIdSubmit(submit.getIdSubmit());
-        submitMessage.setMsgJudge(submit.getMsgJudge());
-        submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
-        submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
-        return submitMessage;
     }
 
 }

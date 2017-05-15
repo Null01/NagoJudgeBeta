@@ -15,7 +15,9 @@ import edu.nagojudge.app.business.dao.entities.ProblemCategory;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.ValidatorUtil;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
+import edu.nagojudge.msg.pojo.CategoryMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
+import edu.nagojudge.msg.pojo.collections.ListMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
@@ -120,43 +122,55 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             map.get(idProblem).put(status, value);
         }
 
-        List<ProblemMessage> problemPojos = new ArrayList<ProblemMessage>();
+        List<ProblemMessage> problemMessages = new ArrayList<ProblemMessage>();
         List<Problem> problems = findProblemEntities(true, -1, -1);
         for (Problem p : problems) {
-            ProblemMessage problemPojo = new ProblemMessage(p.getIdProblem(), p.getNameProblem(), p.getAuthor(), p.getIdDifficulty().getNameDifficulty(),
-                    p.getDescription(), p.getTimeLimit(), 0, 0, 0, 0, 0, 0, 0, 0);
-            Map<String, Long> mapValues = map.get(problemPojo.getIdProblem());
+
+            ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
+            List<ProblemCategory> problemCategoryList = p.getProblemCategoryList();
+            for (ProblemCategory category : problemCategoryList) {
+                CategoryMessage categoryMessage = new CategoryMessage();
+                categoryMessage.setIdCategory(category.getIdCategory().getIdCategory());
+                categoryMessage.setNameCategory(category.getIdCategory().getNameCategory());
+                listMessage.add(categoryMessage);
+            }
+
+            ProblemMessage problemMessage = new ProblemMessage(p.getIdProblem(), p.getNameProblem(), p.getAuthor(),
+                    listMessage, p.getIdDifficulty().getNameDifficulty(), p.getDescription(), p.getIdComplexityAlgorithm().getNameComplexityAlgorithm(),
+                    p.getTimeLimit(), p.getMemoLimit(), 0, 0, 0, 0, 0, 0, 0, 0);
+
+            Map<String, Long> mapValues = map.get(problemMessage.getIdProblem());
             if (mapValues != null) {
                 int sumTotal = 0;
                 for (Map.Entry<String, Long> row : mapValues.entrySet()) {
                     sumTotal += row.getValue();
                     if (row.getKey().compareTo(TypeStateJudgeEnum.AC.getValue()) == 0) {
-                        problemPojo.setStatusAC(row.getValue().intValue());
+                        problemMessage.setStatusAC(row.getValue().intValue());
                     }
                     if (row.getKey().compareTo(TypeStateJudgeEnum.CE.getValue()) == 0) {
-                        problemPojo.setStatusCE(row.getValue().intValue());
+                        problemMessage.setStatusCE(row.getValue().intValue());
                     }
                     if (row.getKey().compareTo(TypeStateJudgeEnum.CS.getValue()) == 0) {
-                        problemPojo.setStatusCS(row.getValue().intValue());
+                        problemMessage.setStatusCS(row.getValue().intValue());
                     }
                     if (row.getKey().compareTo(TypeStateJudgeEnum.IP.getValue()) == 0) {
-                        problemPojo.setStatusIP(row.getValue().intValue());
+                        problemMessage.setStatusIP(row.getValue().intValue());
                     }
                     if (row.getKey().compareTo(TypeStateJudgeEnum.RE.getValue()) == 0) {
-                        problemPojo.setStatusRE(row.getValue().intValue());
+                        problemMessage.setStatusRE(row.getValue().intValue());
                     }
                     if (row.getKey().compareTo(TypeStateJudgeEnum.TL.getValue()) == 0) {
-                        problemPojo.setStatusTL(row.getValue().intValue());
+                        problemMessage.setStatusTL(row.getValue().intValue());
                     }
                     if (row.getKey().compareTo(TypeStateJudgeEnum.WR.getValue()) == 0) {
-                        problemPojo.setStatusWR(row.getValue().intValue());
+                        problemMessage.setStatusWR(row.getValue().intValue());
                     }
-                    problemPojo.setTotalStatus(sumTotal);
+                    problemMessage.setTotalStatus(sumTotal);
                 }
             }
-            problemPojos.add(problemPojo);
+            problemMessages.add(problemMessage);
         }
-        return problemPojos;
+        return problemMessages;
     }
 
     public List<Problem> findProblemTryEntities(long idAccount) {
@@ -181,12 +195,13 @@ public class ProblemFacade extends AbstractFacade<Problem> {
 
     }
 
-    public String createProblem(Problem problemView, List<Category> categoryProblem, DifficultyLevel difficultyLevel,
+    public String createProblem(Problem problemView, List<Category> categoryProblemView,
+            DifficultyLevel difficultyLevelView, ComplexityAlgorithm complexityAlgorithmView,
             byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
         try {
             logger.debug("INICIA METODO - createProblem()");
             List<ProblemCategory> problemCategorys = new ArrayList<ProblemCategory>();
-            for (Category category : categoryProblem) {
+            for (Category category : categoryProblemView) {
                 ProblemCategory problemCategory = new ProblemCategory();
                 problemCategory.setIdCategory(category);
                 problemCategory.setIdProblem(problemView);
@@ -195,13 +210,14 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             problemView.setProblemCategoryList(problemCategorys);
             problemView.setDateCreated(Calendar.getInstance().getTime());
             problemView.setIdComplexityAlgorithm(em.find(ComplexityAlgorithm.class, new String("1")));
-            problemView.setIdDifficulty(difficultyLevel);
-            
+            problemView.setIdDifficulty(difficultyLevelView);
+            problemView.setIdComplexityAlgorithm(complexityAlgorithmView);
+
             ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getAuthor());
             problemView.setAuthor(problemView.getAuthor());
             ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getNameProblem());
             problemView.setNameProblem(problemView.getNameProblem());
-            
+
             logger.debug(" getIdDifficulty=" + problemView.getIdDifficulty() + " @ECHO");
             logger.debug(" getAuthor=" + problemView.getAuthor() + " @ECHO");
             logger.debug(" getNameProblem=" + problemView.getNameProblem() + " @ECHO");
@@ -210,8 +226,8 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             logger.debug(" getMemoLimit=" + problemView.getMemoLimit() + " @ECHO");
 
             create(problemView);
+            
             logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problemView.getIdProblem() + " @ECHO");
-
             String pathProblem = IResourcesPaths.PATH_ROOT_SAVE_PROBLEMS_WEB;
             String nameFileProblem = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
             logger.debug("PATH_PROBLEM=" + pathProblem);
@@ -237,7 +253,6 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             FileUtil.getInstance().createFile(output, pathOutput, nameFileOutput);
 
             logger.debug("INIT - CREACION ATTACHMENTS @ECHO");
-
             List<Attachments> attachmentses = new ArrayList<Attachments>();
             Attachments attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(problem, TypeSHAEnum.SHA256));

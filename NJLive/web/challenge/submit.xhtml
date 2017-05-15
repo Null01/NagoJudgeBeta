@@ -14,7 +14,7 @@
                 <p:messages id="msgs" autoUpdate="true" closable="true"/>
                 <fieldset>
                     <div class="form-group">
-                        <label for="select-problem" class="col-md-1 control-label">Problem</label>
+                        <label for="select-problem" class="col-md-1 control-label">Problema</label>
                         <div class="col-md-2">
                             <p:selectOneMenu id="select-problem"
                                              styleClass="selected-list form-control"
@@ -22,11 +22,11 @@
                                              converter="pairConvertJSF"
                                              value="#{roomSubmitBean.pairMessageView}"
                                              required="true" >
-                                <f:selectItem value="#{null}" itemLabel="Select one problem" />
+                                <f:selectItem value="#{null}" itemLabel="Seleccione un problema" />
                                 <f:selectItems value="#{roomSubmitBean.listProblemItems}" />                                               
                             </p:selectOneMenu>
                         </div>
-                        <label for="select-language" class="col-md-1 control-label">Language</label>
+                        <label for="select-language" class="col-md-1 control-label">Lenguaje</label>
                         <div class="col-md-2">
                             <p:selectOneMenu id="select-language"
                                              styleClass="selected-list form-control"
@@ -34,11 +34,11 @@
                                              converter="languageProgrammingConvertJSF"
                                              value="#{roomSubmitBean.languageProgrammingMessage}"
                                              required="true" >
-                                <f:selectItem value="#{null}" itemLabel="Select one language" />
+                                <f:selectItem value="#{null}" itemLabel="Seleccione un lenguaje" />
                                 <f:selectItems value="#{roomSubmitBean.listLanguageProgrammingItems}" />                                               
                             </p:selectOneMenu>
                         </div>
-                        <label for="upload-sourceCode" class="col-md-2 control-label">Source Code</label>
+                        <label for="upload-sourceCode" class="col-md-2 control-label">Codigo fuente</label>
                         <div class="col-md-4">
                             <p:fileUpload id="upload-sourceCode"
                                           styleClass="form-control center-block"
@@ -52,7 +52,7 @@
                     </div>
                     <div class="form-group text-center">
                         <p:commandButton styleClass="btn btn-default btn-sm center-block text-center"
-                                         value="Send solution"
+                                         value="Enviar solución"
                                          ajax="false"
                                          action="#{roomSubmitBean.actionSubmitSourceCode}"
                                          update="msgs, @form"/>
@@ -69,41 +69,44 @@
                                  tableStyleClass="table table-striped table-hover"
                                  value="#{roomSubmitBean.listSubmits}"
                                  var="s"
-                                 rowStyleClass="#{s.nameStatus eq 'ACCEPTED'?
-                                                  'success': (s.nameStatus eq 'WRONG ANSWER'?
-                                                  'danger': (s.nameStatus eq 'TIME LIMIT'?
-                                                  'warning': (s.nameStatus eq 'RUNTIME ERROR'?
-                                                  'info': (s.nameStatus eq 'COMPILATION ERROR'?
-                                                  'warning': null)))) }"
-                                 styleClass="center-block"
+                                 rowStyleClass="#{s.idStatus eq 'AC'?
+                                                  'success': (s.idStatus eq 'WR'?
+                                                  'danger': (s.idStatus eq 'TL'?
+                                                  'info': (s.idStatus eq 'RE'?
+                                                  'warning': (s.idStatus eq 'CE'?
+                                                  'ce': null)))) }"
+                                 styleClass="center-block text-bold"
                                  rowKey="#{s.idSubmit}"
                                  rowIndexVar="indexKey"
                                  paginator="false"
                                  paginatorPosition="bottom"                                     
                                  emptyMessage="#{msg['general.table.noinfo']}">
                         <p:column headerText="#" width="5%" styleClass="text-center" >
-                            #{indexKey + 1}
+                            #{roomSubmitBean.listSubmits.size() - indexKey} 
                         </p:column>
-                        <p:column headerText="Key" width="5%" styleClass="text-center" >
-                            <h:outputText value="#{roomSubmitBean.mapLettersGlobs[s.idProblem]}" />
+                        <p:column headerText="Id" width="3%" styleClass="text-center" >
+                            <h:outputText value="#{roomSubmitBean.mapLettersGlobs[s.problemMessage.idProblem]}" />
                         </p:column>
-                        <p:column headerText="Problem" width="20%" styleClass="text-left" >
-                            <h:outputText value="#{s.nameProblem}" />
+                        <p:column headerText="Id Envio" width="8%" styleClass="text-center" >
+                            <h:outputText value="#{s.idSubmit}" />
                         </p:column>
-                        <p:column headerText="Language" width="10%" styleClass="text-center" >
-                            <h:outputText value="#{s.nameLanguage}" />
+                        <p:column headerText="Problema" width="20%" styleClass="text-left" >
+                            <h:outputText value="#{s.problemMessage.nameProblem}" />
                         </p:column>
-                        <p:column headerText="Date Submit" width="15%" styleClass="text-center" >
+                        <p:column headerText="Lenguaje" width="8%" styleClass="text-center" >
+                            <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
+                        </p:column>
+                        <p:column headerText="Fecha Envio" width="15%" styleClass="text-center" >
                             <h:outputText value="#{s.dateSubmit}" >
-                                <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" />
+                                <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" timeZone=""  />
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="Status" width="20%" styleClass="text-center" >
+                        <p:column headerText="Estado" width="20%" styleClass="text-center" >
                             <h:outputText value="#{s.nameStatus}" />
                         </p:column>
-                        <p:column width="10%" styleClass="text-center" >
+                        <p:column width="8%" styleClass="text-center" >
                             <ui:fragment rendered="#{s.idStatus eq 'AC'}" >
-                                <img src="#{roomSubmitBean.mapColorsGlogs[s.idProblem]}" class="globe-center"  />
+                                <img src="#{roomSubmitBean.mapColorsGlogs[s.problemMessage.idProblem]}" class="globe-center"  />
                             </ui:fragment>
                             <ui:fragment rendered="#{s.idStatus ne 'AC'}" >
                                 <h:outputText value="-/-" styleClass="text-center" />

@@ -1,3 +1,4 @@
+
 <ui:composition 
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
@@ -29,15 +30,39 @@
                                 <f:validateLength minimum="3" maximum="40" />
                             </p:inputText>
                         </div>
-                        <label for="categoryProblem" class="col-md-1 control-label">Categoria</label>
+                        <label for="difficultyLevel" class="col-md-1 control-label">Dificultad</label>
                         <div class="col-md-3">
-                            <p:selectOneMenu id="categoryProblem" styleClass="selected-list form-control"
-                                             style="width: 100%;" converter="categoryProblemConvertJSF"
-                                             value="#{problemsBean.categoryProblemView}"  required="true" >
-                                <f:selectItems value="#{categoryBean.categoryProblemItems}" />                                               
+                            <p:selectOneMenu id="difficultyLevel" styleClass="selected-list form-control" style="width: 100%;" converter="difficultyLevelConvertJSF"
+                                             value="#{problemsBean.difficultyLevel}"  required="true" >
+                                <f:selectItem value="#{null}" itemLabel="Select a difficulty" />
+                                <f:selectItems value="#{difficultyLevelBean.difficultyLevelItems}" />                                               
                             </p:selectOneMenu>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="complexAlgorithm" class="col-md-1 control-label">Complejidad</label>
+                        <div class="col-md-3">
+                            <p:selectOneMenu id="complexAlgorithm" styleClass="selected-list form-control" 
+                                             style="width: 100%;" converter="complexityProblemConvertJSF"
+                                             value="#{problemsBean.complexityAlgorithmView}"  required="true" >
+                                <f:selectItem value="#{null}" itemLabel="Select a complexity" />
+                                <f:selectItems value="#{complexityBean.complexityProblemItems}" />                                               
+                            </p:selectOneMenu>
+                        </div>
+                        <label for="memoLimit" class="col-md-1 control-label">Memoria Usada</label>
+                        <div class="col-md-3">
+                            <p:spinner id="memoLimit" stepFactor="1" min="1" max="6"  placeholder="1"
+                                       value="#{problemsBean.problemView.timeLimit}"
+                                       required="true" />
+                        </div>
+                        <label for="timeProblem" class="col-md-1 control-label">Tiempo Juzgamiento</label>
+                        <div class="col-md-3">
+                            <p:spinner id="timeProblem" stepFactor="1" min="1" max="6"  placeholder="1"
+                                       value="#{problemsBean.problemView.timeLimit}"
+                                       required="true" />
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="fileProblem" class="col-md-1 control-label">Enunciado</label>
                         <div class="col-md-3">
@@ -48,19 +73,16 @@
                                           required="true"
                                           allowTypes="/(\.|\/)(pdf)$/" />
                         </div>
-                        <label for="difficultyLevel" class="col-md-1 control-label">Dificultad</label>
+                        <label for="categoryProblem" class="col-md-1 control-label">Categoria</label>
                         <div class="col-md-3">
-                            <p:selectOneMenu id="difficultyLevel" styleClass="selected-list form-control" style="width: 100%;" converter="difficultyLevelConvertJSF"
-                                             value="#{problemsBean.difficultyLevel}"  required="true" >
-                                <f:selectItems value="#{difficultyLevelBean.difficultyLevelItems}" />                                               
+                            <p:selectOneMenu id="categoryProblem" styleClass="selected-list form-control"
+                                             style="width: 100%;" converter="categoryProblemConvertJSF"
+                                             value="#{problemsBean.categoryProblemView}"  required="true" >
+                                <f:selectItem value="#{null}" itemLabel="Select a category" />
+                                <f:selectItems value="#{categoryBean.categoryProblemItems}" />                                               
                             </p:selectOneMenu>
                         </div>
-                        <label for="timeProblem" class="col-md-1 control-label">Tiempo Juzgamiento</label>
-                        <div class="col-md-3">
-                            <p:spinner id="timeProblem" stepFactor="1" min="1" max="6"  placeholder="1"
-                                       value="#{problemsBean.problemView.timeLimit}"
-                                       required="true" />
-                        </div>
+
                     </div>
                     <div class="form-group">
                         <label for="descriptionProblem" class="col-md-1 control-label">Obervaciones</label>
@@ -75,12 +97,6 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">Sample Input</div>
                                 <div class="panel-body">
-                                    <!--
-                                    <h:panelGroup id="panel-tex-input">
-                                        <p:inputTextarea id="s-i-t"  rows="9" style="width: 100%;" autoResize="false"
-                                                        />
-                                    </h:panelGroup>
-                                    -->
                                     <div class="form-group">                                        
                                         <div class="col-md-12">
                                             <p:fileUpload id="fileInput"
@@ -98,12 +114,6 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">Sample Output</div>
                                 <div class="panel-body">
-                                    <!--
-                                    <h:panelGroup id="panel-tex-output">
-                                        <p:inputTextarea id="s-o-t" rows="9" style="width: 100%;" autoResize="false"
-                                                          />
-                                    </h:panelGroup>
-                                    -->
                                     <div class="form-group">
                                         <div class="col-md-12">
                                             <p:fileUpload id="fileOutput"
@@ -120,9 +130,10 @@
                     </div>
 
                     <div class="form-group text-center">
-                        <p:commandButton id="btn-create-problem" update="@form" ajax="false" styleClass="btn btn-default"
+                        <p:commandButton id="btn-create-problem" update="@form"
+                                         ajax="false" styleClass="btn btn-default"
                                          value="Crear problema"
-                                         actionListener="#{problemsBean.actionCreateOneProblem}"/>
+                                         action="#{problemsBean.actionCreateProblem}"/>
                     </div>
                 </fieldset>
             </h:form>

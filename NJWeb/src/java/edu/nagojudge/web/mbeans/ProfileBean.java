@@ -92,8 +92,6 @@ public class ProfileBean implements Serializable {
         try {
             logger.debug("INICIA METODO onRowEditMySubmit()");
             SubmitMessage submitMessage = (SubmitMessage) event.getObject();
-            //submitMessage.setVisibleWeb(TypeStateEnum.valueOf(this.submitView.getVisibleWeb()).getType());
-            logger.debug("getVisibleWeb [" + submitMessage.getVisibleWeb() + "]");
             submitFacade.editSubmitMessage(submitMessage);
         } catch (Exception ex) {
             logger.error(ex);

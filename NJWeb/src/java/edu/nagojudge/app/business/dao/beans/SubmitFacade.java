@@ -15,6 +15,9 @@ import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.constants.IKeysApplication;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
 import edu.nagojudge.msg.pojo.AccountMessage;
+import edu.nagojudge.msg.pojo.JudgeMessage;
+import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
@@ -65,7 +68,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
     public List<SubmitMessage> findLast100Results() {
         List<SubmitMessage> outcome = new ArrayList<SubmitMessage>();
         final int TOP = 100;
-        List<AccountSubmit> accountSubmits = em.createQuery("SELECT s FROM AccountSubmit s ORDER BY s.idSubmit.dateSubmit", AccountSubmit.class)
+        List<AccountSubmit> accountSubmits = em.createQuery("SELECT s FROM AccountSubmit s ORDER BY s.idSubmit.dateSubmit DESC", AccountSubmit.class)
                 .setMaxResults(TOP)
                 .getResultList();
         if (accountSubmits != null && !accountSubmits.isEmpty()) {
@@ -86,13 +89,14 @@ public class SubmitFacade extends AbstractFacade<Submit> {
 
             submit.setIdProblem(problemView);
             submit.setIdLanguage(languageProgrammingView);
-            submit.setIdStatus(em.find(SubmitStatus.class, TypeStateJudgeEnum.IP.getValue()));
+            submit.setIdStatus(em.createQuery("SELECT a FROM SubmitStatus a WHERE a.keyStatus = :id_status ", SubmitStatus.class)
+                    .setParameter("id_status", TypeStateJudgeEnum.IP.name())
+                    .getSingleResult());
             submit.setDateSubmit(Calendar.getInstance().getTime());
-
-            Account account = (Account) accountObject;
+            create(submit);
 
             AccountSubmit accountSubmit = new AccountSubmit();
-            accountSubmit.setIdAccount(account);
+            accountSubmit.setIdAccount((Account) accountObject);
             accountSubmit.setIdSubmit(submit);
             accountSubmit.setVisibleWeb(TypeStateEnum.PRIVATE.getType());
             accountSubmitFacade.create(accountSubmit);
@@ -107,7 +111,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
             final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String path = "submit/verdict/{email}/{idSubmit}";
+                    String path = "submit/verdict/user/{email}/{idSubmit}";
                     Object objects[] = {String.valueOf(email), String.valueOf(idSubmit)};
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("token", TOKEN);
@@ -191,10 +195,10 @@ public class SubmitFacade extends AbstractFacade<Submit> {
             StringBuilder sql = new StringBuilder();
             sql.append("select p from AccountSubmit p where p.idSubmit = :id_submit and p.idAccount = :id_account");
             Query query = em.createQuery(sql.toString(), AccountSubmit.class)
-                    .setParameter("id_submit", submitMessage.getIdProblem())
+                    .setParameter("id_submit", submitMessage.getProblemMessage().getIdProblem())
                     .setParameter("id_account", submitMessage.getAccountMessage().getIdAccount());
             AccountSubmit accountSubmit = (AccountSubmit) query.getSingleResult();
-            accountSubmit.setVisibleWeb(submitMessage.getVisibleWeb());
+            accountSubmit.setVisibleWeb((TypeStateEnum.PRIVATE.getType().compareTo(accountSubmit.getVisibleWeb()) == 0) ? TypeStateEnum.PUBLIC.getType() : TypeStateEnum.PRIVATE.getType());
             accountSubmitFacade.edit(accountSubmit);
             logger.debug("editSubmit @ECHO");
         } catch (Exception ex) {
@@ -207,22 +211,32 @@ public class SubmitFacade extends AbstractFacade<Submit> {
     private SubmitMessage parseAccountSubmitEntityToMessage(AccountSubmit accountSubmit) {
         SubmitMessage submitMessage = new SubmitMessage();
 
+        Submit submit = accountSubmit.getIdSubmit();
+
+        submitMessage.setIdSubmit(submit.getIdSubmit());
+        submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
+        submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
+        submitMessage.setIdStatus(submit.getIdStatus().getKeyStatus());
+        submitMessage.setNameStatus(submit.getIdStatus().getNameStatus());
+        submitMessage.setVisibleWeb(accountSubmit.getVisibleWeb());
+
+        ProblemMessage problemMessage = new ProblemMessage();
+        problemMessage.setNameProblem(submit.getIdProblem().getNameProblem());
+        problemMessage.setIdProblem(submit.getIdProblem().getIdProblem());
+        submitMessage.setProblemMessage(problemMessage);
+
+        JudgeMessage judgeMessage = new JudgeMessage();
+        judgeMessage.setMessageJudge(submit.getMsgJudge());
+        submitMessage.setJudgeMessage(judgeMessage);
+
+        LanguageProgrammingMessage languageProgrammingMessage = new LanguageProgrammingMessage();
+        languageProgrammingMessage.setNameProgramming(submit.getIdLanguage().getNameLanguage());
+        submitMessage.setLanguageProgrammingMessage(languageProgrammingMessage);
+
         AccountMessage accountMessage = new AccountMessage();
         accountMessage.setIdAccount(accountSubmit.getIdAccount().getIdAccount());
         accountMessage.setNickname(accountSubmit.getIdAccount().getNickname());
         submitMessage.setAccountMessage(accountMessage);
-        submitMessage.setVisibleWeb(accountSubmit.getVisibleWeb());
-
-        Submit submit = accountSubmit.getIdSubmit();
-        submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
-        submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
-        submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
-        submitMessage.setIdSubmit(submit.getIdSubmit());
-        submitMessage.setMsgJudge(submit.getMsgJudge());
-        submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
-        submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
-        submitMessage.setIdStatus(submit.getIdStatus().getKeyStatus());
-        submitMessage.setNameStatus(submit.getIdStatus().getNameStatus());
 
         return submitMessage;
     }

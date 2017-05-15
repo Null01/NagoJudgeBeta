@@ -21,6 +21,6 @@ public interface IResourcesPath {
     
     
 
-    public final String PATH_VIEW_PROBLEMS = File.separatorChar + "go" + File.separatorChar + "to" + File.separatorChar + "external" + File.separatorChar + "problems";
+    public final String PATH_VIEW_PROBLEMS = File.separatorChar + "now" + File.separatorChar + "external" + File.separatorChar + "problems";
 
 }

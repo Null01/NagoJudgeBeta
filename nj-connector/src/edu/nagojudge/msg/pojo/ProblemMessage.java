@@ -22,7 +22,9 @@ public class ProblemMessage implements Serializable {
     private ListMessage<CategoryMessage> listCategoryMessage;
     private String nameDifficulty;
     private String description;
+    private String bestComplexity;
     private int timeLimitSeg;
+    private int memoLimit;
     private int totalStatus;
     private int statusAC;
     private int statusCE;
@@ -35,13 +37,16 @@ public class ProblemMessage implements Serializable {
     public ProblemMessage() {
     }
 
-    public ProblemMessage(Long idProblem, String nameProblem, String author, String nameDifficulty, String description, int timeLimitSeg, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
+    public ProblemMessage(Long idProblem, String nameProblem, String author, ListMessage<CategoryMessage> listCategoryMessage, String nameDifficulty, String description, String bestComplexity, int timeLimitSeg, int memoLimit, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
         this.idProblem = idProblem;
         this.nameProblem = nameProblem;
         this.author = author;
+        this.listCategoryMessage = listCategoryMessage;
         this.nameDifficulty = nameDifficulty;
         this.description = description;
+        this.bestComplexity = bestComplexity;
         this.timeLimitSeg = timeLimitSeg;
+        this.memoLimit = memoLimit;
         this.totalStatus = totalStatus;
         this.statusAC = statusAC;
         this.statusCE = statusCE;
@@ -170,6 +175,22 @@ public class ProblemMessage implements Serializable {
 
     public void setNameDifficulty(String nameDifficulty) {
         this.nameDifficulty = nameDifficulty;
+    }
+
+    public int getMemoLimit() {
+        return memoLimit;
+    }
+
+    public void setMemoLimit(int memoLimit) {
+        this.memoLimit = memoLimit;
+    }
+
+    public String getBestComplexity() {
+        return bestComplexity;
+    }
+
+    public void setBestComplexity(String bestComplexity) {
+        this.bestComplexity = bestComplexity;
     }
 
 }

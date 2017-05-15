@@ -28,17 +28,26 @@
                             <p:column headerText="#" width="5%" styleClass="text-center">
                                 <h:outputText value="&amp;&#35;#{64+(indexKey+1)};" escape="false"/>
                             </p:column>
-                            <p:column headerText="Name problem" width="45%" styleClass="text-left" >
+                            <p:column headerText="Problema" width="30%" styleClass="text-left" >
                                 <h:outputLink 
                                     target="_blank"
-                                    value="#{fn:replace(roomContentBean.getRealPathToPdf(p.idProblem), '\\\\', '/' )}">
+                                    value="#{roomContentBean.getRealPathOfPDF(p.idProblem)}">
                                     #{p.nameProblem}
                                 </h:outputLink> 
                             </p:column>
-                            <p:column headerText="Category" width="50%" styleClass="text-left" >
+                            <p:column headerText="Categoria" width="30%" styleClass="text-left" >
                                 <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory">
                                     <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':'label-info'}" value="#{c.nameCategory} " /> 
                                 </ui:repeat>
+                            </p:column>
+                            <p:column headerText="Complejidad" width="12%" styleClass="text-center" >
+                                <h:outputText value="#{p.bestComplexity} " /> 
+                            </p:column>
+                            <p:column headerText="Tiempo Max." width="9%" styleClass="text-center" >
+                                <h:outputText value="#{p.timeLimitSeg} " /> 
+                            </p:column>
+                            <p:column headerText="Memoria Max." width="9%" styleClass="text-center" >
+                                <h:outputText value="#{p.memoLimit}" /> 
                             </p:column>
                         </p:dataTable>
                     </h:form>

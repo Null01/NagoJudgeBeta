@@ -26,7 +26,6 @@ public class NotifyResource {
         logger.debug(submitMessage);
         logger.debug(submitMessage.getAccountMessage().getIdAccount());
         logger.debug(submitMessage.getIdSubmit());
-        logger.debug(submitMessage.getIdProblem());
         return submitMessage;
     }
 }

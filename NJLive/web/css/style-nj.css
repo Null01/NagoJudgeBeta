@@ -134,3 +134,30 @@ body {
     border-radius: 0 !important;
     padding-top: 7px !important;
 }
+
+.text-bold{
+    color: #000000;
+    font-weight: bold;
+}
+
+.table > thead > tr > td.ce,
+.table > tbody > tr > td.ce,
+.table > tfoot > tr > td.ce,
+.table > thead > tr > th.ce,
+.table > tbody > tr > th.ce,
+.table > tfoot > tr > th.ce,
+.table > thead > tr.ce > td,
+.table > tbody > tr.ce > td,
+.table > tfoot > tr.ce > td,
+.table > thead > tr.ce > th,
+.table > tbody > tr.ce > th,
+.table > tfoot > tr.ce > th {
+  background-color: #8B1BFF;
+}
+.table-hover > tbody > tr > td.ce:hover,
+.table-hover > tbody > tr > th.ce:hover,
+.table-hover > tbody > tr.ce:hover > td,
+.table-hover > tbody > tr:hover > .ce,
+.table-hover > tbody > tr.ce:hover > th {
+  background-color: #AA85D1;
+}
