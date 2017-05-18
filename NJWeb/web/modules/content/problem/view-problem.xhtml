@@ -12,75 +12,110 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="idProblem"
-                         value="#{problemsBean.problemView.idProblem}"
+                         value="#{problemViewBean.problemMessage.idProblem}"
                          required="true"/>
             <f:event type="preRenderView"
-                     listener="#{problemsBean.actionPreRenderViewToSubmitProblem}" />
+                     listener="#{problemViewBean.actionPreRenderViewToSubmitProblem}" />
         </f:metadata>
     </ui:define>
 
     <ui:define name="content">
 
-        <ui:fragment rendered="#{problemsBean.problemView.idProblem != 0}">
+        <ui:fragment rendered="#{problemViewBean.problemMessage.idProblem != 0}">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title text-center">#{utilBean.formatIdProblem(problemsBean.problemView.idProblem)} - #{problemsBean.problemView.nameProblem}</h3>
-                </div>
                 <div class="panel-body">
-                    <div class="form-group">
-                        <iframe src="#{problemsBean.pathSourceProblem}"
-                                style="width: 100%;"
-                                height="600"
-                                rendered="#{problemsBean.pathSourceProblem != null}"></iframe>
+                    <div class="col-md-7">
+
+                        <div class="form-group">
+                            <iframe src="#{problemViewBean.pathSourceProblem}"
+                                    style="width: 100%;"
+                                    height="550"
+                                    rendered="#{problemViewBean.pathSourceProblem != null}"></iframe>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-
-            <div id="panelMySubmitsContest" class="panel panel-default">
-                <div class="panel panel-default">
-                    <div class="panel-heading"></div>
-                    <div class="panel-body">
+                    <div class="col-md-5">
                         <h:form id="form-submit-sourcecode" class="form-horizontal" enctype="multipart/form-data">
-                            <p:messages id="msgs" autoUpdate="true" closable="true"/>
                             <fieldset>
                                 <div class="form-group">
-                                    <label for="nameProblem" class="col-md-1 control-label">Problem</label>
-                                    <div class="col-md-2">
+                                    <label for="nameProblem" class="col-md-3 control-label">Problema</label>
+                                    <div class="col-md-9">
                                         <p:inputText id="nameProblem"
                                                      styleClass="form-control"
                                                      readonly="true"
-                                                     value="#{utilBean.formatIdProblem(submitBean.problemView.idProblem)} - #{submitBean.problemView.nameProblem}"/>
+                                                     value="#{utilBean.formatIdProblem(problemViewBean.problemMessage.idProblem)} - #{problemViewBean.problemMessage.nameProblem}"/>
                                     </div>
-                                    <label for="select-language" class="col-md-1 control-label">Lenguaje</label>
-                                    <div class="col-md-3">
-                                        <p:selectOneMenu id="select-language"
+                                </div>
+                                <div class="form-group">
+                                    <label for="complexityProblem" class="col-md-3 control-label">Complejidad sugerida</label>
+                                    <div class="col-md-9">
+                                        <p:inputText id="complexityProblem"
+                                                     styleClass="form-control text-center"
+                                                     readonly="true"
+                                                     value="#{problemViewBean.problemMessage.bestComplexity}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="timeProblem" class="col-md-3 control-label">Limite de tiempo</label>
+                                    <div class="col-md-9">
+                                        <p:inputText id="timeProblem"
+                                                     styleClass="form-control text-center"
+                                                     readonly="true"
+                                                     value="#{problemViewBean.problemMessage.timeLimit} Segundos"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="memoProblem" class="col-md-3 control-label">Limite de memoria</label>
+                                    <div class="col-md-9">
+                                        <p:inputText id="memoProblem"
+                                                     styleClass="form-control text-center"
+                                                     readonly="true"
+                                                     value="#{problemViewBean.problemMessage.memoLimit}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descriptionProblem" class="col-md-3 control-label">Descripcion</label>
+                                    <div class="col-md-9">
+                                        <p:inputTextarea id="descriptionProblem"
+                                                         styleClass="form-control text-center"
+                                                         readonly="true"
+                                                         value="#{(empty problemViewBean.problemMessage.description )?'N/A':problemViewBean.problemMessage.description}" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="selectLanguage" class="col-md-3 control-label">Lenguaje</label>
+                                    <div class="col-md-9">
+                                        <p:selectOneMenu id="selectLanguage"
                                                          styleClass="form-control"
                                                          style="width: 100%;"
                                                          converter="languageProgrammingConvertJSF"
-                                                         value="#{submitBean.languageProgrammingView}"
-                                                         required="true" >
+                                                         value="#{problemViewBean.languageProgrammingView}"
+                                                        >
+                                            <f:selectItem value="#{null}" itemLabel="Seleccione un lenguaje" />         
                                             <f:selectItems value="#{languageBean.listLanguageProgrammingItems}" />                                               
                                         </p:selectOneMenu>
                                     </div>
-                                    <label for="upload-sourceCode" class="col-md-1 control-label">Codigo Fuente</label>
-                                    <div class="col-md-4">
-                                        <p:fileUpload id="upload-sourceCode"
+                                </div>
+                                <div class="form-group">
+                                    <label for="uploadSourceCode" class="col-md-3 control-label">Codigo</label>
+                                    <div class="col-md-9">
+                                        <p:fileUpload id="uploadSourceCode"
                                                       styleClass="form-control center-block"
-                                                      value="#{submitBean.codeSourceFile}"
+                                                      value="#{problemViewBean.codeSourceFile}"
                                                       mode="simple"
                                                       skinSimple="false"
-                                                      required="true"
                                                       allowTypes="/(\.|\/)(java|cpp|c)$/"
                                                       label="#{msg['general.label.archivo.upload']}"/>
                                     </div>
-
                                 </div>
+
+                                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+
                                 <div class="form-group text-center">
-                                    <p:commandButton styleClass="btn btn-default btn-sm center-block text-center col-md-12"
-                                                     value="Send solution"
+                                    <p:commandButton styleClass="btn btn-default center-block text-center col-md-12"
+                                                     value="Enviar solucion"
                                                      ajax="false"
-                                                     action="#{submitBean.actionSubmitSolution}"
+                                                     action="#{problemViewBean.actionSubmitSolution}"
                                                      update="messages, @form"/>
                                 </div>
                             </fieldset>
@@ -88,8 +123,6 @@
                     </div>
                 </div>
             </div>
-
         </ui:fragment>
-
     </ui:define>
 </ui:composition>

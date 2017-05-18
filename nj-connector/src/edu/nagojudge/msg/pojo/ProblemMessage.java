@@ -23,7 +23,7 @@ public class ProblemMessage implements Serializable {
     private String nameDifficulty;
     private String description;
     private String bestComplexity;
-    private int timeLimitSeg;
+    private int timeLimit;
     private int memoLimit;
     private int totalStatus;
     private int statusAC;
@@ -45,7 +45,7 @@ public class ProblemMessage implements Serializable {
         this.nameDifficulty = nameDifficulty;
         this.description = description;
         this.bestComplexity = bestComplexity;
-        this.timeLimitSeg = timeLimitSeg;
+        this.timeLimit = timeLimitSeg;
         this.memoLimit = memoLimit;
         this.totalStatus = totalStatus;
         this.statusAC = statusAC;
@@ -65,14 +65,6 @@ public class ProblemMessage implements Serializable {
         this.idProblem = idProblem;
     }
 
-    public ListMessage<CategoryMessage> getListCategoryMessage() {
-        return listCategoryMessage;
-    }
-
-    public void setListCategoryMessage(ListMessage<CategoryMessage> listCategoryMessage) {
-        this.listCategoryMessage = listCategoryMessage;
-    }
-
     public String getNameProblem() {
         return nameProblem;
     }
@@ -89,6 +81,22 @@ public class ProblemMessage implements Serializable {
         this.author = author;
     }
 
+    public ListMessage<CategoryMessage> getListCategoryMessage() {
+        return listCategoryMessage;
+    }
+
+    public void setListCategoryMessage(ListMessage<CategoryMessage> listCategoryMessage) {
+        this.listCategoryMessage = listCategoryMessage;
+    }
+
+    public String getNameDifficulty() {
+        return nameDifficulty;
+    }
+
+    public void setNameDifficulty(String nameDifficulty) {
+        this.nameDifficulty = nameDifficulty;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -97,12 +105,36 @@ public class ProblemMessage implements Serializable {
         this.description = description;
     }
 
-    public int getTimeLimitSeg() {
-        return timeLimitSeg;
+    public String getBestComplexity() {
+        return bestComplexity;
     }
 
-    public void setTimeLimitSeg(int timeLimitSeg) {
-        this.timeLimitSeg = timeLimitSeg;
+    public void setBestComplexity(String bestComplexity) {
+        this.bestComplexity = bestComplexity;
+    }
+
+    public int getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public int getMemoLimit() {
+        return memoLimit;
+    }
+
+    public void setMemoLimit(int memoLimit) {
+        this.memoLimit = memoLimit;
+    }
+
+    public int getTotalStatus() {
+        return totalStatus;
+    }
+
+    public void setTotalStatus(int totalStatus) {
+        this.totalStatus = totalStatus;
     }
 
     public int getStatusAC() {
@@ -161,36 +193,6 @@ public class ProblemMessage implements Serializable {
         this.statusWR = statusWR;
     }
 
-    public int getTotalStatus() {
-        return totalStatus;
-    }
-
-    public void setTotalStatus(int totalStatus) {
-        this.totalStatus = totalStatus;
-    }
-
-    public String getNameDifficulty() {
-        return nameDifficulty;
-    }
-
-    public void setNameDifficulty(String nameDifficulty) {
-        this.nameDifficulty = nameDifficulty;
-    }
-
-    public int getMemoLimit() {
-        return memoLimit;
-    }
-
-    public void setMemoLimit(int memoLimit) {
-        this.memoLimit = memoLimit;
-    }
-
-    public String getBestComplexity() {
-        return bestComplexity;
-    }
-
-    public void setBestComplexity(String bestComplexity) {
-        this.bestComplexity = bestComplexity;
-    }
+ 
 
 }

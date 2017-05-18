@@ -6,6 +6,7 @@
 package edu.nagojudge.app.business.dao.entities;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -55,6 +56,10 @@ public class Submit implements Serializable {
     @Column(name = "DATE_JUDGE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateJudge;
+    @Column(name = "TIME_USED")
+    private BigInteger timeUsed;
+    @Column(name = "MEMO_USED")
+    private BigInteger memoUsed;
     @Lob
     @Size(max = 65535)
     @Column(name = "MSG_JUDGE")
@@ -107,6 +112,22 @@ public class Submit implements Serializable {
 
     public void setDateJudge(Date dateJudge) {
         this.dateJudge = dateJudge;
+    }
+
+    public BigInteger getTimeUsed() {
+        return timeUsed;
+    }
+
+    public void setTimeUsed(BigInteger timeUsed) {
+        this.timeUsed = timeUsed;
+    }
+
+    public BigInteger getMemoUsed() {
+        return memoUsed;
+    }
+
+    public void setMemoUsed(BigInteger memoUsed) {
+        this.memoUsed = memoUsed;
     }
 
     public String getMsgJudge() {

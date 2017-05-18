@@ -11,16 +11,15 @@
 
         <h:form id="form-create-challenge" class="form-horizontal">
             <p:wizard flowListener="#{challengeCreateBean.actionOnFlowProcessCreateChallenge}">
+
+
                 <p:tab id="wizard-tab-01-create-challenge" title="#{msg['challenge.config.create.datos.title']}">
-
                     <div class="panel panel-default">
-
                         <div class="panel-body">
                             <div class="well">
                                 <p:messages id="messages01"
                                             autoUpdate="true"
                                             closable="true" />
-
                                 <div class="panel-body">
                                     <fieldset>
                                         <div class="form-group">
@@ -32,9 +31,15 @@
                                                              required="true"
                                                              value="#{challengeCreateBean.challengeView.nameChallenge}" />
                                             </div>
-                                            <div class="col-md-4"> </div>
+                                            <label for="nameRolAdmin" class="col-md-2 control-label">#{msg['challenge.label.nameOrganizer']}</label>
+                                            <div class="col-md-4">
+                                                <p:inputText id="nameRolAdmin"
+                                                             styleClass="form-control"
+                                                             placeholder="#{msg['challenge.label.nameOrganizer']}"
+                                                             required="true"
+                                                             value="#{challengeCreateBean.challengeView.emailOrganizer}" />
+                                            </div>
                                         </div>
-
                                         <div class="form-group">
                                             <label for="dateChallengeStart" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.start']}</label>
                                             <div class="col-md-4">
@@ -58,7 +63,6 @@
                                                 </p:selectOneMenu>
                                             </div>
                                         </div>
-
                                         <div class="form-group">
                                             <label for="dateChallengeEnd" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.end']}</label>
                                             <div class="col-md-4">
@@ -161,19 +165,25 @@
                                             <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
                                         </p:column>
                                         <p:column headerText="Problem" width="200" sortBy="#{p.nameProblem}">
-                                            <h:commandLink value="#{p.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                                                <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{p.idProblem}" />
+                                            <h:commandLink value="#{p.nameProblem}" action="#{problemBean.actionRedirectViewToSubmitProblem}">
+                                                <f:setPropertyActionListener target="#{pproblemBeanproblemView.idProblem}" value="#{p.idProblem}" />
                                             </h:commandLink>
                                         </p:column>
                                         <p:column headerText="Autor" width="240" sortBy="#{p.author}" filterBy="#{p.author}" filterStyle="display:none;" filterMatchMode="contains">
                                             <h:outputText value="#{p.author}" />
                                         </p:column>
-                                        <p:column headerText="TL" width="80" sortBy="#{p.timeLimitSeg}" filterBy="#{p.timeLimitSeg}" filterStyle="display:none;" >
-                                            <h:outputText value="#{p.timeLimitSeg}" />
+                                        <p:column headerText="Categoria" width="200" styleClass="text-left" >
+                                            <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory" >
+                                                <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':
+                                                                                  c.idCategory eq 2? 'label-info':
+                                                                                  c.idCategory eq 3? 'label-default':
+                                                                                  c.idCategory eq 4? 'label-danger':
+                                                                                  c.idCategory eq 5? 'label-primary':
+                                                                                  c.idCategory eq 6? 'label-warning':
+                                                                                  'label-info'}" value="#{c.nameCategory} " /> 
+                                            </ui:repeat>
                                         </p:column>
-                                        <p:column headerText="Categoria" width="200" sortBy="#{p.nameCategory}"  filterBy="#{p.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
-                                            <h:outputText value="#{p.nameCategory}" />
-                                        </p:column>
+
                                         <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}"  filterBy="#{p.nameDifficulty}" filterStyle="display:none;" filterMatchMode="contains">
                                             <h:outputText value="#{p.nameDifficulty}" />
                                         </p:column>
@@ -216,13 +226,80 @@
                                 <div class="panel-body">
                                     <fieldset>
                                         <div class="form-group">
-                                            <label for="outputNameChallenge" class="col-md-2 control-label">#{msg['challenge.label.nameChallenge']}</label>
-
+                                            <label for="nameChallengeOutput" class="col-md-2 control-label">#{msg['challenge.label.nameChallenge']}</label>
                                             <div class="col-md-4">
-                                                <p:outputLabel id="outputNameChallenge"
-                                                               styleClass="form-control"
-                                                               value="#{challengeCreateBean.challengeView.nameChallenge}" />
+                                                <p:inputText id="nameChallengeOutput"
+                                                             styleClass="form-control"
+                                                             placeholder="#{msg['challenge.label.nameChallenge']}"
+                                                             required="true"
+                                                             value="#{challengeCreateBean.challengeView.nameChallenge}" />
+                                            </div>
+                                            <label for="nameRolAdminOutput" class="col-md-2 control-label">#{msg['challenge.label.nameOrganizer']}</label>
+                                            <div class="col-md-4">
+                                                <p:inputText id="nameRolAdminOutput"
+                                                             styleClass="form-control"
+                                                             placeholder="#{msg['challenge.label.nameOrganizer']}"
+                                                             required="true"
+                                                             value="#{challengeCreateBean.challengeView.emailOrganizer}" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="dateChallengeStartOutput" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.start']}</label>
+                                            <div class="col-md-4">
+                                                <p:calendar id="dateChallengeStartOutput"
+                                                            pattern="MM/dd/yyyy"                                                    
+                                                            placeholder="02/05/2015"
+                                                            yearRange="c-50:c+5"
+                                                            navigator="true"
+                                                            required="true"
+                                                            value="#{challengeCreateBean.challengeView.dateStart}" />
+                                            </div>
+                                            <label for="timeChallengeStartOutput" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge.start']}</label>
+                                            <div class="col-md-4">
+                                                <p:selectOneMenu id="timeChallengeStartOutput"
+                                                                 styleClass="selected-list form-control"
+                                                                 style="width: 100%;" 
+                                                                 value="#{challengeCreateBean.timeStartSelected}"
+                                                                 required="true">
+                                                    <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
+                                                    <f:selectItems value="#{challengeCreateBean.listTimes}"  />                                               
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="dateChallengeEndOutput" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.end']}</label>
+                                            <div class="col-md-4">
+                                                <p:calendar id="dateChallengeEndOutput"
+                                                            pattern="MM/dd/yyyy"                                                    
+                                                            placeholder="02/05/2015"
+                                                            yearRange="c-50:c+5"
+                                                            navigator="true"
+                                                            required="true"
+                                                            value="#{challengeCreateBean.challengeView.dateEnd}" />
+                                            </div>
+                                            <label for="timeChallengeEndOutput" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge.end']}</label>
+                                            <div class="col-md-4">
+                                                <p:selectOneMenu id="timeChallengeEndOutput"
+                                                                 styleClass="selected-list form-control"
+                                                                 style="width: 100%;" 
+                                                                 value="#{challengeCreateBean.timeEndSelected}"
+                                                                 required="true">
+                                                    <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
+                                                    <f:selectItems value="#{challengeCreateBean.listTimes}"  />                                               
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
 
+                                        <div class="form-group">
+                                            <label for="descriptionChallengeOutput" class="col-md-2 control-label">#{msg['challenge.label.descriptionChallenge']}</label>
+                                            <div class="col-md-4">
+                                                <p:inputTextarea id="descriptionProblemOutput"
+                                                                 rows="5"
+                                                                 style="width: 100%;"
+                                                                 autoResize="false" 
+                                                                 placeholder="#{msg['challenge.label.descriptionChallenge.placeholder']}"
+                                                                 required="true" 
+                                                                 value="#{challengeCreateBean.challengeView.description}" />
                                             </div>
                                         </div>
                                     </fieldset>

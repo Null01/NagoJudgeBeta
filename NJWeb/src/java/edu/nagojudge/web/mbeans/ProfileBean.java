@@ -13,8 +13,10 @@ import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.Submit;
 import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
+import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -57,8 +60,8 @@ public class ProfileBean implements Serializable {
 
     private String searchParameter;
 
-    private List<Problem> listProblemsTry;
-    private List<Problem> filteredProblemsTry;
+    private List<ProblemMessage> listProblemsTry;
+    private List<ProblemMessage> filteredProblemsTry;
 
     private List<Problem> listProblemsTrySolve;
     private List<Problem> filteredProblemsTrySolve;
@@ -102,19 +105,23 @@ public class ProfileBean implements Serializable {
     }
 
     public void actionPreRenderViewToProfile() {
-        logger.debug("getIdAccount [" + accountView.getIdAccount() + "]");
-        if (accountView.getIdAccount() != null) {
-
+        boolean validationFailed = FacesUtil.getFacesUtil().isValidationFailed();
+        if (validationFailed) {
+            logger.debug("params [" + accountView.getIdAccount() + "]");
+            HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
+            session.invalidate();
+            FacesUtil.getFacesUtil().printErrorResponse("Authentication failed, contact administrator.");
+        } else {
+            logger.debug("params [" + accountView.getIdAccount() + "]");
             User findUser = userFacade.findUserByIdAccount(accountView.getIdAccount());
             if (findUser != null) {
-
                 long idAccount = accountView.getIdAccount();
                 this.userView = findUser;
                 this.accountView = findUser.getIdAccount();
-                this.listProblemsTry = problemFacade.findProblemTryEntities(idAccount);
-                this.filteredProblemsTry = new ArrayList<Problem>(this.listProblemsTry);
+                this.listProblemsTry = problemFacade.findProblemTry(idAccount);
+                this.filteredProblemsTry = new ArrayList<ProblemMessage>(this.listProblemsTry);
 
-                this.listProblemsTrySolve = problemFacade.findProblemTrySolveEntities(idAccount);
+                this.listProblemsTrySolve = problemFacade.findProblemWithStatusFrom(idAccount, TypeStateJudgeEnum.AC);
                 this.filteredProblemsTrySolve = new ArrayList<Problem>(this.listProblemsTrySolve);
 
                 this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(idAccount);
@@ -175,19 +182,19 @@ public class ProfileBean implements Serializable {
         this.problemView = problemView;
     }
 
-    public List<Problem> getListProblemsTry() {
+    public List<ProblemMessage> getListProblemsTry() {
         return listProblemsTry;
     }
 
-    public void setListProblemsTry(List<Problem> listProblemsTry) {
+    public void setListProblemsTry(List<ProblemMessage> listProblemsTry) {
         this.listProblemsTry = listProblemsTry;
     }
 
-    public List<Problem> getFilteredProblemsTry() {
+    public List<ProblemMessage> getFilteredProblemsTry() {
         return filteredProblemsTry;
     }
 
-    public void setFilteredProblemsTry(List<Problem> filteredProblemsTry) {
+    public void setFilteredProblemsTry(List<ProblemMessage> filteredProblemsTry) {
         this.filteredProblemsTry = filteredProblemsTry;
     }
 

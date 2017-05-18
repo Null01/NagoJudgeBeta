@@ -7,9 +7,7 @@ import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import org.apache.catalina.tribes.util.Arrays;
 import org.apache.log4j.Logger;
 
@@ -25,20 +24,20 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 public class JudgeServiceJava {
-
+    
     private final Logger logger = Logger.getLogger(JudgeServiceJava.class);
-
+    
     public static final String JAVA_EXTENSION = "java";
     private final String JAVAC_COMPILE = " javac ";
     private final String NAME_CLASS_FILE_DEFAULT = "Main";
     private final String LINK_EXE = "java " + NAME_CLASS_FILE_DEFAULT;
-
+    
     private final String ERROR_TIMEOUT_JAVAC = "ERROR - TIMEOUT COMPILATION";
-
+    
     private final Runtime runtime = Runtime.getRuntime();
     private Process process;
-
-    public JudgeMessage judgeRulingNow(String pathSourceCode, String fullPathInputFileServer,
+    
+    public JudgeMessage runExecuteJudge(String pathSourceCode, String fullPathInputFileServer,
             final String checkSumOutputFileServer)
             throws RunJudgeException {
         JudgeMessage judgeMessage = new JudgeMessage();
@@ -46,45 +45,40 @@ public class JudgeServiceJava {
             logger.debug("INICIA JUDGE_RULING_NOW_CODE_SOURCE JVM");
             String commands[] = {"java", "-cp", ".", "Main"};
             logger.debug("COMMANS_RUN [" + Arrays.toString(commands) + "]");
-            ProcessBuilder builder = new ProcessBuilder(commands);
             logger.debug("BASE_DIRECTORY [" + pathSourceCode + "]");
+            ProcessBuilder builder = new ProcessBuilder(commands);
             builder.directory(new File(pathSourceCode));
-            process = builder.start();
             logger.debug("START_PROCESS @ECHO");
-            readDataInputProblem(process.getOutputStream(), fullPathInputFileServer);
-            logger.debug("READER_INPUTS_SERVER @ECHO");
-            byte[] outputFileUser = FileUtil.getInstance().parseFromInputStreamToArrayByte(process.getInputStream());
+            long startTime = Calendar.getInstance().getTimeInMillis();
+            process = builder.start();
+            readDataInputProblem(process.getOutputStream(), fullPathInputFileServer); // READER_INPUTS_SERVER @ECHO
+            byte[] outputFileUser = FileUtil.getInstance().parseFromInputStreamToArrayByte(process.getInputStream()); // WRITER_OUTPUTS_SERVER @ECHO
             //FileUtil.getFileUtil().createFileAccordingToByteArrayToFile(outputFileUser, pathSourceCode + java.io.File.separatorChar + "temp_out");
-            logger.debug("WRITER_OUTPUTS_SERVER @ECHO");
-            boolean judge = FileUtil.getInstance().compareFilesByCheckSumSHA(outputFileUser, checkSumOutputFileServer, TypeSHAEnum.SHA256);
-            logger.debug("COMPARE_BYTES_FILES @ECHO");
-            logger.debug("RULING_COMPARE_FILES_INPUT_OUTPUT=" + judge);
+            boolean judge = FileUtil.getInstance().compareFilesByCheckSumSHA(outputFileUser, checkSumOutputFileServer, TypeSHAEnum.SHA256); // COMPARE FILES GENERATED
+            long endTime = Calendar.getInstance().getTimeInMillis();
             if (process.exitValue() != 0) {
                 StringBuilder messageStreamError = getStreamError();
                 logger.error(messageStreamError);
                 throw new RunJudgeException(messageStreamError.toString());
             }
-            logger.debug("EXECUTION SUCCESS @ECHO");
-            if (judge) {
-                judgeMessage.setStatusName(TypeStateJudgeEnum.AC.name());
-            } else {
-                judgeMessage.setStatusName(TypeStateJudgeEnum.WR.name());
-            }
+            logger.debug("COMPARE_FILES_INPUT_OUTPUT [" + judge + "] - EXECUTION SUCCESS @ECHO");
+            judgeMessage.setStatusName((judge) ? TypeStateJudgeEnum.AC.name() : TypeStateJudgeEnum.WR.name());
+            judgeMessage.setTimeUsed(endTime - startTime);
+        } catch (RunJudgeException ex) {
+            logger.error(ex);
+            throw ex;
         } catch (IOException ex) {
             logger.error(ex);
             throw new RunJudgeException(ex);
         } catch (NoSuchAlgorithmException ex) {
             logger.error(ex);
             throw new RunJudgeException(ex);
-        } catch (RunJudgeException ex) {
-            logger.error(ex);
-            throw ex;
         } finally {
             logger.debug("FINALIZA JUDGE_RULING_NOW_CODE_SOURCE JVM");
         }
         return judgeMessage;
     }
-
+    
     public JudgeMessage judgeProblemProcess(String pathCodeSource, String nameFileCodeSource, String fullPathInputFile,
             final String checkSumOutputFile)
             throws RunJudgeException {
@@ -98,8 +92,8 @@ public class JudgeServiceJava {
                 logger.debug("fullPathCodeSource [" + fullPathCodeSource + "]");
                 try {
                     lockFile(fullPathCodeSource, fullPathCodeSourceTemp);
-                    runStateCompilation(fullPathCodeSourceTemp);
-                    judgeMessage = judgeRulingNow(pathCodeSource, fullPathInputFile, checkSumOutputFile);
+                    runCompilation(fullPathCodeSourceTemp);
+                    judgeMessage = runExecuteJudge(pathCodeSource, fullPathInputFile, checkSumOutputFile);
                 } catch (RunJudgeException ex) {
                     logger.error(ex);
                     judgeMessage.setStatusName(TypeStateJudgeEnum.CE.name());
@@ -113,8 +107,8 @@ public class JudgeServiceJava {
             logger.debug("ENDING PROCESS JUDGE - judgeProblemProcess()");
         }
     }
-
-    private void runStateCompilation(String fullPathCodeSource) throws RunJudgeException {
+    
+    private void runCompilation(String fullPathCodeSource) throws RunJudgeException {
         try {
             logger.debug("START - COMPILATION JVM");
             process = runtime.exec(JAVAC_COMPILE + fullPathCodeSource);
@@ -137,7 +131,7 @@ public class JudgeServiceJava {
             logger.debug("FINALLY - COMPILATION JVM");
         }
     }
-
+    
     private StringBuilder getStreamError() throws IOException {
         if (process != null) {
             try {
@@ -149,7 +143,7 @@ public class JudgeServiceJava {
         }
         return null;
     }
-
+    
     private StringBuilder readInputStream(InputStream inputStream) throws IOException {
         String line;
         BufferedReader bufferedReader = null;
@@ -169,7 +163,7 @@ public class JudgeServiceJava {
         }
         return stringBuilder;
     }
-
+    
     private void readDataInputProblem(OutputStream outputStreamProcess, String fullPathInputFile) throws IOException {
         Reader reader = null;
         OutputStreamWriter out = null;
@@ -209,7 +203,7 @@ public class JudgeServiceJava {
             }
         }
     }
-
+    
     private void lockFile(String fullPathCodeSource, String fullPathCodeSourceTemp) {
         File fileTemp = new File(fullPathCodeSourceTemp);
         File fileSource = new File(fullPathCodeSource);
@@ -251,7 +245,7 @@ public class JudgeServiceJava {
         }
         logger.debug("FINALIZA - CHECK IF IS NECESSARY LOCK_FILE OR WAIT_TO_SECONDS");
     }
-
+    
     private void unLockFile(String fullPathCodeSource, String fullPathCodeSourceTemp) {
         File fileTemp = new File(fullPathCodeSourceTemp);
         File fileSource = new File(fullPathCodeSource);
@@ -266,7 +260,7 @@ public class JudgeServiceJava {
         }
         logger.debug("FINALIZA - CHECK IF IS NECESSARY UNLOCK_FILE");
     }
-
+    
     public void copyFile(Reader input, Writer output) throws IOException {
         try {
             int DEFAULT_BUFFER_SIZE = 1024 * 8;
@@ -293,5 +287,5 @@ public class JudgeServiceJava {
             }
         }
     }
-
+    
 }

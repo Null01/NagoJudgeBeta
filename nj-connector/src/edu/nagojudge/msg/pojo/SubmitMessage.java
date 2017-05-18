@@ -18,6 +18,8 @@ public class SubmitMessage implements Serializable {
     private Long idSubmit;
     private Long dateSubmit;
     private Long dateJudge;
+    private Long timeUsed;
+    private Long memoUsed;
     private String visibleWeb;
     private String _idStatus;
     private String _nameStatus;
@@ -29,10 +31,12 @@ public class SubmitMessage implements Serializable {
     public SubmitMessage() {
     }
 
-    public SubmitMessage(Long idSubmit, Long dateSubmit, Long dateJudge, String visibleWeb, String _idStatus, String _nameStatus, LanguageProgrammingMessage languageProgrammingMessage, ProblemMessage problemMessage, AccountMessage accountMessage, JudgeMessage judgeMessage) {
+    public SubmitMessage(Long idSubmit, Long dateSubmit, Long dateJudge, Long timeUsed, Long memoUsed, String visibleWeb, String _idStatus, String _nameStatus, LanguageProgrammingMessage languageProgrammingMessage, ProblemMessage problemMessage, AccountMessage accountMessage, JudgeMessage judgeMessage) {
         this.idSubmit = idSubmit;
         this.dateSubmit = dateSubmit;
         this.dateJudge = dateJudge;
+        this.timeUsed = timeUsed;
+        this.memoUsed = memoUsed;
         this.visibleWeb = visibleWeb;
         this._idStatus = _idStatus;
         this._nameStatus = _nameStatus;
@@ -40,14 +44,6 @@ public class SubmitMessage implements Serializable {
         this.problemMessage = problemMessage;
         this.accountMessage = accountMessage;
         this.judgeMessage = judgeMessage;
-    }
-
-    public String getVisibleWeb() {
-        return visibleWeb;
-    }
-
-    public void setVisibleWeb(String visibleWeb) {
-        this.visibleWeb = visibleWeb;
     }
 
     public Long getIdSubmit() {
@@ -72,6 +68,30 @@ public class SubmitMessage implements Serializable {
 
     public void setDateJudge(Long dateJudge) {
         this.dateJudge = dateJudge;
+    }
+
+    public Long getTimeUsed() {
+        return timeUsed;
+    }
+
+    public void setTimeUsed(Long timeUsed) {
+        this.timeUsed = timeUsed;
+    }
+
+    public Long getMemoUsed() {
+        return memoUsed;
+    }
+
+    public void setMemoUsed(Long memoUsed) {
+        this.memoUsed = memoUsed;
+    }
+
+    public String getVisibleWeb() {
+        return visibleWeb;
+    }
+
+    public void setVisibleWeb(String visibleWeb) {
+        this.visibleWeb = visibleWeb;
     }
 
     public String getIdStatus() {

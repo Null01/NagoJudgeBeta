@@ -11,7 +11,6 @@ import edu.nagojudge.business.dao.entity.SubmitStatus;
 import edu.nagojudge.business.logic.java.JudgeServiceJava;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.business.servicios.restful.exceptions.RunJudgeException;
-import edu.nagojudge.msg.pojo.AccountMessage;
 import edu.nagojudge.msg.pojo.JudgeMessage;
 import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
@@ -20,11 +19,9 @@ import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.utils.FormatUtil;
 import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -74,16 +71,16 @@ public class JudgeDAOFacade {
                     + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
             String nameFileCodeSource = FormatUtil.getInstance().buildZerosToLeft(submit.getIdSubmit(), 7) + "." + submit.getIdLanguage().getExtension();
             String fullPathInputFile = PATH_SAVE_INPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            String fullPathOutputFile = PATH_SAVE_OUTPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            logger.debug("pathFileCodeSource=" + pathFileCodeSource);
-            logger.debug("nameFileCodeSource=" + nameFileCodeSource);
-            logger.debug("fullPathInputFile=" + fullPathInputFile);
-            logger.debug("fullPathOutputFile=" + fullPathOutputFile);
+            //String fullPathOutputFile = PATH_SAVE_OUTPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
+            //logger.debug("fullPathOutputFile=" + fullPathOutputFile);
 
             String checkSumOutputFile = findCheckSumOfFile(submit.getIdProblem().getAttachmentsList(), TypeFilesEnum.TYPE_FILE_OUT.getExtension());
-            logger.debug("checkSumOutputFile [" + fullPathOutputFile + "]");
+            logger.debug("checkSumOutputFile [" + checkSumOutputFile + "]");
             if (submit.getIdLanguage().getExtension().toLowerCase().compareTo(JudgeServiceJava.JAVA_EXTENSION) == 0) {
                 try {
+                    logger.debug("pathFileCodeSource=" + pathFileCodeSource);
+                    logger.debug("nameFileCodeSource=" + nameFileCodeSource);
+                    logger.debug("fullPathInputFile=" + fullPathInputFile);
                     JudgeServiceJava judgeServiceJava = new JudgeServiceJava();
                     judgetState = judgeServiceJava.judgeProblemProcess(pathFileCodeSource, nameFileCodeSource, fullPathInputFile, checkSumOutputFile);
                 } catch (RunJudgeException ex) {
@@ -94,6 +91,7 @@ public class JudgeDAOFacade {
             }
             logger.debug("JUDGE_FINALLY [" + judgetState.getStatusName() + "]");
             submit.setDateJudge(Calendar.getInstance().getTime());
+            submit.setTimeUsed(BigInteger.valueOf(judgetState.getTimeUsed()));            
             submit.setIdStatus(em.createQuery("SELECT ss FROM SubmitStatus ss WHERE ss.keyStatus = :id_status ", SubmitStatus.class)
                     .setParameter("id_status", judgetState.getStatusName())
                     .getSingleResult());
@@ -210,11 +208,13 @@ public class JudgeDAOFacade {
         submitMessage.setIdSubmit(submit.getIdSubmit());
         submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
         submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
+        submitMessage.setTimeUsed(judgetState.getTimeUsed());
+        submitMessage.setMemoUsed(judgetState.getMemoUsed());
 
         ProblemMessage problemMessage = new ProblemMessage();
         problemMessage.setIdProblem(submit.getIdProblem().getIdProblem());
         problemMessage.setNameProblem(submit.getIdProblem().getNameProblem());
-        problemMessage.setTimeLimitSeg(submit.getIdProblem().getTimeLimit());
+        problemMessage.setTimeLimit(submit.getIdProblem().getTimeLimit());
         problemMessage.setMemoLimit(submit.getIdProblem().getMemoLimit());
         submitMessage.setProblemMessage(problemMessage);
 

@@ -62,26 +62,11 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         super(Problem.class);
     }
 
-    private List<Problem> findProblemEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-        cq.select(cq.from(Problem.class));
-        Query q = em.createQuery(cq);
-        if (!all) {
-            q.setMaxResults(maxResults);
-            q.setFirstResult(firstResult);
-        }
-        return q.getResultList();
-
-    }
-
     public Map<String, Long> findStatisticsStatus(long idProblem) {
-        EntityManager em = getEntityManager();
         Map<String, Long> mapStatisticsStatus = new HashMap<String, Long>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? GROUP BY STATUS_SUBMIT ");
-        Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem);
-        List<Object[]> resultList = query.getResultList();
+        List<Object[]> resultList = em.createQuery("SELECT a.idSubmit.idStatus.keyStatus, COUNT(0) FROM AccountSubmit a WHERE a.idSubmit.idProblem.idProblem = :id_problem GROUP BY a.idSubmit.idStatus.keyStatus")
+                .setParameter("id_problem", idProblem)
+                .getResultList();
         for (Object[] r : resultList) {
             mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
         }
@@ -89,27 +74,20 @@ public class ProblemFacade extends AbstractFacade<Problem> {
     }
 
     public Map<String, Long> findStatisticsStatusByAccount(long idProblem, long idAccount) {
-        EntityManager em = getEntityManager();
         Map<String, Long> mapStatisticsStatus = new HashMap<String, Long>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? AND ID_ACCOUNT = ? GROUP BY STATUS_SUBMIT ");
-        Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem).setParameter(2, idAccount);
-        List<Object[]> resultList = query.getResultList();
+        List<Object[]> resultList = em.createQuery("SELECT a.idSubmit.idStatus.keyStatus, COUNT(0) FROM AccountSubmit a WHERE a.idSubmit.idProblem.idProblem = :id_problem AND a.idAccount.idAccount = :id_account GROUP BY a.idSubmit.idStatus.keyStatus")
+                .setParameter("id_problem", idProblem)
+                .setParameter("id_account", idAccount)
+                .getResultList();
         for (Object[] r : resultList) {
             mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
         }
         return mapStatisticsStatus;
     }
 
-    public List<ProblemMessage> findProblemMessage() {
+    public List<ProblemMessage> findStatisticsFromAllProblem() {
         Map<Long, Map<String, Long>> map = new HashMap<Long, Map<String, Long>>();
-        EntityManager em = getEntityManager();
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.idStatus, COUNT(0) ");
-        sql.append("FROM AccountSubmit p GROUP BY p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.idStatus ");
-        sql.append("ORDER BY p.idSubmit.idProblem.idProblem DESC");
-        Query query = em.createQuery(sql.toString(), AccountSubmit.class);
+        Query query = em.createQuery("SELECT p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.keyStatus, COUNT(0) FROM AccountSubmit p GROUP BY p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.keyStatus ORDER BY p.idSubmit.idProblem.idProblem DESC", AccountSubmit.class);
         List<Object[]> resultList = query.getResultList();
 
         for (Object[] objects : resultList) {
@@ -123,7 +101,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         }
 
         List<ProblemMessage> problemMessages = new ArrayList<ProblemMessage>();
-        List<Problem> problems = findProblemEntities(true, -1, -1);
+        List<Problem> problems = findAll();
         for (Problem p : problems) {
 
             ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
@@ -144,25 +122,25 @@ public class ProblemFacade extends AbstractFacade<Problem> {
                 int sumTotal = 0;
                 for (Map.Entry<String, Long> row : mapValues.entrySet()) {
                     sumTotal += row.getValue();
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.AC.getValue()) == 0) {
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.AC.name()) == 0) {
                         problemMessage.setStatusAC(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.CE.getValue()) == 0) {
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.CE.name()) == 0) {
                         problemMessage.setStatusCE(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.CS.getValue()) == 0) {
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.CS.name()) == 0) {
                         problemMessage.setStatusCS(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.IP.getValue()) == 0) {
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.IP.name()) == 0) {
                         problemMessage.setStatusIP(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.RE.getValue()) == 0) {
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.RE.name()) == 0) {
                         problemMessage.setStatusRE(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.TL.getValue()) == 0) {
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.TL.name()) == 0) {
                         problemMessage.setStatusTL(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.WR.getValue()) == 0) {
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.WR.name()) == 0) {
                         problemMessage.setStatusWR(row.getValue().intValue());
                     }
                     problemMessage.setTotalStatus(sumTotal);
@@ -173,24 +151,25 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         return problemMessages;
     }
 
-    public List<Problem> findProblemTryEntities(long idAccount) {
-        EntityManager em = getEntityManager();
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT WHERE  ID_ACCOUNT = ").append(idAccount).append(")");
-        List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
-        if (resultList != null && resultList.size() >= 1) {
-            logger.debug(resultList.get(0).getProblemCategoryList());
+    public List<ProblemMessage> findProblemTry(long idAccount) {
+        List<ProblemMessage> problemMessages = new ArrayList<ProblemMessage>();
+        List<Problem> resultList = em.createQuery("SELECT b FROM Problem b WHERE b.idProblem IN (SELECT a.idSubmit.idProblem.idProblem FROM AccountSubmit a WHERE a.idAccount.idAccount = :id_account GROUP BY a.idSubmit.idProblem.idProblem)", Problem.class)
+                .setParameter("id_account", idAccount)
+                .getResultList();
+        if (resultList != null) {
+            for (Problem problem : resultList) {
+                problemMessages.add(parseEntityProblemToMessage(problem));
+            }
         }
-        return resultList;
+        return problemMessages;
 
     }
 
-    public List<Problem> findProblemTrySolveEntities(long idAccount) {
-        EntityManager em = getEntityManager();
-        StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT ");
-        sql.append(" WHERE STATUS_SUBMIT = '").append(TypeStateJudgeEnum.AC.getValue()).append("' AND ID_ACCOUNT = ").append(idAccount).append(")");
-        List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
+    public List<Problem> findProblemWithStatusFrom(long idAccount, TypeStateJudgeEnum status) {
+        List<Problem> resultList = em.createQuery("SELECT a.idSubmit.idProblem FROM AccountSubmit a WHERE a.idAccount.idAccount = :id_account AND a.idSubmit.idStatus.keyStatus = :key_status", Problem.class)
+                .setParameter("id_account", idAccount)
+                .setParameter("key_status", status.name())
+                .getResultList();
         return resultList;
 
     }
@@ -209,7 +188,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             }
             problemView.setProblemCategoryList(problemCategorys);
             problemView.setDateCreated(Calendar.getInstance().getTime());
-            problemView.setIdComplexityAlgorithm(em.find(ComplexityAlgorithm.class, new String("1")));
+            problemView.setIdComplexityAlgorithm(complexityAlgorithmView);
             problemView.setIdDifficulty(difficultyLevelView);
             problemView.setIdComplexityAlgorithm(complexityAlgorithmView);
 
@@ -226,7 +205,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             logger.debug(" getMemoLimit=" + problemView.getMemoLimit() + " @ECHO");
 
             create(problemView);
-            
+
             logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problemView.getIdProblem() + " @ECHO");
             String pathProblem = IResourcesPaths.PATH_ROOT_SAVE_PROBLEMS_WEB;
             String nameFileProblem = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
@@ -297,6 +276,32 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         } finally {
             logger.debug("FINALIZA METODO - createProblem()");
         }
+    }
+
+    public ProblemMessage findProblemById(Long idProblem) {
+        Problem problem = em.find(Problem.class, idProblem);
+        return parseEntityProblemToMessage(problem);
+    }
+
+    private ProblemMessage parseEntityProblemToMessage(Problem problem) {
+        ProblemMessage problemMessage = new ProblemMessage();
+        problemMessage.setIdProblem(problem.getIdProblem());
+        problemMessage.setNameProblem(problem.getNameProblem());
+        problemMessage.setBestComplexity(problem.getIdComplexityAlgorithm().getNameComplexityAlgorithm());
+        problemMessage.setNameProblem(problem.getIdDifficulty().getNameDifficulty());
+        problemMessage.setMemoLimit(problem.getMemoLimit());
+        problemMessage.setTimeLimit(problem.getTimeLimit());
+        problemMessage.setDescription(problem.getDescription());
+        List<ProblemCategory> problemCategorys = problem.getProblemCategoryList();
+        ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
+        for (ProblemCategory category : problemCategorys) {
+            CategoryMessage categoryMessage = new CategoryMessage();
+            categoryMessage.setIdCategory(category.getIdCategory().getIdCategory());
+            categoryMessage.setNameCategory(category.getIdCategory().getNameCategory());
+            listMessage.add(categoryMessage);
+        }
+        problemMessage.setListCategoryMessage(listMessage);
+        return problemMessage;
     }
 
 }

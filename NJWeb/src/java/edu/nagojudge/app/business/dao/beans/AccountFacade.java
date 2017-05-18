@@ -10,7 +10,6 @@ import edu.nagojudge.app.exceptions.NagoJudgeException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -32,12 +31,8 @@ public class AccountFacade extends AbstractFacade<Account> {
     }
 
     public void validateFieldsUnique(String nickname) throws NagoJudgeException {
-        EntityManager em = getEntityManager();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT COUNT(0) FROM ACCOUNT WHERE LOWER(NICKNAME) = LOWER('").append(nickname).append("')");
-        Query query = em.createNativeQuery(sb.toString());
-        int count = Integer.parseInt(query.getSingleResult().toString());
+        Long count = (Long) em.createQuery("SELECT COUNT(0) FROM Account a WHERE LOWER(a.nickname)")
+                .getSingleResult();
         if (count >= 1) {
             throw new NagoJudgeException(" EL NICKNAME " + nickname + " YA ESTA REGISTRADO. ");
         }

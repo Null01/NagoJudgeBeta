@@ -46,7 +46,7 @@
                                             <p:inputText id="lastName" styleClass="form-control" value="#{profileBean.userView.lastName}" readonly="true" />
                                         </div>
                                         <label for="email" class="col-md-1 control-label">#{msg['general.user.label.email']}</label>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <p:inputText id="email" styleClass="form-control" value="#{profileBean.userView.idEmail}" readonly="true" />
                                         </div>
                                     </div>
@@ -101,8 +101,16 @@
                                                 <p:column headerText="Problema" width="250" filterBy="#{p.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
                                                     <h:outputText  value="#{p.nameProblem}" />
                                                 </p:column>
-                                                <p:column headerText="Categoria" width="300" filterBy="#{p.idCategory.nameCategory}" filterStyle="display:none;" filterMatchMode="contains">
-                                                    <h:outputText value="#{p.idCategory.nameCategory}" />
+                                                <p:column headerText="Categoria" width="30%" styleClass="text-left" >
+                                                    <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory" >
+                                                        <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':
+                                                                                          c.idCategory eq 2? 'label-info':
+                                                                                          c.idCategory eq 3? 'label-default':
+                                                                                          c.idCategory eq 4? 'label-danger':
+                                                                                          c.idCategory eq 5? 'label-primary':
+                                                                                          c.idCategory eq 6? 'label-warning':
+                                                                                          'label-info'}" value="#{c.nameCategory} " /> 
+                                                    </ui:repeat>
                                                 </p:column>
                                             </p:dataTable>
                                         </div>
@@ -137,12 +145,12 @@
 
                                         <p:dataTable id="table-mysubmit" widgetVar="coWidgetVar3"
                                                      tableStyleClass="table table-striped table-hover"
-                                                     rowStyleClass="#{s.statusSubmit eq 'ACCEPTED'?
-                                                                      'success': (s.statusSubmit eq 'WRONG ANSWER'?
-                                                                      'danger': (s.statusSubmit eq 'TIME LIMIT'?
-                                                                      'warning': (s.statusSubmit eq 'RUNTIME ERROR'?
-                                                                      'info': (s.statusSubmit eq 'COMPILATION ERROR'?
-                                                                      'warning': null)))) }"
+                                                     rowStyleClass="#{s.idStatus eq 'AC'?
+                                                                      'success': (s.idStatus eq 'WR'?
+                                                                      'danger': (s.idStatus eq 'TL'?
+                                                                      'info': (s.idStatus eq 'RE'?
+                                                                      'warning': (s.idStatus eq 'CE'?
+                                                                      'ce': null)))) }"
                                                      value="#{profileBean.listSubmitsByAccount}"
                                                      filteredValue="#{profileBean.filterListSubmitsByAccount}"
                                                      var="s"
@@ -169,20 +177,20 @@
                                                 </p:outputPanel>
                                             </f:facet>
 
-                                            <p:column headerText="Id Submit" width="100" filterBy="#{s.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                                            <p:column headerText="Id Submit" width="100" filterBy="#{s.idSubmit}" filterStyle="display:none;" filterMatchMode="contains">
                                                 <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
                                             </p:column>
-                                            <p:column headerText="Problem" width="200" filterBy="#{s.nameProblem}" filterStyle="display:none;" filterMatchMode="contains">
-                                                <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem)} - #{s.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                                                    <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem}" />
+                                            <p:column headerText="Problem" width="200" filterBy="#{s.idSubmit}" filterStyle="display:none;" filterMatchMode="contains">
+                                                <h:commandLink value="#{utilBean.formatIdProblem(s.problemMessage.idProblem)} - #{s.problemMessage.nameProblem}" action="#{problemBean.actionRedirectViewToSubmitProblem}">
+                                                    <f:setPropertyActionListener target="#{problemBean.problemView.idProblem}" value="#{s.problemMessage.idProblem}" />
                                                 </h:commandLink>
                                             </p:column>
 
-                                            <p:column headerText="Status" styleClass="bold-font" width="150" filterBy="#{s.statusSubmit}" filterStyle="display:none;" filterMatchMode="contains">
-                                                <h:outputText value="#{s.statusSubmit}" />
+                                            <p:column headerText="Status" styleClass="bold-font" width="150" filterBy="#{s.nameStatus}" filterStyle="display:none;" filterMatchMode="contains">
+                                                <h:outputText value="#{s.nameStatus}" />
                                             </p:column>
-                                            <p:column headerText="Language" width="60" filterBy="#{s.nameLanguage}" filterStyle="display:none;" filterMatchMode="contains">
-                                                <h:outputText value="#{s.nameLanguage}" />
+                                            <p:column headerText="Language" width="60" filterBy="#{s.languageProgrammingMessage.nameProgramming}" filterStyle="display:none;" filterMatchMode="contains">
+                                                <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
                                             </p:column>
                                             <p:column headerText="Date Submit" width="170" filterBy="#{s.dateSubmit}" filterStyle="display:none;" filterMatchMode="contains">
                                                 <h:outputText value="#{s.dateSubmit}" >
@@ -204,7 +212,7 @@
                                                                        rendered="#{s.visibleWeb eq 'PUB'}"/>
                                                     </f:facet>
                                                     <f:facet name="input">
-                                                        <h:selectOneMenu value="#{profileBean.submitView.visibleWeb}" 
+                                                        <h:selectOneMenu value="#{s.visibleWeb}" 
                                                                          style="width:100%; color: black !important; font-weight: bold !important;">
                                                             <f:selectItems value="#{profileBean.listStatusVisibleWeb}"  var="visible" itemLabel="#{visible}" itemValue="#{visible}" />
                                                         </h:selectOneMenu>

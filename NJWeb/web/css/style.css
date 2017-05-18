@@ -119,4 +119,34 @@ input[type="text"], input[type="file"]{
     font-size: 15px;
 }
 
+/*
+    Aux colors from table
+*/
+.table > thead > tr > td.ce,
+.table > tbody > tr > td.ce,
+.table > tfoot > tr > td.ce,
+.table > thead > tr > th.ce,
+.table > tbody > tr > th.ce,
+.table > tfoot > tr > th.ce,
+.table > thead > tr.ce > td,
+.table > tbody > tr.ce > td,
+.table > tfoot > tr.ce > td,
+.table > thead > tr.ce > th,
+.table > tbody > tr.ce > th,
+.table > tfoot > tr.ce > th {
+    background-color: #aaaa00;
+    color: #FFFFFF;
+}
+.table-hover > tbody > tr > td.ce:hover,
+.table-hover > tbody > tr > th.ce:hover,
+.table-hover > tbody > tr.ce:hover > td,
+.table-hover > tbody > tr:hover > .ce,
+.table-hover > tbody > tr.ce:hover > th {
+    background-color: #aaaa00;
+    color: #FFFFFF;
+}
 
+a:link { 
+    color: inherit;
+    text-decoration: none;
+} 

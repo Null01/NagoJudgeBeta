@@ -10,7 +10,7 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="idProblem"
-                         value="#{problemsBean.problemView.idProblem}"/>
+                         value="#{problemBean.problemView.idProblem}"/>
         </f:metadata>
     </ui:define>
 
@@ -25,9 +25,9 @@
                                      var="p"
                                      widgetVar="coWidgetVar"
                                      tableStyleClass="table table-striped table-hover"
-                                     value="#{problemsBean.listProblems}"
+                                     value="#{problemBean.listProblems}"
                                      styleClass="center-block"
-                                     filteredValue="#{problemsBean.filteredProblems}"
+                                     filteredValue="#{problemBean.filteredProblems}"
                                      rowKey="#{p.idProblem}"
                                      rows="15"
                                      paginator="true"
@@ -40,7 +40,7 @@
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-search" aria-hidden="true" />
                                             </span>
-                                            <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('coWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{problemsBean.searchParameter}"/>
+                                            <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('coWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{proproblemBeanarchParameter}"/>
                                         </div>
                                     </div>
                                 </p:outputPanel>
@@ -50,26 +50,26 @@
                             </p:column>
                             <p:column headerText="Problem" width="220">
                                 <h:commandLink value="#{p.nameProblem}"
-                                               action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                                    <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{p.idProblem}" />
+                                               action="#{problemBean.actionRedirectViewToSubmitProblem()}">
+                                    <f:setPropertyActionListener target="#{problemBean.problemView.idProblem}" value="#{p.idProblem}" />
                                 </h:commandLink>
                             </p:column>
                             <p:column headerText="Autor" width="240" sortBy="#{p.author}" filterBy="#{p.author}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.author}" />
                             </p:column>
-                            <p:column headerText="TL" width="40" filterBy="#{p.timeLimitSeg}" filterStyle="display:none;" filterMatchMode="contains">
-                                <h:outputText value="#{p.timeLimitSeg}" />
-                            </p:column>
                             <p:column headerText="Categoria" width="200"  filterStyle="display:none;" filterMatchMode="contains">
                                 <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory">
-                                    <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':'label-info'}" value="#{c.nameCategory} " /> 
+                                    <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':
+                                                                      c.idCategory eq 2? 'label-info':
+                                                                      c.idCategory eq 3? 'label-default':
+                                                                      c.idCategory eq 4? 'label-danger':
+                                                                      c.idCategory eq 5? 'label-primary':
+                                                                      c.idCategory eq 6? 'label-warning':
+                                                                      'label-info'}" value="#{c.nameCategory} " /> 
                                 </ui:repeat>
                             </p:column>
                             <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}" filterBy="#{p.nameDifficulty}" filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.nameDifficulty}" />
-                            </p:column>
-                            <p:column headerText="Descripcion" width="300">
-                                <h:outputText value="#{p.description}" />
                             </p:column>
                             <p:column headerText="AC" width="30" style="text-align: center !important;">
                                 <h:outputText value="#{p.statusAC}" />

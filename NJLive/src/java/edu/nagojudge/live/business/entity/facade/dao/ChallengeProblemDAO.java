@@ -60,7 +60,7 @@ public class ChallengeProblemDAO extends AbstractDAO<ChallengeProblem> {
         problemMessage.setNameProblem(problem.getNameProblem());
         problemMessage.setBestComplexity(problem.getIdComplexityAlgorithm().getNameComplexityAlgorithm());
         problemMessage.setMemoLimit(problem.getMemoLimit());
-        problemMessage.setTimeLimitSeg(problem.getTimeLimit());
+        problemMessage.setTimeLimit(problem.getTimeLimit());
         List<ProblemCategory> problemCategorys = problem.getProblemCategoryList();
         ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
         for (ProblemCategory category : problemCategorys) {

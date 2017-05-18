@@ -8,8 +8,8 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="idProblem" value="#{problemsBean.problemView.idProblem}"/>
-            <f:viewParam name="idAccount" value="#{problemsBean.accountView.idAccount}"/>
+            <f:viewParam name="idProblem" value="#{problemBean.problemView.idProblem}"/>
+            <f:viewParam name="idAccount" value="#{problemBean.accountView.idAccount}"/>
         </f:metadata>
     </ui:define>
 
@@ -44,7 +44,7 @@
                                               'danger': (s.idStatus eq 'TL'?
                                               'info': (s.idStatus eq 'RE'?
                                               'warning': (s.idStatus eq 'CE'?
-                                              'color-CE': null)))) }"
+                                              'ce': null)))) }"
                              value="#{submitBean.submitsAll}"
                              var="s"
                              emptyMessage="#{msg['general.table.noinfo']}">
@@ -54,17 +54,22 @@
                     </p:column>
                     <p:column headerText="#{msg['problem.label.nameProblem']}" width="200">
                         <h:commandLink value="#{utilBean.formatIdProblem(s.problemMessage.idProblem)} - #{s.problemMessage.nameProblem}"
-                                       action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                            <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.problemMessage.idProblem}" />
+                                       action="#{problemBean.actionRedirectViewToSubmitProblem}">
+                            <f:setPropertyActionListener target="#{problemBean.problemView.idProblem}" value="#{s.problemMessage.idProblem}" />
                         </h:commandLink>
                     </p:column>
                     <p:column headerText="#{msg['account.label.nameAccount']}" width="120">
-                        <h:commandLink value="#{s.accountMessage.nickname}" action="#{problemsBean.actionRedirectViewToProfile}">
-                            <f:setPropertyActionListener target="#{problemsBean.accountView.idAccount}" value="#{s.accountMessage.idAccount}" />
+                        <h:commandLink value="#{s.accountMessage.nickname}" action="#{problemBean.actionRedirectViewToProfile}">
+                            <f:setPropertyActionListener target="#{problemBean.accountView.idAccount}" value="#{s.accountMessage.idAccount}" />
                         </h:commandLink>
                     </p:column>
                     <p:column headerText="#{msg['submit.label.nameStatus']}" styleClass="bold-font" width="150">
                         <h:outputText value="#{s.nameStatus}" />
+                    </p:column>
+                    <p:column headerText="#{msg['submit.label.tiempo']}" width="60">
+                        <h:outputText value="#{s.timeUsed}" >
+                            <f:convertDateTime pattern="s.SSS" />
+                        </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg['submit.label.nameLanguag']}" width="60">
                         <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
@@ -82,7 +87,7 @@
                     <p:column headerText="#{msg['general.label.view']}" width="40">
                         <p:commandLink styleClass="glyphicon glyphicon-paperclip"
                                        oncomplete="PF('wv-view-code').show();"
-                                       action="#{problemsBean.actionViewCode(s.idSubmit)}" 
+                                       action="#{problemBean.actionViewCode(s.idSubmit)}" 
                                        update=":form-dlg-view-code" />
                     </p:column>
                 </p:dataTable>
@@ -101,7 +106,7 @@
                         <div class="panel-heading">#{msg['general.label.codeSource']}</div>
                         <div id="panel-body-dlg-view-code" class="panel-body" >
                             <p:inputTextarea id="text-area-view-code"
-                                             value="#{problemsBean.textCode}"
+                                             value="#{problemBean.textCode}"
                                              readonly="true"
                                              style="width: 90% !important; cursor: pointer !important;" />
                         </div>

@@ -36,15 +36,21 @@
                                 </h:outputLink> 
                             </p:column>
                             <p:column headerText="Categoria" width="30%" styleClass="text-left" >
-                                <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory">
-                                    <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':'label-info'}" value="#{c.nameCategory} " /> 
+                                <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory" >
+                                    <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':
+                                                                      c.idCategory eq 2? 'label-info':
+                                                                      c.idCategory eq 3? 'label-default':
+                                                                      c.idCategory eq 4? 'label-danger':
+                                                                      c.idCategory eq 5? 'label-primary':
+                                                                      c.idCategory eq 6? 'label-warning':
+                                                                      'label-info'}" value="#{c.nameCategory} " /> 
                                 </ui:repeat>
                             </p:column>
                             <p:column headerText="Complejidad" width="12%" styleClass="text-center" >
                                 <h:outputText value="#{p.bestComplexity} " /> 
                             </p:column>
                             <p:column headerText="Tiempo Max." width="9%" styleClass="text-center" >
-                                <h:outputText value="#{p.timeLimitSeg} " /> 
+                                <h:outputText value="#{p.timeLimit} " /> 
                             </p:column>
                             <p:column headerText="Memoria Max." width="9%" styleClass="text-center" >
                                 <h:outputText value="#{p.memoLimit}" /> 

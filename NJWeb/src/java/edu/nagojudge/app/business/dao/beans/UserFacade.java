@@ -77,11 +77,10 @@ public class UserFacade extends AbstractFacade<User> {
     }
 
     private void validateFieldsUnique(String email) throws NagoJudgeException {
-        EntityManager em = getEntityManager();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT COUNT(0) FROM USER WHERE LOWER(ID_EMAIL) = LOWER('").append(email).append("')");
-        Query query = em.createNativeQuery(sb.toString());
-        int count = Integer.parseInt(query.getSingleResult().toString());
+
+        Long count = (Long) em.createQuery("SELECT COUNT(0) FROM User a WHERE LOWER(a.idEmail) = LOWER(:id_email)")
+                .setParameter("id_email", email)
+                .getSingleResult();
         if (count >= 1) {
             throw new NagoJudgeException(" EL EMAIL " + email + " YA ESTA REGISTRADO. ");
         }
@@ -89,11 +88,8 @@ public class UserFacade extends AbstractFacade<User> {
     }
 
     public User findUserByIdAccount(long idAccount) {
-        EntityManager em = getEntityManager();
         User outcome;
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT p FROM ").append(User.class.getSimpleName()).append(" p WHERE p.idAccount.idAccount = :idAccount ");
-        Query query = em.createQuery(sb.toString()).setParameter("idAccount", idAccount);
+        Query query = em.createQuery("SELECT p FROM User p WHERE p.idAccount.idAccount = :id_account").setParameter("id_account", idAccount);
         outcome = (User) query.getResultList().get(0);
         logger.debug(outcome.getIdAccount());
         return outcome;

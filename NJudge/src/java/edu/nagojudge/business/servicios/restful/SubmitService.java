@@ -11,7 +11,6 @@ import edu.nagojudge.business.dao.beans.JudgeDAOFacade;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import java.io.IOException;
-import java.util.Date;
 import javax.ejb.EJB;
 import javax.naming.AuthenticationException;
 import javax.ws.rs.GET;

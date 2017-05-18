@@ -15,7 +15,6 @@ import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.ProblemMessage;
-import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,8 +24,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.model.UploadedFile;
 
@@ -36,7 +33,7 @@ import org.primefaces.model.UploadedFile;
  */
 @ManagedBean
 @ViewScoped
-public class ProblemsBean implements Serializable {
+public class ProblemBean implements Serializable {
 
     @EJB
     private SubmitFacade submitFacadeDAO;
@@ -44,10 +41,9 @@ public class ProblemsBean implements Serializable {
     @EJB
     private ProblemFacade problemFacade;
 
-    private final Logger logger = Logger.getLogger(ProblemsBean.class);
+    private final Logger logger = Logger.getLogger(ProblemBean.class);
 
     private final String TARGET_PATH = "/go/to/modules/content/problem/search.xhtml";
-    private final String KEYS_REQUEST[] = {"idProblem", "idAccount"};
 
     private List<ProblemMessage> listProblems;
     private List<ProblemMessage> filteredProblems;
@@ -66,13 +62,13 @@ public class ProblemsBean implements Serializable {
     private UploadedFile outputFile;
     private String textCode;
 
-    public ProblemsBean() {
+    public ProblemBean() {
     }
 
     @PostConstruct
     public void init() {
         if (problemView.getIdProblem() == null) {
-            this.listProblems = problemFacade.findProblemMessage();
+            this.listProblems = problemFacade.findStatisticsFromAllProblem();
         }
     }
 
@@ -94,7 +90,7 @@ public class ProblemsBean implements Serializable {
                 List<Category> categorys = new ArrayList<Category>();
                 categorys.add(categoryProblemView);
 
-                String idProblemCreated = problemFacade.createProblem(problemView, categorys, 
+                String idProblemCreated = problemFacade.createProblem(problemView, categorys,
                         difficultyLevel, complexityAlgorithmView,
                         problemFile.getContents(), inputFile.getContents(), outputFile.getContents());
                 FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Problema #" + idProblemCreated);
@@ -115,27 +111,6 @@ public class ProblemsBean implements Serializable {
     public void actionViewCode(Object idSubmit) {
         String codeText = submitFacadeDAO.findAttachmentSubmit(String.valueOf(idSubmit));
         setTextCode(codeText);
-    }
-
-    public void actionPreRenderViewToSubmitProblem() {
-
-        boolean validationFailed = FacesUtil.getFacesUtil().isValidationFailed();
-        if (validationFailed) {
-            logger.error("params [" + problemView.getIdProblem() + "]");
-            HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
-            session.invalidate();
-            FacesUtil.getFacesUtil().printErrorResponse("Authentication failed, contact administrator.");
-        } else {
-            try {
-                logger.debug("params [" + +problemView.getIdProblem() + "]");
-                this.problemView = problemFacade.find(problemView.getIdProblem());
-                this.pathSourceProblem = submitFacadeDAO.getFullPathProblem(problemView.getIdProblem(), TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension());
-            } catch (IOException ex) {
-                logger.error(ex);
-                FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-            }
-
-        }
     }
 
     public List<ProblemMessage> getListProblems() {

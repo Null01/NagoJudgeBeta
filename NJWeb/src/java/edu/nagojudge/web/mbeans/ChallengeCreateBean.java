@@ -66,7 +66,7 @@ public class ChallengeCreateBean implements Serializable {
     @PostConstruct
     public void init() {
 
-        this.listProblems = problemFacade.findProblemMessage();
+        this.listProblems = problemFacade.findStatisticsFromAllProblem();
         this.listTimes = challengeFacade.obtenerListaHorasInicioCompetencias();
         this.listQuantityProblems = challengeFacade.obtenerListaNumeroEnunciados();
         for (ProblemMessage problemPojo : listProblems) {
