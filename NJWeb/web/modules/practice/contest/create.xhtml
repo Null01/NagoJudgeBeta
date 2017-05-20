@@ -230,75 +230,43 @@
                                             <div class="col-md-4">
                                                 <p:inputText id="nameChallengeOutput"
                                                              styleClass="form-control"
-                                                             placeholder="#{msg['challenge.label.nameChallenge']}"
-                                                             required="true"
+                                                             readonly="true"
                                                              value="#{challengeCreateBean.challengeView.nameChallenge}" />
                                             </div>
-                                            <label for="nameRolAdminOutput" class="col-md-2 control-label">#{msg['challenge.label.nameOrganizer']}</label>
+                                            <label for="nameAuthorOutput" class="col-md-2 control-label">#{msg['challenge.label.nameOrganizer']}</label>
                                             <div class="col-md-4">
-                                                <p:inputText id="nameRolAdminOutput"
-                                                             styleClass="form-control"
-                                                             placeholder="#{msg['challenge.label.nameOrganizer']}"
-                                                             required="true"
+                                                <p:inputText id="nameAuthorOutput"
+                                                             styleClass="form-control"                                                         
+                                                             readonly="true"
                                                              value="#{challengeCreateBean.challengeView.emailOrganizer}" />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="dateChallengeStartOutput" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.start']}</label>
+                                            <label for="dateChallengeStartCompleteOutput" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.start']}</label>
                                             <div class="col-md-4">
-                                                <p:calendar id="dateChallengeStartOutput"
-                                                            pattern="MM/dd/yyyy"                                                    
-                                                            placeholder="02/05/2015"
-                                                            yearRange="c-50:c+5"
-                                                            navigator="true"
-                                                            required="true"
-                                                            value="#{challengeCreateBean.challengeView.dateStart}" />
+                                                <p:inputText id="dateChallengeStartCompleteOutput"
+                                                             styleClass="form-control"
+                                                             readonly="true"
+                                                             value="#{challengeCreateBean.textDateStartChallenge}" />
                                             </div>
-                                            <label for="timeChallengeStartOutput" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge.start']}</label>
+                                            <label for="dateChallengeEndCompleteOutput" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge.start']}</label>
                                             <div class="col-md-4">
-                                                <p:selectOneMenu id="timeChallengeStartOutput"
-                                                                 styleClass="selected-list form-control"
-                                                                 style="width: 100%;" 
-                                                                 value="#{challengeCreateBean.timeStartSelected}"
-                                                                 required="true">
-                                                    <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
-                                                    <f:selectItems value="#{challengeCreateBean.listTimes}"  />                                               
-                                                </p:selectOneMenu>
+                                                <p:inputText id="dateChallengeEndCompleteOutput"
+                                                             styleClass="form-control"
+                                                             readonly="true"
+                                                             value="#{challengeCreateBean.textDateEndChallenge}" />
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="dateChallengeEndOutput" class="col-md-2 control-label">#{msg['challenge.label.dateChallenge.end']}</label>
-                                            <div class="col-md-4">
-                                                <p:calendar id="dateChallengeEndOutput"
-                                                            pattern="MM/dd/yyyy"                                                    
-                                                            placeholder="02/05/2015"
-                                                            yearRange="c-50:c+5"
-                                                            navigator="true"
-                                                            required="true"
-                                                            value="#{challengeCreateBean.challengeView.dateEnd}" />
-                                            </div>
-                                            <label for="timeChallengeEndOutput" class="col-md-2 control-label">#{msg['challenge.label.timeChallenge.end']}</label>
-                                            <div class="col-md-4">
-                                                <p:selectOneMenu id="timeChallengeEndOutput"
-                                                                 styleClass="selected-list form-control"
-                                                                 style="width: 100%;" 
-                                                                 value="#{challengeCreateBean.timeEndSelected}"
-                                                                 required="true">
-                                                    <f:selectItem value="#{null}" itemLabel="Seleccione una opción" />
-                                                    <f:selectItems value="#{challengeCreateBean.listTimes}"  />                                               
-                                                </p:selectOneMenu>
-                                            </div>
-                                        </div>
-
                                         <div class="form-group">
                                             <label for="descriptionChallengeOutput" class="col-md-2 control-label">#{msg['challenge.label.descriptionChallenge']}</label>
-                                            <div class="col-md-4">
+                                            <div class="col-md-10">
                                                 <p:inputTextarea id="descriptionProblemOutput"
-                                                                 rows="5"
+                                                                 rows="4"
+                                                                  styleClass="form-control"
                                                                  style="width: 100%;"
                                                                  autoResize="false" 
                                                                  placeholder="#{msg['challenge.label.descriptionChallenge.placeholder']}"
-                                                                 required="true" 
+                                                                 readonly="true" 
                                                                  value="#{challengeCreateBean.challengeView.description}" />
                                             </div>
                                         </div>
@@ -312,7 +280,85 @@
                         <div class="panel-body">
                             <div class="well">
                                 <div class="panel-body">
-                                    UNO
+                                    <p:dataTable id="table-problems-contest-selected"
+                                                 var="p"
+                                                 widgetVar="cpWidgetVar"
+                                                 tableStyleClass="table table-striped table-hover"
+                                                 value="#{challengeCreateBean.listProblemsSelectedFinally}"
+                                                 styleClass="center-block"
+                                                 rowKey="#{p.idProblem}"
+                                                 paginator="true"
+                                                 paginatorPosition="bottom"
+                                                 emptyMessage="#{msg['general.table.noinfo']}">
+                                        <f:facet name="header">
+                                            <p:outputPanel>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                                                        </span>
+                                                        <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('cpWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{challengeCreateBean.searchParameter}"/>
+                                                    </div>
+                                                </div>
+                                            </p:outputPanel>
+                                        </f:facet>
+
+                                        <p:column headerText="" width="25">                                   
+                                            <p:selectBooleanCheckbox value="#{challengeCreateBean.mapProblemsSelected[ p.idProblem ]}" >
+                                                <p:ajax listener="#{challengeCreateBean.actionUpdateListenerProblemsSelected}" update="@form" />
+                                            </p:selectBooleanCheckbox>
+                                        </p:column>
+                                        <p:column headerText="Id" width="80" sortBy="#{p.idProblem}" filterStyle="display:none;" >
+                                            <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
+                                        </p:column>
+                                        <p:column headerText="Problem" width="200" sortBy="#{p.nameProblem}">
+                                            <h:commandLink value="#{p.nameProblem}" action="#{problemBean.actionRedirectViewToSubmitProblem}">
+                                                <f:setPropertyActionListener target="#{pproblemBeanproblemView.idProblem}" value="#{p.idProblem}" />
+                                            </h:commandLink>
+                                        </p:column>
+                                        <p:column headerText="Autor" width="240" sortBy="#{p.author}" filterBy="#{p.author}" filterStyle="display:none;" filterMatchMode="contains">
+                                            <h:outputText value="#{p.author}" />
+                                        </p:column>
+                                        <p:column headerText="Categoria" width="200" styleClass="text-left" >
+                                            <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory" >
+                                                <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':
+                                                                                  c.idCategory eq 2? 'label-info':
+                                                                                  c.idCategory eq 3? 'label-default':
+                                                                                  c.idCategory eq 4? 'label-danger':
+                                                                                  c.idCategory eq 5? 'label-primary':
+                                                                                  c.idCategory eq 6? 'label-warning':
+                                                                                  'label-info'}" value="#{c.nameCategory} " /> 
+                                            </ui:repeat>
+                                        </p:column>
+
+                                        <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}"  filterBy="#{p.nameDifficulty}" filterStyle="display:none;" filterMatchMode="contains">
+                                            <h:outputText value="#{p.nameDifficulty}" />
+                                        </p:column>
+                                        <p:column headerText="AC" width="30" style="text-align: center !important;" sortBy="#{p.statusAC}" >
+                                            <h:outputText value="#{p.statusAC}" />
+                                        </p:column>
+                                        <p:column headerText="WR" width="30" style="text-align: center !important;" sortBy="#{p.statusWR}" >
+                                            <h:outputText value="#{p.statusWR}" />
+                                        </p:column>
+                                        <p:column headerText="TL" width="30" style="text-align: center !important;" sortBy="#{p.statusTL}" >
+                                            <h:outputText value="#{p.statusTL}" />
+                                        </p:column>
+                                        <p:column headerText="RE" width="30" style="text-align: center !important;" sortBy="#{p.statusRE}" >
+                                            <h:outputText value="#{p.statusRE}" />
+                                        </p:column>
+                                        <p:column headerText="CE" width="30" style="text-align: center !important;" sortBy="#{p.statusCE}" >
+                                            <h:outputText value="#{p.statusCE}" />
+                                        </p:column>
+                                        <p:column headerText="CS" width="30" style="text-align: center !important;" sortBy="#{p.statusCS}" >
+                                            <h:outputText value="#{p.statusCS}" />
+                                        </p:column>
+                                        <p:column headerText="IP" width="30" style="text-align: center !important;" sortBy="#{p.statusIP}" >
+                                            <h:outputText value="#{p.statusIP}" />
+                                        </p:column>
+                                        <p:column headerText="Total" width="30" style="text-align: center !important;" sortBy="#{p.totalStatus}" >
+                                            <h:outputText value="#{p.totalStatus}" />
+                                        </p:column>
+                                    </p:dataTable>
                                 </div>
                             </div>
                         </div>

@@ -29,7 +29,7 @@
                                            value="Puntuación"
                                            action="#{navegationRoomBean.actionRedirectScoreBoard}" />
                             <h:commandLink styleClass="btn btn-default" style="width: 160px;"
-                                           value="Envios"
+                                           value="Mis Envios"
                                            action="#{navegationRoomBean.actionRedirectSubmitsBoard}" />
                         </div>
                         <ul class="nav navbar-nav navbar-form navbar-right text-center">
@@ -50,7 +50,7 @@
                 <div class="col-md-12 text-center">
                     <h3>
                         <pe:timer timeout="#{navegationRoomBean.timeEndingChallenge}"
-                                  format="[Tiempo:] DD [dias] HH:mm:ss" />
+                                  format="[Tiempo Restante:] DD [dias] HH:mm:ss" />
                     </h3>
                 </div>
             </nav>

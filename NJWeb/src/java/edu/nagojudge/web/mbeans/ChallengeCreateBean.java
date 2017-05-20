@@ -12,6 +12,7 @@ import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.TransformUtil;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +48,8 @@ public class ChallengeCreateBean implements Serializable {
     private Map<Long, Boolean> mapProblemsSelected = new HashMap<Long, Boolean>();
     private Map<Long, ProblemMessage> mapProblemsSelectedObject = new HashMap<Long, ProblemMessage>();
     private List<ProblemMessage> listProblemsSelectedFinally = new ArrayList<ProblemMessage>();
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/YYYY");
 
     private List<String> listTimes = new ArrayList<String>();
     private String timeStartSelected;
@@ -104,6 +107,14 @@ public class ChallengeCreateBean implements Serializable {
         } finally {
             logger.debug("FINALIZA METODO - actionSaveCompleteChallenge()");
         }
+    }
+
+    public String getTextDateStartChallenge() {
+        return dateFormat.format(challengeView.getDateStart()) + " " + timeStartSelected;
+    }
+
+    public String getTextDateEndChallenge() {
+        return dateFormat.format(challengeView.getDateEnd()) + " " + timeEndSelected;
     }
 
     public Challenge getChallengeView() {

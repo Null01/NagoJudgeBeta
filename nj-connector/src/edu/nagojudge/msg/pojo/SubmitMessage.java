@@ -23,6 +23,7 @@ public class SubmitMessage implements Serializable {
     private String visibleWeb;
     private String _idStatus;
     private String _nameStatus;
+    private String _descriptionStatus;
     private LanguageProgrammingMessage languageProgrammingMessage;
     private ProblemMessage problemMessage;
     private AccountMessage accountMessage;
@@ -100,6 +101,14 @@ public class SubmitMessage implements Serializable {
 
     public void setIdStatus(String _idStatus) {
         this._idStatus = _idStatus;
+    }
+
+    public String getDescriptionStatus() {
+        return _descriptionStatus;
+    }
+
+    public void setDescriptionStatus(String _descriptionStatus) {
+        this._descriptionStatus = _descriptionStatus;
     }
 
     public String getNameStatus() {

@@ -96,13 +96,17 @@
                         <p:column headerText="Lenguaje" width="8%" styleClass="text-center" >
                             <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
                         </p:column>
+                        <p:column headerText="Tiempo" width="8%" styleClass="text-center" >
+                            <h:outputText  value="#{s.timeUsed}" />
+                        </p:column>
                         <p:column headerText="Fecha Envio" width="15%" styleClass="text-center" >
                             <h:outputText value="#{s.dateSubmit}" >
                                 <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" timeZone=""  />
                             </h:outputText>
                         </p:column>
                         <p:column headerText="Estado" width="20%" styleClass="text-center" >
-                            <h:outputText value="#{s.nameStatus}" />
+                            <h:outputText id="tooltipEstado" value="#{s.nameStatus}" />
+                            <p:tooltip for="tooltipEstado" value="#{s.descriptionStatus}" position="left"/>
                         </p:column>
                         <p:column width="8%" styleClass="text-center" >
                             <ui:fragment rendered="#{s.idStatus eq 'AC'}" >

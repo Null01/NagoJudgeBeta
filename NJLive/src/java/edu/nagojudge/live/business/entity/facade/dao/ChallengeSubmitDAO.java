@@ -167,6 +167,7 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
                 submitMessage.setIdSubmit(submit.getIdSubmit());
                 submitMessage.setIdStatus(submit.getIdStatus().getKeyStatus());
                 submitMessage.setNameStatus(submit.getIdStatus().getNameStatus());
+                submitMessage.setDescriptionStatus(submit.getIdStatus().getDescription());
                 submitMessage.setDateSubmit(submit.getDateSubmit() != null ? submit.getDateSubmit().getTime() : 0);
 
                 LanguageProgrammingMessage languageProgrammingMessage = new LanguageProgrammingMessage();
