@@ -10,7 +10,7 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="idProblem"
-                         value="#{problemBean.problemView.idProblem}"/>
+                         value="#{problemViewBean.problemMessage.idProblem}"/>
         </f:metadata>
     </ui:define>
 
@@ -25,9 +25,9 @@
                                      var="p"
                                      widgetVar="coWidgetVar"
                                      tableStyleClass="table table-striped table-hover"
-                                     value="#{problemBean.listProblems}"
+                                     value="#{problemViewBean.listProblems}"
                                      styleClass="center-block"
-                                     filteredValue="#{problemBean.filteredProblems}"
+                                     filteredValue="#{problemViewBean.filteredProblems}"
                                      rowKey="#{p.idProblem}"
                                      rows="15"
                                      paginator="true"
@@ -45,19 +45,23 @@
                                     </div>
                                 </p:outputPanel>
                             </f:facet>
-                            <p:column headerText="Id Problem" width="100" filterBy="#{p.idProblem}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Id Problem" width="100" filterBy="#{p.idProblem}"
+                                      filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
                             </p:column>
                             <p:column headerText="Problem" width="220">
                                 <h:commandLink value="#{p.nameProblem}"
-                                               action="#{problemBean.actionRedirectViewToSubmitProblem()}">
-                                    <f:setPropertyActionListener target="#{problemBean.problemView.idProblem}" value="#{p.idProblem}" />
+                                               action="#{problemViewBean.actionRedirectViewToSubmitProblem}">
+                                    <f:setPropertyActionListener target="#{problemViewBean.problemMessage.idProblem}"
+                                                                 value="#{p.idProblem}" />
                                 </h:commandLink>
                             </p:column>
-                            <p:column headerText="Autor" width="240" sortBy="#{p.author}" filterBy="#{p.author}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Autor" width="240" sortBy="#{p.author}" filterBy="#{p.author}"
+                                      filterStyle="display:none;" filterMatchMode="contains">
                                 <h:outputText value="#{p.author}" />
                             </p:column>
-                            <p:column headerText="Categoria" width="200"  filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Categoria" width="200"  filterStyle="display:none;"
+                                      filterMatchMode="contains">
                                 <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory">
                                     <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':
                                                                       c.idCategory eq 2? 'label-info':
@@ -68,7 +72,9 @@
                                                                       'label-info'}" value="#{c.nameCategory} " /> 
                                 </ui:repeat>
                             </p:column>
-                            <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}" filterBy="#{p.nameDifficulty}" filterStyle="display:none;" filterMatchMode="contains">
+                            <p:column headerText="Dificultad" width="200" sortBy="#{p.nameDifficulty}"
+                                      filterBy="#{p.nameDifficulty}" filterStyle="display:none;"
+                                      filterMatchMode="contains">
                                 <h:outputText value="#{p.nameDifficulty}" />
                             </p:column>
                             <p:column headerText="AC" width="30" style="text-align: center !important;">

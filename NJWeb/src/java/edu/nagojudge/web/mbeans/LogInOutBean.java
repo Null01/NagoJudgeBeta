@@ -32,7 +32,7 @@ public class LogInOutBean implements Serializable {
 
     private String username = "agarciad1@ucentral.edu.co", password;
 
-    private final String TARGET_PATH_LOGIN = "/go/to/home.xhtml";
+    private final String TARGET_PATH_LOGIN = "/go/to/modules/board/score.xhtml";
     private final String TARGET_PATH_LOGOUT = "/go/";
 
     /**

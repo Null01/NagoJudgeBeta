@@ -7,10 +7,12 @@ package edu.nagojudge.app.business.dao.beans;
 
 import com.google.zxing.WriterException;
 import edu.nagojudge.app.business.dao.entities.Account;
+import edu.nagojudge.app.business.dao.entities.TypeUser;
 import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.app.utils.constants.IKeysApplication;
+import edu.nagojudge.msg.pojo.AccountMessage;
 import edu.nagojudge.msg.pojo.UserMessage;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import java.io.IOException;
@@ -87,14 +89,6 @@ public class UserFacade extends AbstractFacade<User> {
 
     }
 
-    public User findUserByIdAccount(long idAccount) {
-        User outcome;
-        Query query = em.createQuery("SELECT p FROM User p WHERE p.idAccount.idAccount = :id_account").setParameter("id_account", idAccount);
-        outcome = (User) query.getResultList().get(0);
-        logger.debug(outcome.getIdAccount());
-        return outcome;
-    }
-
     public String createUserCommon(User user, Account account) throws NoSuchFileException, NagoJudgeException, WriterException, IOException, MessagingException, Exception {
         logger.debug("INICIA METODO createUserCommon @ECHO");
         try {
@@ -164,31 +158,48 @@ public class UserFacade extends AbstractFacade<User> {
 
     public List<UserMessage> findAllUsersMessage() {
         List<UserMessage> outcome = new ArrayList<UserMessage>();
-        List<User> findAll = findAll();
-        if (findAll != null && !findAll.isEmpty()) {
-            for (User user : findAll) {
-                outcome.add(parseUserEntityToMessage(user));
+        List<Account> accounts = em.createQuery("SELECT a FROM Account a", Account.class)
+                .getResultList();
+        if (accounts != null) {
+            for (Account account : accounts) {
+                if (account != null) {
+                    if (account.getUserList() != null && !account.getUserList().isEmpty()) {
+                        UserMessage userMessage = parseEntityAccountToMessage(account, account.getUserList().get(0));
+                        outcome.add(userMessage);
+                    }
+                }
             }
         }
         return outcome;
     }
 
-    public String autoGenerateString() {
+    public String textAutoGenerateString() {
         SecureRandom random = new SecureRandom();
         String string = new BigInteger(130, random).toString(32);
-        return string.substring(0, 5);
+        return string.substring(0, 7);
     }
 
-    private UserMessage parseUserEntityToMessage(User user) {
+    private UserMessage parseEntityAccountToMessage(Account account, User user) {
         UserMessage userMessage = new UserMessage();
-        userMessage.setDateBirthday(user.getDateBirthday() == null ? 0 : user.getDateBirthday().getTime());
+        userMessage.setDateBirthday(user.getDateBirthday() != null ? user.getDateBirthday().getTime() : 0);
         userMessage.setEmail(user.getIdEmail());
         userMessage.setFirstName(user.getFirstName());
-        userMessage.setIdAccount(user.getIdAccount().getIdAccount());
+        userMessage.setKeyUser(user.getPasswordUser());
         userMessage.setLastName(user.getLastName());
         userMessage.setNameTypeUser(user.getIdType().getNameType());
-        userMessage.setNicknameAccount(user.getIdAccount().getNickname());
+
+        AccountMessage accountMessage = new AccountMessage();
+        if (account != null) {
+            accountMessage.setDateRegister(account.getDateRegister() != null ? account.getDateRegister().getTime() : 0);
+            accountMessage.setIdAccount(account.getIdAccount());
+            accountMessage.setNickname(account.getNickname());
+        }
+        userMessage.setAccountMessage(accountMessage);
         return userMessage;
+    }
+
+    public long createUserCommon(UserMessage userMessage, AccountMessage accountMessage, TypeUser typeUser, byte[] contents) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -1,0 +1,105 @@
+
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+    <ui:define name="content">
+        <div class="well bs-component">
+            <h:form id="form-create-user" class="form-horizontal" enctype="multipart/form-data">
+                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                <fieldset>
+                    <div class="form-group">
+                        <label for="nameUser" class="col-md-1 control-label">Nombre</label>
+                        <div class="col-md-3">
+                            <p:inputText id="nameUser" styleClass="form-control" placeholder="Nombre"
+                                         value="#{userCreateBean.userMessage.firstName}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="lastName" class="col-md-1 control-label">Apellidos</label>
+                        <div class="col-md-3">
+                            <p:inputText id="lastName" styleClass="form-control" placeholder="Nombre del autor"
+                                         value="#{userCreateBean.userMessage.lastName}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="emailUser" class="col-md-1 control-label">Correo Electronico</label>
+                        <div class="col-md-3">
+                            <p:inputText id="emailUser" 
+                                         styleClass="form-control"
+                                         placeholder="Correo Electronico"
+                                         value="#{userCreateBean.userMessage.email}"
+                                         required="true" >
+                                <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-md-1 control-label">Password</label>
+                        <div class="col-md-3">
+                            <p:inputText id="password" styleClass="form-control" placeholder="Password" readonly="true"
+                                         value="#{userCreateBean.userMessage.keyUser}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="dateBirthday" class="col-md-1 control-label">Fecha Nacimiento</label>
+                        <div class="col-md-3">
+                            <p:calendar id="dateBirthday"
+                                        pattern="MM/dd/yyyy"                                                    
+                                        placeholder="02/05/2015"
+                                        yearRange="c-50:c+5"
+                                        navigator="true"
+                                        required="true"
+                                        value="#{userCreateBean.dateBirthdayUser}" />
+                        </div>
+                        <label for="typeUser" class="col-md-1 control-label">Rol</label>
+                        <div class="col-md-3">
+                            <p:selectOneMenu id="typeUser" 
+                                             styleClass="selected-list form-control" 
+                                             style="width: 100%;"
+                                             converter="typeUserConvertJSF"
+                                             value="#{userCreateBean.typeUser}"
+                                             required="true" >
+                                <f:selectItem value="#{null}" itemLabel="Seleccione un rol de usuario." />
+                                <f:selectItems value="#{userCreateBean.typeUserItems}" />                                               
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname" class="col-md-1 control-label">Nickname</label>
+                        <div class="col-md-3">
+                            <p:inputText id="nickname" styleClass="form-control" placeholder="Nickname"
+                                         value="#{userCreateBean.accountMessage.nickname}"
+                                         required="true" >
+                                <f:validateLength minimum="3" maximum="40" />
+                            </p:inputText>
+                        </div>
+                        <label for="photoUser" class="col-md-1 control-label">Imagen</label>
+                        <div class="col-md-3">
+                            <p:fileUpload id="photoUser"
+                                          styleClass="form-control" 
+                                          value="#{userCreateBean.imageUserFile}"
+                                          mode="simple"
+                                          label="#{msg['general.label.archivo.upload']}"
+                                          allowTypes="/(\.|\/)(png|jpg|gif)$/" />
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <p:commandButton id="btn-create-user"
+                                         ajax="false"
+                                         styleClass="btn btn-default"
+                                         value="Crear usuario"
+                                         update="@form"
+                                         action="#{userCreateBean.actionCreateUser}"/>
+                    </div>
+                </fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

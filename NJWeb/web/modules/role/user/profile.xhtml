@@ -9,8 +9,10 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="idAccount"
-                         value="#{profileBean.accountView.idAccount}"
-                         required="true"/>
+                         value="#{profileBean.accountMessage.idAccount}"
+                         required="true">
+                <f:validateLongRange minimum="1" maximum="9999999" />
+            </f:viewParam>
             <f:event type="preRenderView"
                      listener="#{profileBean.actionPreRenderViewToProfile}" />
         </f:metadata>
@@ -19,7 +21,7 @@
     <ui:define name="content">
 
         <div class="panel panel-default">
-            <div class="panel-heading">Hola, #{profileBean.accountView.nickname}</div>
+            <div class="panel-heading">Hola, #{profileBean.accountMessage.nickname}</div>
 
             <p:accordionPanel>
 
@@ -39,15 +41,15 @@
                                         </label>
                                         <label for="firstName" class="col-md-1 control-label">#{msg['general.user.label.firstName']}</label>
                                         <div class="col-md-2">
-                                            <p:inputText id="firstName" styleClass="form-control" value="#{profileBean.userView.firstName}" readonly="true" />
+                                            <p:inputText id="firstName" styleClass="form-control" value="#{profileBean.userMessage.firstName}" readonly="true" />
                                         </div>
                                         <label for="lastName" class="col-md-1 control-label">#{msg['general.user.label.lastName']}</label>
                                         <div class="col-md-2">
-                                            <p:inputText id="lastName" styleClass="form-control" value="#{profileBean.userView.lastName}" readonly="true" />
+                                            <p:inputText id="lastName" styleClass="form-control" value="#{profileBean.userMessage.lastName}" readonly="true" />
                                         </div>
                                         <label for="email" class="col-md-1 control-label">#{msg['general.user.label.email']}</label>
                                         <div class="col-md-3">
-                                            <p:inputText id="email" styleClass="form-control" value="#{profileBean.userView.idEmail}" readonly="true" />
+                                            <p:inputText id="email" styleClass="form-control" value="#{profileBean.userMessage.email}" readonly="true" />
                                         </div>
                                     </div>
                                 </fieldset>
@@ -76,7 +78,7 @@
                                                          value="#{profileBean.listProblemsTry}"
                                                          styleClass="center-block"
                                                          selectionMode="single"
-                                                         selection="#{profileBean.problemView}"
+                                                         selection="#{profileBean.problemMessage}"
                                                          rowKey="#{p.idProblem}"
                                                          filteredValue="#{profileBean.filteredProblemsTry}"
                                                          emptyMessage="#{msg['general.table.noinfo']}">
@@ -114,8 +116,6 @@
                                                 </p:column>
                                             </p:dataTable>
                                         </div>
-
-
                                     </div>
 
                                     <div class="col-md-6">
@@ -181,8 +181,8 @@
                                                 <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
                                             </p:column>
                                             <p:column headerText="Problem" width="200" filterBy="#{s.idSubmit}" filterStyle="display:none;" filterMatchMode="contains">
-                                                <h:commandLink value="#{utilBean.formatIdProblem(s.problemMessage.idProblem)} - #{s.problemMessage.nameProblem}" action="#{problemBean.actionRedirectViewToSubmitProblem}">
-                                                    <f:setPropertyActionListener target="#{problemBean.problemView.idProblem}" value="#{s.problemMessage.idProblem}" />
+                                                <h:commandLink value="#{utilBean.formatIdProblem(s.problemMessage.idProblem)} - #{s.problemMessage.nameProblem}" action="#{problemCreateBean.actionRedirectViewToSubmitProblem}">
+                                                    <f:setPropertyActionListener target="#{problemCreateBean.problemView.idProblem}" value="#{s.problemMessage.idProblem}" />
                                                 </h:commandLink>
                                             </p:column>
 

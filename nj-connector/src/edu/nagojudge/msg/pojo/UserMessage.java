@@ -20,22 +20,28 @@ public class UserMessage implements Serializable {
     private String firstName;
     private String lastName;
     private Long dateBirthday;
-    private Long idAccount;
-    private String nicknameAccount;
     private String nameTypeUser;
+    private AccountMessage accountMessage;
 
     public UserMessage() {
     }
 
-    public UserMessage(String email, String keyUser, String firstName, String lastName, Long dateBirthday, Long idAccount, String nicknameAccount, String nameTypeUser) {
+    public UserMessage(String email, String keyUser, String firstName, String lastName, Long dateBirthday, String nameTypeUser, AccountMessage accountMessage) {
         this.email = email;
         this.keyUser = keyUser;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateBirthday = dateBirthday;
-        this.idAccount = idAccount;
-        this.nicknameAccount = nicknameAccount;
         this.nameTypeUser = nameTypeUser;
+        this.accountMessage = accountMessage;
+    }
+
+    public AccountMessage getAccountMessage() {
+        return accountMessage;
+    }
+
+    public void setAccountMessage(AccountMessage accountMessage) {
+        this.accountMessage = accountMessage;
     }
 
     public String getEmail() {
@@ -76,22 +82,6 @@ public class UserMessage implements Serializable {
 
     public void setDateBirthday(Long dateBirthday) {
         this.dateBirthday = dateBirthday;
-    }
-
-    public Long getIdAccount() {
-        return idAccount;
-    }
-
-    public void setIdAccount(Long idAccount) {
-        this.idAccount = idAccount;
-    }
-
-    public String getNicknameAccount() {
-        return nicknameAccount;
-    }
-
-    public void setNicknameAccount(String nicknameAccount) {
-        this.nicknameAccount = nicknameAccount;
     }
 
     public String getNameTypeUser() {

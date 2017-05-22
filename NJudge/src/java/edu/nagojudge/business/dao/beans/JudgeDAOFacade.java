@@ -160,6 +160,7 @@ public class JudgeDAOFacade {
             }
             logger.debug("JUDGE_FINALLY [" + judgetState.getStatusName() + "]");
             submit.setDateJudge(Calendar.getInstance().getTime());
+            submit.setTimeUsed(BigInteger.valueOf(judgetState.getTimeUsed()));
             submit.setIdStatus(em.createQuery("SELECT ss FROM SubmitStatus ss WHERE ss.keyStatus = :id_status ", SubmitStatus.class)
                     .setParameter("id_status", judgetState.getStatusName())
                     .getSingleResult());

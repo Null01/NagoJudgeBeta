@@ -165,7 +165,7 @@
                                             <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
                                         </p:column>
                                         <p:column headerText="Problem" width="200" sortBy="#{p.nameProblem}">
-                                            <h:commandLink value="#{p.nameProblem}" action="#{problemBean.actionRedirectViewToSubmitProblem}">
+                                            <h:commandLink value="#{p.nameProblem}" action="#{problemCreateBean.actionRedirectViewToSubmitProblem}">
                                                 <f:setPropertyActionListener target="#{pproblemBeanproblemView.idProblem}" value="#{p.idProblem}" />
                                             </h:commandLink>
                                         </p:column>
@@ -312,7 +312,7 @@
                                             <h:outputText value="#{utilBean.formatIdProblem(p.idProblem)}" />
                                         </p:column>
                                         <p:column headerText="Problem" width="200" sortBy="#{p.nameProblem}">
-                                            <h:commandLink value="#{p.nameProblem}" action="#{problemBean.actionRedirectViewToSubmitProblem}">
+                                            <h:commandLink value="#{p.nameProblem}" action="#{problemCreateBean.actionRedirectViewToSubmitProblem}">
                                                 <f:setPropertyActionListener target="#{pproblemBeanproblemView.idProblem}" value="#{p.idProblem}" />
                                             </h:commandLink>
                                         </p:column>

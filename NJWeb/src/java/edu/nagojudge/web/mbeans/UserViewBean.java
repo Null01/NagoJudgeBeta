@@ -35,7 +35,7 @@ import org.primefaces.model.UploadedFile;
  */
 @ManagedBean
 @ViewScoped
-public class UserBean implements Serializable {
+public class UserViewBean implements Serializable {
 
     @EJB
     private TypeUserFacade typeUserFacade;
@@ -43,10 +43,9 @@ public class UserBean implements Serializable {
     @EJB
     private UserFacade userFacade;
 
-    private final Logger logger = Logger.getLogger(UserBean.class);
+    private final Logger logger = Logger.getLogger(UserViewBean.class);
 
     private final String TARGET_PATH = "/go/to/modules/user/search.xhtml";
-    private final String KEYS_REQUEST[] = {"idProblem", "idAccount"};
 
     private List<UserMessage> listUsers = new ArrayList<UserMessage>();
     private List<UserMessage> filteredUsers = new ArrayList<UserMessage>();
@@ -58,14 +57,16 @@ public class UserBean implements Serializable {
     private String searchParameter;
     private UploadedFile imageUserFile;
 
-    public UserBean() {
+    public UserViewBean() {
     }
 
     @PostConstruct
     public void init() {
+
         this.listUsers = userFacade.findAllUsersMessage();
         this.typeUserItems = parceToSelectItemTypeUsers(typeUserFacade.findAll());
-        userView.setPasswordUser(userFacade.autoGenerateString());
+        userView.setPasswordUser(userFacade.textAutoGenerateString());
+
     }
 
     public void actionCreateUser(ActionEvent event) {
@@ -101,7 +102,7 @@ public class UserBean implements Serializable {
     }
 
     public void actionChangePasswordGenerate(ActionEvent actionEvent) {
-        userView.setPasswordUser(userFacade.autoGenerateString());
+        userView.setPasswordUser(userFacade.textAutoGenerateString());
     }
 
     public List<UserMessage> getListUsers() {

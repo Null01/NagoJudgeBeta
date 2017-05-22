@@ -12,25 +12,27 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="idProblem"
-                         value="#{problemViewBean.problemMessage.idProblem}"
-                         required="true"/>
+                         value="#{submitViewBean.problemMessage.idProblem}"
+                         required="true" >
+                <f:validateLongRange minimum="1" maximum="9999999" />
+            </f:viewParam>
             <f:event type="preRenderView"
-                     listener="#{problemViewBean.actionPreRenderViewToSubmitProblem}" />
+                     listener="#{submitViewBean.actionPreRenderViewToSubmitProblem}" />
         </f:metadata>
     </ui:define>
 
     <ui:define name="content">
 
-        <ui:fragment rendered="#{problemViewBean.problemMessage.idProblem != 0}">
+        <ui:fragment rendered="#{submitViewBean.problemMessage.idProblem != 0}">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-md-7">
 
                         <div class="form-group">
-                            <iframe src="#{problemViewBean.pathSourceProblem}"
+                            <iframe src="#{submitViewBean.pathSourceProblem}"
                                     style="width: 100%;"
                                     height="550"
-                                    rendered="#{problemViewBean.pathSourceProblem != null}"></iframe>
+                                    rendered="#{submitViewBean.pathSourceProblem != null}"></iframe>
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -42,7 +44,7 @@
                                         <p:inputText id="nameProblem"
                                                      styleClass="form-control"
                                                      readonly="true"
-                                                     value="#{utilBean.formatIdProblem(problemViewBean.problemMessage.idProblem)} - #{problemViewBean.problemMessage.nameProblem}"/>
+                                                     value="#{utilBean.formatIdProblem(submitViewBean.problemMessage.idProblem)} - #{submitViewBean.problemMessage.nameProblem}"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -51,7 +53,7 @@
                                         <p:inputText id="complexityProblem"
                                                      styleClass="form-control text-center"
                                                      readonly="true"
-                                                     value="#{problemViewBean.problemMessage.bestComplexity}"/>
+                                                     value="#{submitViewBean.problemMessage.bestComplexity}"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -60,7 +62,7 @@
                                         <p:inputText id="timeProblem"
                                                      styleClass="form-control text-center"
                                                      readonly="true"
-                                                     value="#{problemViewBean.problemMessage.timeLimit} Segundos"/>
+                                                     value="#{submitViewBean.problemMessage.timeLimit} Segundos"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -69,7 +71,7 @@
                                         <p:inputText id="memoProblem"
                                                      styleClass="form-control text-center"
                                                      readonly="true"
-                                                     value="#{problemViewBean.problemMessage.memoLimit}"/>
+                                                     value="#{submitViewBean.problemMessage.memoLimit}"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -78,7 +80,7 @@
                                         <p:inputTextarea id="descriptionProblem"
                                                          styleClass="form-control text-center"
                                                          readonly="true"
-                                                         value="#{(empty problemViewBean.problemMessage.description )?'N/A':problemViewBean.problemMessage.description}" />
+                                                         value="#{(empty submitViewBean.problemMessage.description )?'N/A':submitViewBean.problemMessage.description}" />
                                     </div>
                                 </div>
 
@@ -89,8 +91,7 @@
                                                          styleClass="form-control"
                                                          style="width: 100%;"
                                                          converter="languageProgrammingConvertJSF"
-                                                         value="#{problemViewBean.languageProgrammingView}"
-                                                        >
+                                                         value="#{submitViewBean.languageProgrammingView}" >
                                             <f:selectItem value="#{null}" itemLabel="Seleccione un lenguaje" />         
                                             <f:selectItems value="#{languageBean.listLanguageProgrammingItems}" />                                               
                                         </p:selectOneMenu>
@@ -101,7 +102,7 @@
                                     <div class="col-md-9">
                                         <p:fileUpload id="uploadSourceCode"
                                                       styleClass="form-control center-block"
-                                                      value="#{problemViewBean.codeSourceFile}"
+                                                      value="#{submitViewBean.codeSourceFile}"
                                                       mode="simple"
                                                       skinSimple="false"
                                                       allowTypes="/(\.|\/)(java|cpp|c)$/"
@@ -115,7 +116,7 @@
                                     <p:commandButton styleClass="btn btn-default center-block text-center col-md-12"
                                                      value="Enviar solucion"
                                                      ajax="false"
-                                                     action="#{problemViewBean.actionSubmitSolution}"
+                                                     action="#{submitViewBean.actionSubmitSolution}"
                                                      update="messages, @form"/>
                                 </div>
                             </fieldset>

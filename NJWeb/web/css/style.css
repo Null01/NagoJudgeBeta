@@ -150,3 +150,17 @@ a:link {
     color: inherit;
     text-decoration: none;
 } 
+
+/* ManyCheckbox */
+.select-many-checkbox tbody {
+    border-spacing: 2px !important;
+}
+
+.ui-selectmanycheckbox label {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 16px 0 8px;
+    outline: medium none;
+    vertical-align: middle;
+    z-index: 1;
+}

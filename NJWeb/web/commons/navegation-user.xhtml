@@ -16,16 +16,20 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="/go/to/home.xhtml" class="navbar-brand" >
+                    <a href="#" class="navbar-brand" >
                         <span class="glyphicon glyphicon-education" aria-hidden="true"/> NagoJudge
                     </a>
                 </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">                                
+                <div class="collapse navbar-collapse">                                
                     <ul class="nav navbar-nav">
                         <ui:repeat var="level1" value="#{navigationBean.treeNavigation.children}" >
-                            <ui:fragment rendered="#{level1.children != null}">
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#{level1.data.nameFunction}<span class="caret"></span></a>
+                            <li>
+                                <ui:fragment rendered="#{empty level1.children}">
+                                    <h:commandLink value="#{level1.data.nameFunction}" action="#{navigationBean.actionRedirect(level1.data)}"/>                  
+                                </ui:fragment>
+                                <ui:fragment rendered="#{not empty level1.children}">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                       aria-haspopup="true" aria-expanded="false">#{level1.data.nameFunction}<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <ui:repeat var="level2" value="#{level1.children}" >
                                             <li>
@@ -33,11 +37,9 @@
                                             </li>
                                         </ui:repeat>
                                     </ul>
-                                </li>
-                            </ui:fragment>
-                            <h:commandLink value="#{level1.data.nameFunction}" action="#{navigationBean.actionRedirect(level1.data)}" rendered="#{level1.children == null}"/>
-                        </ui:repeat>
-
+                                </ui:fragment>
+                            </li>
+                        </ui:repeat>                       
                     </ul>
                     <ul class="nav navbar-nav navbar-right ">
                         <li>

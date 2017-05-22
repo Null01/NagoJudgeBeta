@@ -6,107 +6,78 @@
 package edu.nagojudge.web.mbeans;
 
 import edu.nagojudge.app.business.dao.beans.ProblemFacade;
-import edu.nagojudge.app.business.dao.beans.SubmitFacade;
-import edu.nagojudge.app.business.dao.entities.LanguageProgramming;
-import edu.nagojudge.app.utils.FacesUtil;
-import edu.nagojudge.app.utils.constants.IKeysApplication;
+import edu.nagojudge.msg.pojo.AccountMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
-import edu.nagojudge.msg.pojo.SubmitMessage;
-import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
-import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
 @ManagedBean
 @ViewScoped
 public class ProblemViewBean implements Serializable {
 
-    @EJB
-    private SubmitFacade submitFacadeDAO;
+    private final Logger logger = Logger.getLogger(ProblemViewBean.class);
 
     @EJB
     private ProblemFacade problemFacade;
 
-    private final Logger logger = Logger.getLogger(ProblemViewBean.class);
+    private List<ProblemMessage> listProblems;
+    private List<ProblemMessage> filteredProblems;
+    private String searchParameter;
 
     private ProblemMessage problemMessage = new ProblemMessage();
-    private SubmitMessage submitMessage = new SubmitMessage();
-
-    private LanguageProgramming languageProgrammingView = new LanguageProgramming();
-
-    private UploadedFile codeSourceFile;
-    private String pathSourceProblem;
+    private AccountMessage accountMessage = new AccountMessage();
 
     public ProblemViewBean() {
     }
 
-    public String actionSubmitSolution() {
-        try {
-            logger.debug("INICIA METODO - actionSubmitSolution()");
-            logger.debug("codeSourceFile [" + codeSourceFile + "]");
-            if (languageProgrammingView == null) {
-                String msg = FacesUtil.getFacesUtil().getResourceBundle("validacion.listaItem.noseleccionado",
-                        IKeysApplication.KEY_PUBLIC_MSG_RESOURCES);
-                throw new Exception(msg);
-            } else {
-                if (codeSourceFile == null) {
-                    String msg = FacesUtil.getFacesUtil().getResourceBundle("validacion.arhivo.noseleccionado",
-                            IKeysApplication.KEY_PUBLIC_MSG_RESOURCES);
-                    throw new Exception(msg);
-                } else {
-                    SubmitMessage message = submitFacadeDAO.createSubmitSolve(submitMessage, problemMessage, languageProgrammingView, codeSourceFile.getContents());
-                    //actionSendPushBoardLive(submitMessage);
-                    return "/modules/board/score.xhtml?faces-redirect=true&includeViewParams=false";
-                }
-            }
-        } catch (IOException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } finally {
-            logger.debug("FINALIZA METODO - actionSubmitSolution()");
-        }
-        return null;
-    }
-
-    public void actionPreRenderViewToSubmitProblem() {
-        boolean validationFailed = FacesUtil.getFacesUtil().isValidationFailed();
-        if (validationFailed) {
-            logger.error("params [" + problemMessage.getIdProblem() + "]");
-            HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
-            session.invalidate();
-            FacesUtil.getFacesUtil().printErrorResponse("Authentication failed, contact administrator.");
-        } else {
-            try {
-                logger.debug("params [" + +problemMessage.getIdProblem() + "]");
-                this.problemMessage = problemFacade.findProblemById(problemMessage.getIdProblem());
-                this.pathSourceProblem = submitFacadeDAO.getFullPathProblem(problemMessage.getIdProblem(), TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension());
-            } catch (IOException ex) {
-                logger.error(ex);
-                FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-            }
-
+    @PostConstruct
+    public void init() {
+        if (problemMessage.getIdProblem() == null) {
+            this.listProblems = problemFacade.findStatisticsFromAllProblem();
         }
     }
 
-    public String getPathSourceProblem() {
-        return pathSourceProblem;
+    public String actionRedirectViewToSubmitProblem() {
+        logger.debug("getIdProblem [" + problemMessage.getIdProblem() + "]");
+        return "/modules/content/problem/view-problem.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
-    public void setPathSourceProblem(String pathSourceProblem) {
-        this.pathSourceProblem = pathSourceProblem;
+    public String actionRedirectViewToProfile() {
+        logger.debug("getIdAccount=" + accountMessage.getIdAccount());
+        return "/modules/user/profile.xhtml?faces-redirect=true&includeViewParams=true";
+    }
+
+    public List<ProblemMessage> getListProblems() {
+        return listProblems;
+    }
+
+    public void setListProblems(List<ProblemMessage> listProblems) {
+        this.listProblems = listProblems;
+    }
+
+    public List<ProblemMessage> getFilteredProblems() {
+        return filteredProblems;
+    }
+
+    public void setFilteredProblems(List<ProblemMessage> filteredProblems) {
+        this.filteredProblems = filteredProblems;
+    }
+
+    public String getSearchParameter() {
+        return searchParameter;
+    }
+
+    public void setSearchParameter(String searchParameter) {
+        this.searchParameter = searchParameter;
     }
 
     public ProblemMessage getProblemMessage() {
@@ -117,28 +88,12 @@ public class ProblemViewBean implements Serializable {
         this.problemMessage = problemMessage;
     }
 
-    public SubmitMessage getSubmitMessage() {
-        return submitMessage;
+    public AccountMessage getAccountMessage() {
+        return accountMessage;
     }
 
-    public void setSubmitMessage(SubmitMessage submitMessage) {
-        this.submitMessage = submitMessage;
-    }
-
-    public LanguageProgramming getLanguageProgrammingView() {
-        return languageProgrammingView;
-    }
-
-    public void setLanguageProgrammingView(LanguageProgramming languageProgrammingView) {
-        this.languageProgrammingView = languageProgrammingView;
-    }
-
-    public UploadedFile getCodeSourceFile() {
-        return codeSourceFile;
-    }
-
-    public void setCodeSourceFile(UploadedFile codeSourceFile) {
-        this.codeSourceFile = codeSourceFile;
+    public void setAccountMessage(AccountMessage accountMessage) {
+        this.accountMessage = accountMessage;
     }
 
 }

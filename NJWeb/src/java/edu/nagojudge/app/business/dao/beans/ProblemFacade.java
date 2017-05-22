@@ -12,8 +12,8 @@ import edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.ProblemCategory;
+import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
-import edu.nagojudge.app.utils.ValidatorUtil;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
 import edu.nagojudge.msg.pojo.CategoryMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
@@ -35,7 +35,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
 import org.apache.log4j.Logger;
 
 /**
@@ -174,59 +173,62 @@ public class ProblemFacade extends AbstractFacade<Problem> {
 
     }
 
-    public String createProblem(Problem problemView, List<Category> categoryProblemView,
+    public String createProblem(ProblemMessage problemView, List<Category> categoryProblemView,
             DifficultyLevel difficultyLevelView, ComplexityAlgorithm complexityAlgorithmView,
-            byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
+            byte[] info, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
         try {
             logger.debug("INICIA METODO - createProblem()");
+
+            Problem problem = new Problem();
+            problem.setDateCreated(Calendar.getInstance().getTime());
+            problem.setIdComplexityAlgorithm(complexityAlgorithmView);
+            problem.setIdDifficulty(difficultyLevelView);
+            problem.setAuthor(problemView.getAuthor());
+            problem.setNameProblem(problemView.getNameProblem());
+            problem.setTimeLimit(problemView.getTimeLimit());
+            problem.setMemoLimit(problemView.getMemoLimit());
+            problem.setDescription(problemView.getDescription());
             List<ProblemCategory> problemCategorys = new ArrayList<ProblemCategory>();
             for (Category category : categoryProblemView) {
                 ProblemCategory problemCategory = new ProblemCategory();
                 problemCategory.setIdCategory(category);
-                problemCategory.setIdProblem(problemView);
+                problemCategory.setIdProblem(problem);
                 problemCategorys.add(problemCategory);
             }
-            problemView.setProblemCategoryList(problemCategorys);
-            problemView.setDateCreated(Calendar.getInstance().getTime());
-            problemView.setIdComplexityAlgorithm(complexityAlgorithmView);
-            problemView.setIdDifficulty(difficultyLevelView);
-            problemView.setIdComplexityAlgorithm(complexityAlgorithmView);
+            problem.setProblemCategoryList(problemCategorys);
 
-            ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getAuthor());
-            problemView.setAuthor(problemView.getAuthor());
-            ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getNameProblem());
-            problemView.setNameProblem(problemView.getNameProblem());
+            logger.debug(" getProblemCategoryList [" + problem.getProblemCategoryList() + "] @ECHO");
+            logger.debug(" getIdComplexityAlgorithm [" + problem.getIdComplexityAlgorithm() + "] @ECHO");
+            logger.debug(" getIdDifficulty [" + problem.getIdDifficulty() + "] @ECHO");
+            logger.debug(" getAuthor [" + problem.getAuthor() + "] @ECHO");
+            logger.debug(" getNameProblem [" + problem.getNameProblem() + "] @ECHO");
+            logger.debug(" getTimeLimit [" + problem.getTimeLimit() + "] @ECHO");
+            logger.debug(" getMemoLimit [" + problem.getMemoLimit() + "] @ECHO");
+            logger.debug(" getDescription [" + problem.getDescription() + "] @ECHO");
 
-            logger.debug(" getIdDifficulty=" + problemView.getIdDifficulty() + " @ECHO");
-            logger.debug(" getAuthor=" + problemView.getAuthor() + " @ECHO");
-            logger.debug(" getNameProblem=" + problemView.getNameProblem() + " @ECHO");
-            logger.debug(" getDescription=" + problemView.getDescription() + " @ECHO");
-            logger.debug(" getTimeLimit=" + problemView.getTimeLimit() + " @ECHO");
-            logger.debug(" getMemoLimit=" + problemView.getMemoLimit() + " @ECHO");
+            create(problem);
+            logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problem.getIdProblem() + " @ECHO");
 
-            create(problemView);
-
-            logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problemView.getIdProblem() + " @ECHO");
             String pathProblem = IResourcesPaths.PATH_ROOT_SAVE_PROBLEMS_WEB;
-            String nameFileProblem = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
+            String nameFileProblem = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
             logger.debug("PATH_PROBLEM=" + pathProblem);
             logger.debug("NAME_FILE_PROBLEM=" + nameFileProblem);
-            FileUtil.getInstance().createFile(problem, pathProblem, nameFileProblem);
+            FileUtil.getInstance().createFile(info, pathProblem, nameFileProblem);
 
             String pathProblemLocal = IResourcesPaths.PATH_SAVE_PROBLEMS_LOCAL;
-            String nameFileProblemLocal = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
+            String nameFileProblemLocal = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
             logger.debug("PATH_PROBLEM_LOCAL=" + pathProblemLocal);
             logger.debug("NAME_FILE_PROBLEM_LOCAL=" + nameFileProblemLocal);
-            FileUtil.getInstance().createFile(problem, pathProblemLocal, nameFileProblemLocal);
+            FileUtil.getInstance().createFile(info, pathProblemLocal, nameFileProblemLocal);
 
             String pathInput = IResourcesPaths.PATH_SAVE_INPUT_LOCAL;
-            String nameFileInput = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7);
+            String nameFileInput = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7);
             logger.debug("PATH_INPUT=" + pathInput);
             logger.debug("NAME_FILE_INPUT=" + nameFileInput);
             FileUtil.getInstance().createFile(input, pathInput, nameFileInput);
 
             String pathOutput = IResourcesPaths.PATH_SAVE_OUTPUT_LOCAL;
-            String nameFileOutput = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7);
+            String nameFileOutput = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7);
             logger.debug("PATH_OUTPUT=" + pathOutput);
             logger.debug("NAME_FILE_OUTPUT=" + nameFileOutput);
             FileUtil.getInstance().createFile(output, pathOutput, nameFileOutput);
@@ -234,9 +236,9 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             logger.debug("INIT - CREACION ATTACHMENTS @ECHO");
             List<Attachments> attachmentses = new ArrayList<Attachments>();
             Attachments attachment = new Attachments();
-            attachment.setChecksum(FileUtil.getInstance().generateChechSum(problem, TypeSHAEnum.SHA256));
+            attachment.setChecksum(FileUtil.getInstance().generateChechSum(info, TypeSHAEnum.SHA256));
             attachment.setDateCreated(Calendar.getInstance().getTime());
-            attachment.setIdProblem(problemView);
+            attachment.setIdProblem(problem);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension());
             attachmentses.add(attachment);
             attachmentsFacadeDAO.create(attachment);
@@ -245,7 +247,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(input, TypeSHAEnum.SHA256));
             attachment.setDateCreated(Calendar.getInstance().getTime());
-            attachment.setIdProblem(problemView);
+            attachment.setIdProblem(problem);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_IN.getExtension());
             attachmentses.add(attachment);
             attachmentsFacadeDAO.create(attachment);
@@ -254,23 +256,15 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(output, TypeSHAEnum.SHA256));
             attachment.setDateCreated(Calendar.getInstance().getTime());
-            attachment.setIdProblem(problemView);
+            attachment.setIdProblem(problem);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_OUT.getExtension());
             attachmentses.add(attachment);
             attachmentsFacadeDAO.create(attachment);
             logger.debug("CREACION ATTACHMENT_ID=" + attachment.getIdAttachment() + "  @ECHO");
 
             return String.valueOf(problemView.getIdProblem());
-        } catch (IOException ex) {
-            logger.error(ex);
-            throw ex;
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error(ex);
-            throw ex;
-        } catch (UtilNagoJudgeException ex) {
-            logger.error(ex);
-            throw ex;
         } catch (Exception ex) {
+            ex.printStackTrace();
             logger.error(ex);
             throw ex;
         } finally {
@@ -279,8 +273,12 @@ public class ProblemFacade extends AbstractFacade<Problem> {
     }
 
     public ProblemMessage findProblemById(Long idProblem) {
+        ProblemMessage message = null;
         Problem problem = em.find(Problem.class, idProblem);
-        return parseEntityProblemToMessage(problem);
+        if (problem != null) {
+            message = parseEntityProblemToMessage(problem);
+        }
+        return message;
     }
 
     private ProblemMessage parseEntityProblemToMessage(Problem problem) {

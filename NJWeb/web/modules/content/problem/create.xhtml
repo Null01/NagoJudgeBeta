@@ -7,8 +7,6 @@
     xmlns:p="http://primefaces.org/ui"
     template="/home.xhtml">
     <ui:define name="content">
-        <link rel="stylesheet" href="../../../tools//frameworks/codemirror/codemirror.css"/>
-        <script src="../../../tools/frameworks/codemirror/codemirror.js"></script>
         <div class="well bs-component">
             <h:form id="form-create-problem" class="form-horizontal" enctype="multipart/form-data">
                 <p:messages id="msgs" autoUpdate="true" closable="true"/>
@@ -17,7 +15,7 @@
                         <label for="nameProblem" class="col-md-1 control-label">Nombre Problema</label>
                         <div class="col-md-3">
                             <p:inputText id="nameProblem" styleClass="form-control" placeholder="Nombre del problema"
-                                         value="#{problemBean.problemView.nameProblem}"
+                                         value="#{problemCreateBean.problemView.nameProblem}"
                                          required="true" >
                                 <f:validateLength minimum="3" maximum="40" />
                             </p:inputText>
@@ -25,7 +23,7 @@
                         <label for="nameAuthor" class="col-md-1 control-label">Nombre autor</label>
                         <div class="col-md-3">
                             <p:inputText id="nameAuthor" styleClass="form-control" placeholder="Nombre del autor"
-                                         value="#{problemBean.problemView.author}"
+                                         value="#{problemCreateBean.problemView.author}"
                                          required="true" >
                                 <f:validateLength minimum="3" maximum="40" />
                             </p:inputText>
@@ -33,7 +31,7 @@
                         <label for="difficultyLevel" class="col-md-1 control-label">Dificultad</label>
                         <div class="col-md-3">
                             <p:selectOneMenu id="difficultyLevel" styleClass="selected-list form-control" style="width: 100%;" converter="difficultyLevelConvertJSF"
-                                             value="#{problemBean.difficultyLevel}"  required="true" >
+                                             value="#{problemCreateBean.difficultyLevel}"  required="true" >
                                 <f:selectItem value="#{null}" itemLabel="Seleccione una dificultad" />
                                 <f:selectItems value="#{difficultyLevelBean.difficultyLevelItems}" />                                               
                             </p:selectOneMenu>
@@ -44,51 +42,56 @@
                         <div class="col-md-3">
                             <p:selectOneMenu id="complexAlgorithm" styleClass="selected-list form-control" 
                                              style="width: 100%;" converter="complexityProblemConvertJSF"
-                                             value="#{problemBean.complexityAlgorithmView}"  required="true" >
+                                             value="#{problemCreateBean.complexityAlgorithmView}"  required="true" >
                                 <f:selectItem value="#{null}" itemLabel="Seleccione una complejidad" />
                                 <f:selectItems value="#{complexityBean.complexityProblemItems}" />                                               
                             </p:selectOneMenu>
                         </div>
                         <label for="memoLimit" class="col-md-1 control-label">Memoria Usada</label>
                         <div class="col-md-3">
-                            <p:spinner id="memoLimit" stepFactor="1" min="1" max="5000"  placeholder="1"
-                                       value="#{problemBean.problemView.memoLimit}"
+                            <p:spinner id="memoLimit"
+                                       stepFactor="1" min="1" max="5000" placeholder="1"
+                                       value="#{problemCreateBean.problemView.memoLimit}"
                                        required="true" />
                         </div>
                         <label for="timeProblem" class="col-md-1 control-label">Tiempo Juzgamiento</label>
                         <div class="col-md-3">
                             <p:spinner id="timeProblem" stepFactor="1" min="1" max="9"  placeholder="1"
-                                       value="#{problemBean.problemView.timeLimit}"
+                                       value="#{problemCreateBean.problemView.timeLimit}"
                                        required="true" />
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="fileProblem" class="col-md-1 control-label">Enunciado</label>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <p:fileUpload id="problemFile"
                                           styleClass="form-control" 
-                                          value="#{problemBean.problemFile}"
+                                          value="#{problemCreateBean.problemFile}"
                                           mode="simple"
                                           required="true"
+                                          label="#{msg['general.label.archivo.upload']}"
                                           allowTypes="/(\.|\/)(pdf)$/" />
                         </div>
                         <label for="categoryProblem" class="col-md-1 control-label">Categoria</label>
                         <div class="col-md-3">
-                            <p:selectOneMenu id="categoryProblem" styleClass="selected-list form-control"
-                                             style="width: 100%;" converter="categoryProblemConvertJSF"
-                                             value="#{problemBean.categoryProblemView}"  required="true" >
-                                <f:selectItem value="#{null}" itemLabel="Seleccione una categoria" />
-                                <f:selectItems value="#{categoryBean.categoryProblemItems}" />                                               
-                            </p:selectOneMenu>
+                            <p:selectManyCheckbox id="categoryProblem"
+                                                  value="#{problemCreateBean.selectedCategory}"
+                                                  layout="grid"
+                                                  columns="3"
+                                                  style="width: 100%"
+                                                  required="true"
+                                                  requiredMessage="Seleccione una categoria"
+                                                  converter="categoryProblemConvertJSF">
+                                <f:selectItems value="#{categoryBean.categoryProblemItems}" var="category" />
+                            </p:selectManyCheckbox>
                         </div>
-
                     </div>
                     <div class="form-group">
                         <label for="descriptionProblem" class="col-md-1 control-label">Obervaciones</label>
                         <div class="col-md-11">
                             <p:inputTextarea id="descriptionProblem" rows="5" style="width: 100%;" autoResize="false" placeholder="Observaciones y/o inquietudes"
-                                             value="#{problemBean.problemView.description}"
+                                             value="#{problemCreateBean.problemView.description}"
                                              required="true" />
                         </div>
                     </div>
@@ -101,9 +104,10 @@
                                         <div class="col-md-12">
                                             <p:fileUpload id="fileInput"
                                                           styleClass="form-control" 
-                                                          value="#{problemBean.inputFile}"
+                                                          value="#{problemCreateBean.inputFile}"
                                                           mode="simple"
                                                           required="true"
+                                                          label="#{msg['general.label.archivo.upload']}"
                                                           allowTypes="/(\.|\/)(|in|out|txt)$/" />
                                         </div>
                                     </div>
@@ -118,9 +122,10 @@
                                         <div class="col-md-12">
                                             <p:fileUpload id="fileOutput"
                                                           styleClass="form-control" 
-                                                          value="#{problemBean.outputFile}"
+                                                          value="#{problemCreateBean.outputFile}"
                                                           mode="simple"
                                                           required="true"
+                                                          label="#{msg['general.label.archivo.upload']}"
                                                           allowTypes="/(\.|\/)(|in|out|txt)$/" />
                                         </div>
                                     </div>
@@ -130,23 +135,15 @@
                     </div>
 
                     <div class="form-group text-center">
-                        <p:commandButton id="btn-create-problem" update="@form"
-                                         ajax="false" styleClass="btn btn-default"
+                        <p:commandButton id="btn-create-problem"
+                                         ajax="false"
+                                         styleClass="btn btn-default"
                                          value="Crear problema"
-                                         action="#{problemBean.actionCreateProblem}"/>
+                                         update="@form"
+                                         action="#{problemCreateBean.actionCreateProblem}"/>
                     </div>
                 </fieldset>
             </h:form>
         </div>
-        <script>
-            var textAreaSimpleInput = document.getElementById("form-create-problem:s-i-t");
-            var codeEditorInput = CodeMirror.fromTextArea(textAreaSimpleInput, {
-                lineNumbers: true
-            });
-            var textAreaSimpleOutput = document.getElementById("form-create-problem:s-o-t");
-            var codeEditorOutput = CodeMirror.fromTextArea(textAreaSimpleOutput, {
-                lineNumbers: true
-            });
-        </script>
     </ui:define>
 </ui:composition>

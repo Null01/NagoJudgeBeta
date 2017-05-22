@@ -1,0 +1,19 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+    <ui:define name="content">
+        <div class="well bs-component">
+            <h:form id="form-registry-team" class="form-horizontal" >
+                <p:messages id="msgs" autoUpdate="true" closable="true"/>
+                <p:multiSelectListbox value="#{teamRegistryBean.selection}" effect="slide" header="Categories" showHeaders="true">
+                    <f:selectItems value="#{teamRegistryBean.categories}" />
+                </p:multiSelectListbox>
+
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
