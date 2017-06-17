@@ -10,6 +10,7 @@ import edu.nagojudge.business.dao.beans.AuthenticationDAOFacade;
 import edu.nagojudge.business.dao.beans.JudgeDAOFacade;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
+import edu.nagojudge.business.servicios.restful.interfaces.ISubmitService;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -28,7 +29,7 @@ import org.apache.log4j.Logger;
  */
 @Path("/submit")
 @Produces({MediaType.APPLICATION_JSON + ";charset=UTF-8"})
-public class SubmitService {
+public class SubmitService implements ISubmitService {
 
     @EJB
     private AuthenticationDAOFacade authenticationFacade;
@@ -41,59 +42,40 @@ public class SubmitService {
 
     private final Logger logger = Logger.getLogger(SubmitService.class);
 
-    /**
-     *
-     * @param idTeam Correo electronico - Llave del usuario.
-     * @param idSubmit Llave del envio.
-     * @param idChallenge
-     * @param token Identificador de seguridad.
-     * @return proceso asincrono/sincrono no devuelve una respuesta
-     * inmediatamente.
-     * @throws AuthenticationException Se genera, si el identificador de
-     * seguridad no es valido.
-     * @throws BusinessException Se genera, si la información es incorrecta o no
-     * existe, validaciones de negocio.
-     */
     @GET
     @Path("/verdict/team/{idTeam}/{idSubmit}")
-    public SubmitMessage judgmentLiveOnlyVerdict(@PathParam("idTeam") String idTeam,
+    @Override
+    public SubmitMessage generateJudgmentByTeam(
+            @PathParam("idTeam") String idTeam,
             @PathParam("idSubmit") String idSubmit,
             @QueryParam("idChallenge") String idChallenge,
             @QueryParam("token") String token) throws AuthenticationException, BusinessException {
         try {
-            logger.debug("INICIA SERVICIO - judgmentLiveOnlyVerdictTeam()");
-            authenticationFacade.authentication(token);
-            Submit startJudge = judgeFacade.startJudgeATeam(
+            logger.debug("INICIA SERVICIO - generateJudgmentByTeam()");
+            authenticationFacade.authorization(token);
+            Submit startJudge = judgeFacade.startJudgeByTeam(
                     Long.parseLong(idChallenge),
                     Long.parseLong(idSubmit),
                     Long.parseLong(idTeam));
             return parseSubmitEntityToMessage(startJudge);
         } finally {
-            logger.debug("FINALIZA SERVICIO - judgmentLiveOnlyVerdictTeam()");
+            logger.debug("FINALIZA SERVICIO - generateJudgmentByTeam()");
         }
     }
 
-    /**
-     *
-     * @param email Correo electronico - Llave del usuario.
-     * @param idSubmit Llave del envio.
-     * @param token Identificador de seguridad.
-     * @return proceso asincrono/sincrono no devuelve una respuesta
-     * inmediatamente.
-     * @throws AuthenticationException Se genera, si el identificador de
-     * seguridad no es valido.
-     * @throws BusinessException Se genera, si la información es incorrecta o no
-     * existe, validaciones de negocio.
-     */
     @GET
     @Path("/verdict/user/{email}/{idSubmit}")
-    public SubmitMessage judgmentLiveOnlyVerdict(@PathParam("email") String email,
+    @Override
+    public SubmitMessage generateJudgmentByUser(
+            @PathParam("email") String email,
             @PathParam("idSubmit") String idSubmit,
             @QueryParam("token") String token) throws AuthenticationException, BusinessException {
         try {
-            logger.debug("INICIA SERVICIO - judgmentLiveOnlyVerdict()");
-            authenticationFacade.authentication(token);
-            Submit startJudge = judgeFacade.startJudge(idSubmit, email);
+            logger.debug("INICIA SERVICIO - generateJudgmentByUser()");
+            authenticationFacade.authorization(token);
+            Submit startJudge = judgeFacade.startJudgeByUser(
+                    Long.parseLong(idSubmit),
+                    email);
             return parseSubmitEntityToMessage(startJudge);
         } catch (AuthenticationException ex) {
             logger.error(ex);
@@ -102,31 +84,18 @@ public class SubmitService {
             logger.error(ex);
             throw ex;
         } finally {
-            logger.debug("FINALIZA SERVICIO - judgmentLiveOnlyVerdict()");
+            logger.debug("FINALIZA SERVICIO - generateJudgmentByUser()");
         }
     }
 
-    /**
-     * Servicio encargado de retornar el codigo fuente, que se encuentra
-     * directamente relacionado con el envio hecho, el envio se indentifica
-     * según su identificador.
-     *
-     * @param idSubmit Llave del envio.
-     * @param token Identificador de seguridad.
-     * @return Retorna codigo fuente.
-     * @throws IOException Se genera, leyendo un archivo o copiandolo.
-     * @throws BusinessException Se genera, si la información es incorrecta o no
-     * existe, validaciones de negocio.
-     * @throws AuthenticationException Se genera, si el identificador de
-     * seguridad no es valido.
-     */
     @GET
     @Path("/codeSource/{idSubmit}")
-    public String getCodeSourceByIdSubmit(@PathParam("idSubmit") String idSubmit,
-            @QueryParam("token") String token) throws IOException, BusinessException, AuthenticationException {
+    @Override
+    public String getCodeSourceBySubmit(@PathParam("idSubmit") String idSubmit,
+            @QueryParam("token") String token) throws IOException, AuthenticationException, BusinessException {
         try {
-            logger.debug("INICIA SERVICIO - getCodeSourceByIdSubmit()");
-            authenticationFacade.authentication(token);
+            logger.debug("INICIA SERVICIO - getCodeSourceBySubmit()");
+            authenticationFacade.authorization(token);
             StringBuilder codeSource = attachmentsFacade.getCodeSource(idSubmit);
             return codeSource.toString();
         } catch (IOException ex) {
@@ -139,7 +108,7 @@ public class SubmitService {
             logger.error(ex);
             throw ex;
         } finally {
-            logger.debug("FINALIZA SERVICIO - getCodeSourceByIdSubmit()");
+            logger.debug("FINALIZA SERVICIO - getCodeSourceBySubmit()");
         }
     }
 

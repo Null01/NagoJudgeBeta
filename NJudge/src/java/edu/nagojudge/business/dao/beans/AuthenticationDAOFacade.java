@@ -17,7 +17,7 @@ public class AuthenticationDAOFacade {
 
     private final String TOKEN = "asd";
 
-    public void authentication(String token) throws AuthenticationException {
+    public void authorization(String token) throws AuthenticationException {
         if (token.compareTo(TOKEN) != 0) {
             throw new AuthenticationException("Autenticación denegada, comuniquese con el administrador. #TeamNJ");
         }
