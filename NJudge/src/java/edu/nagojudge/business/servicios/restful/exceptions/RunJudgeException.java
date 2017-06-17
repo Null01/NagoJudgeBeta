@@ -7,22 +7,22 @@ package edu.nagojudge.business.servicios.restful.exceptions;
 
 /**
  *
- * @author andresfelipegarciaduran
+ * @author andres.garcia
  */
-public class BusinessException extends Exception {
+public class RunJudgeException extends Exception {
 
-    public BusinessException() {
+    public RunJudgeException() {
     }
 
-    public BusinessException(String msg) {
+    public RunJudgeException(String msg) {
         super(msg);
     }
 
-    public BusinessException(Throwable cause) {
+    public RunJudgeException(Throwable cause) {
         super(cause);
     }
 
-    public BusinessException(String message, Throwable cause) {
+    public RunJudgeException(String message, Throwable cause) {
         super(message, cause);
     }
 

@@ -46,9 +46,10 @@ public class AttachmentsDAOFacade extends AbstractFacade<Attachments> {
         BufferedReader bufferedReader = null;
         try {
             logger.debug("INICIA METODO - getCodeSource()");
-            AccountSubmit accountSubmit = em.createQuery("SELECT s FROM AccountSubmit s WHERE s.idSubmit = :id_submit", AccountSubmit.class).setParameter("id_submit", idSubmit).getSingleResult();
+            logger.debug("idSubmit [" + idSubmit + "]");
+            AccountSubmit accountSubmit = em.createQuery("SELECT s FROM AccountSubmit s WHERE s.idSubmit = :id_submit", AccountSubmit.class)
+                    .setParameter("id_submit", new Long(idSubmit)).getSingleResult();
             Submit submit = accountSubmit.getIdSubmit();
-            logger.debug("FIND_SUBMIT_ID=" + idSubmit);
             if (submit == null) {
                 throw new BusinessException("ID_SUBMIT [" + idSubmit + "] NO EXISTE.");
             }

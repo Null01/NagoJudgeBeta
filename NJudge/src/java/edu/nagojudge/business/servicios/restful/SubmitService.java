@@ -8,7 +8,6 @@ package edu.nagojudge.business.servicios.restful;
 import edu.nagojudge.business.dao.beans.AttachmentsDAOFacade;
 import edu.nagojudge.business.dao.beans.AuthenticationDAOFacade;
 import edu.nagojudge.business.dao.beans.JudgeDAOFacade;
-import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.business.servicios.restful.interfaces.ISubmitService;
 import edu.nagojudge.msg.pojo.SubmitMessage;
@@ -53,11 +52,11 @@ public class SubmitService implements ISubmitService {
         try {
             logger.debug("INICIA SERVICIO - generateJudgmentByTeam()");
             authenticationFacade.authorization(token);
-            Submit startJudge = judgeFacade.startJudgeByTeam(
+            SubmitMessage startJudge = judgeFacade.startJudgeATeam(
                     Long.parseLong(idChallenge),
                     Long.parseLong(idSubmit),
                     Long.parseLong(idTeam));
-            return parseSubmitEntityToMessage(startJudge);
+            return startJudge;
         } finally {
             logger.debug("FINALIZA SERVICIO - generateJudgmentByTeam()");
         }
@@ -73,10 +72,10 @@ public class SubmitService implements ISubmitService {
         try {
             logger.debug("INICIA SERVICIO - generateJudgmentByUser()");
             authenticationFacade.authorization(token);
-            Submit startJudge = judgeFacade.startJudgeByUser(
+            SubmitMessage startJudge = judgeFacade.startJudgeByUser(
                     Long.parseLong(idSubmit),
                     email);
-            return parseSubmitEntityToMessage(startJudge);
+            return startJudge;
         } catch (AuthenticationException ex) {
             logger.error(ex);
             throw ex;
@@ -110,18 +109,6 @@ public class SubmitService implements ISubmitService {
         } finally {
             logger.debug("FINALIZA SERVICIO - getCodeSourceBySubmit()");
         }
-    }
-
-    private SubmitMessage parseSubmitEntityToMessage(Submit submit) {
-        SubmitMessage submitMessage = new SubmitMessage();
-        submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
-        submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
-        submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
-        submitMessage.setIdSubmit(submit.getIdSubmit());
-        submitMessage.setMsgJudge(submit.getMsgJudge());
-        submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
-        submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
-        return submitMessage;
     }
 
 }
