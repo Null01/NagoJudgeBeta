@@ -1,11 +1,10 @@
-
 package edu.nagojudge.msg.pojo.constants;
 
 /**
  *
  * @author andresfelipegarciaduran
  */
-public enum TypeUserEnum {
+public enum TypeRoleEnum {
 
-    ADMIN_USER
+    ADMIN, TEAM, JUDGE;
 }

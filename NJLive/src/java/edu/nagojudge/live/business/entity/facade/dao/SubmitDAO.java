@@ -13,8 +13,9 @@ import edu.nagojudge.live.business.entity.Submit;
 import edu.nagojudge.live.business.entity.SubmitStatus;
 import edu.nagojudge.live.business.entity.Team;
 import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
+import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.clients.ClientService;
-import edu.nagojudge.live.web.utils.constants.IKeysChallenge;
+//import edu.nagojudge.live.web.utils.constants.IKeysChallenge;
 import edu.nagojudge.live.web.utils.constants.IResourcesPath;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
@@ -64,7 +65,7 @@ public class SubmitDAO extends AbstractDAO<Submit> {
             logger.debug("INICIA METODO - getFullPathProblem()");
             String nameFile = FormatUtil.getInstance().buildZerosToLeft(idProblem, 7) + TypeFilesEnum.PDF.getExtension();
             if (type.compareTo(TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension()) == 0) {
-                String tempFullPath = IKeysChallenge.PATH_ROOT_SAVE_PROBLEMS_WEB + java.io.File.separatorChar + nameFile;
+                String tempFullPath = IResourcesPath.PATH_ROOT_SAVE_PROBLEMS_WEB + java.io.File.separatorChar + nameFile;
                 fullPath = RELATIVE_PATH + tempFullPath.substring(tempFullPath.lastIndexOf("\\external"));
             }
             logger.debug("PATH_VIEW_FILE_PUBLIC=" + fullPath);
@@ -113,7 +114,7 @@ public class SubmitDAO extends AbstractDAO<Submit> {
             final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String path = "submit/verdict/team/{idTeam}/{idSubmit}";
+                    String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.path.submit.team");
                     Object objects[] = {String.valueOf(idTeam), String.valueOf(idSubmit)};
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("token", TOKEN);

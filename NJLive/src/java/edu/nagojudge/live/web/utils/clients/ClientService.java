@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.live.web.utils.clients;
 
+import edu.nagojudge.live.web.utils.FacesUtil;
 import java.util.Arrays;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
@@ -17,9 +18,9 @@ import org.apache.log4j.Logger;
  */
 public class ClientService {
 
-    private Logger logger = Logger.getLogger(ClientService.class);
+    private final Logger logger = Logger.getLogger(ClientService.class);
 
-    private final String BASE_ADDRESS_RESTFUL_NJ = "http://localhost:8484/ask";
+    private final String BASE_ADDRESS_RESTFUL_NJ = getPathJudgeNagoJudge();
 
     private static ClientService instance;
 
@@ -32,7 +33,7 @@ public class ClientService {
 
     public Object callRestfulGet(String path, Object[] objects, Map<String, Object> params, Class t) {
         try {
-            logger.debug("Inicia metodo - callRestfulGet()");
+            logger.debug("INICIA METODO - callRestfulGet()");
             logger.debug("path [" + path + "]");
             logger.debug("objects [" + Arrays.toString(objects) + "]");
             logger.debug("params [" + params + "]");
@@ -45,15 +46,18 @@ public class ClientService {
                 client.query(entry.getKey(), entry.getValue());
             }
 
+            client.header("Content-Type", MediaType.APPLICATION_JSON_TYPE);
+            //client.header("Authorization", authorizationHeader);
+
             return client.get(t);
         } finally {
-            logger.debug("Finaliza metodo - callRestfulGet()");
+            logger.debug("FINALIZA METODO - callRestfulGet()");
         }
     }
 
     public Object callRestfulGetList(String path, Object[] objects, Map<String, Object> params, Class t) {
         try {
-            logger.debug("Inicia metodo - callRestfulGetList()");
+            logger.debug("INICIA METODO - callRestfulGetList()");
             logger.debug("path [" + path + "]");
             logger.debug("objects [" + Arrays.toString(objects) + "]");
             logger.debug("class [" + t.getName() + "]");
@@ -64,11 +68,18 @@ public class ClientService {
                     .accept(MediaType.APPLICATION_JSON)
                     .type(MediaType.APPLICATION_JSON);
 
+            client.header("Content-Type", MediaType.APPLICATION_JSON_TYPE);
+            //client.header("Authorization", authorizationHeader);
+
             return client.getCollection(t);
         } finally {
-            logger.debug("Finaliza metodo - callRestfulGetList()");
+            logger.debug("FINALIZA METODO - callRestfulGetList()");
         }
 
+    }
+
+    private String getPathJudgeNagoJudge() {
+        return FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.url");
     }
 
     /*

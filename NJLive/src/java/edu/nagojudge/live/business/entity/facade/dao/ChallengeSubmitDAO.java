@@ -8,7 +8,7 @@ package edu.nagojudge.live.business.entity.facade.dao;
 import edu.nagojudge.live.business.entity.ChallengeProblem;
 import edu.nagojudge.live.business.entity.ChallengeSubmit;
 import edu.nagojudge.live.business.entity.Submit;
-import edu.nagojudge.live.web.utils.constants.IKeysChallenge;
+import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.InfoScoreMessage;
 import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
@@ -70,6 +70,8 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
                 infoScore.put(infoScoreMessage.getIdProblem(), infoScoreMessage);
             }
 
+            Long penalityTime = Long.parseLong(FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.penality.time"));
+
             StringBuilder sql = new StringBuilder();
             sql.append("(select \n"
                     + " (select t.name_team from team t where t.id_team = cs.id_team) as team,\n"
@@ -100,7 +102,7 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
                         InfoScoreMessage infoScoreMessage = map.get((String) row[0]).get((Long) row[1]);
                         boolean solved = ((String) row[2]).compareTo(TypeStateJudgeEnum.AC.toString()) == 0;
                         if (solved && !infoScoreMessage.isSolved()) {
-                            infoScoreMessage.setTime(Long.parseLong(String.valueOf(row[3])) + (infoScoreMessage.getTries() * IKeysChallenge.JUDGE_PENALITY_TIME));
+                            infoScoreMessage.setTime(Long.parseLong(String.valueOf(row[3])) + (infoScoreMessage.getTries() * penalityTime));
                             infoScoreMessage.setTries(infoScoreMessage.getTries() + 1);
                         } else {
                             if (!infoScoreMessage.isSolved()) {

@@ -6,11 +6,14 @@
 package edu.nagojudge.live.web.utils;
 
 import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
+import edu.nagojudge.tools.utils.FileUtil;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -139,6 +142,18 @@ public class FacesUtil {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         String initParameter = externalContext.getInitParameter(key);
         return initParameter;
+    }
+
+    public String getParameterWEBINF(String keyFileWEBINF, String key) {
+        String outcome = null;
+        try {
+            String initParameter = getInitParameter(keyFileWEBINF);
+            Properties loadFileProperties = FileUtil.getInstance().loadFileProperties(getFacesUtil().getRealPath() + File.separator + initParameter);
+            outcome = loadFileProperties.getProperty(key);
+        } catch (IOException ex) {
+            logger.error(ex);
+        }
+        return outcome;
     }
 
     public boolean isValidationFailed() {

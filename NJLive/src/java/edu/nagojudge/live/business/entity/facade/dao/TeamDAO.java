@@ -7,17 +7,14 @@ package edu.nagojudge.live.business.entity.facade.dao;
 
 import edu.nagojudge.live.business.entity.Team;
 import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
-import edu.nagojudge.live.web.mbeans.SelectRoomBean;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
-import edu.nagojudge.live.web.utils.constants.IKeysChallenge;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
