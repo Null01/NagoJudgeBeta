@@ -192,4 +192,7 @@ public class ProblemMessage implements Serializable {
     public void setStatusWR(int statusWR) {
         this.statusWR = statusWR;
     }
+
+ 
+
 }

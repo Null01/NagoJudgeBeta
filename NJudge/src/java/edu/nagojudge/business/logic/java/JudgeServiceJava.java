@@ -204,6 +204,7 @@ public class JudgeServiceJava extends JudgeService {
             logger.error(ex);
             throw ex;
         } catch (IOException ex) {
+            ex.printStackTrace();
             logger.error(ex);
             throw ex;
         } finally {
@@ -215,5 +216,32 @@ public class JudgeServiceJava extends JudgeService {
             }
         }
     }
-
+    
+    public void copyFile(Reader input, Writer output) throws IOException {
+        try {
+            int DEFAULT_BUFFER_SIZE = 1024 * 8;
+            if (input == null || output == null) {
+                throw new IOException("#NJ - OBJETOS READER/WRITER NO SE ENCUENTRAN INICIALIZADOS");
+            }
+            char[] buffer = new char[DEFAULT_BUFFER_SIZE];
+            int n;
+            logger.debug("copyFile() 01 - @ECHO");
+            while ((n = input.read(buffer)) != -1) {
+                output.write(buffer, 0, n);
+            }
+            logger.debug("copyFile() 02 - @ECHO");
+            output.flush();
+            logger.debug("copyFile() 03 - @ECHO");
+        } catch (IOException ex) {
+            throw ex;
+        } finally {
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.close();
+            }
+        }
+    }
+    
 }

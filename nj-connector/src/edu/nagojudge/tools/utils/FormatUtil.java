@@ -15,6 +15,9 @@ public class FormatUtil {
     private static FormatUtil fileUtil;
     private StringTokenizer tokenizer;
 
+    public FormatUtil() {
+    }
+
     public static FormatUtil getInstance() {
         if (fileUtil == null) {
             fileUtil = new FormatUtil();
