@@ -8,25 +8,12 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="idProblem" value="#{problemsBean.problemView.idProblem}"/>
-            <f:viewParam name="idAccount" value="#{problemsBean.accountView.idAccount}"/>
+            <f:viewParam name="idProblem" value="#{problemViewBean.problemMessage.idProblem}" />
+            <f:viewParam name="idAccount" value="#{problemViewBean.accountMessage.idAccount}"/>
         </f:metadata>
     </ui:define>
 
     <ui:define name="content">
-
-        <script src="/go/to/tools/frameworks/codemirror/addon/selection/selection-pointer.js"></script>
-        <script src="/go/to/tools/frameworks/codemirror/addon/dialog/dialog.js"/>
-        <script src="/go/to/tools/frameworks/codemirror/addon/selection/active-line.js"/>
-        <script src="/go/to/tools/frameworks/codemirror/addon/edit/matchbrackets.js"/>           
-        <script src="/go/to/tools/frameworks/codemirror/addon/comment/comment.js"/>
-        <script src="/go/to/tools/frameworks/codemirror/addon/search/searchcursor.js"/>
-        <script src="/go/to/tools/frameworks/codemirror/addon/search/search.js"/>
-        <link href="/go/to/tools/frameworks/codemirror/addon/dialog/dialog.css" rel="stylesheet"/>
-
-        <script src="/go/to/tools/frameworks/codemirror/keymap/emacs.js"/>
-
-        <script src="/go/to/tools/frameworks/codemirror/mode/clike/clike.js"/>
 
         <div id="panel-board-live" class="panel panel-default">
 
@@ -39,12 +26,12 @@
                 <p:dataTable id="table-submit-live"
                              widgetVar="tableMyScoreContest"
                              tableStyleClass="table table-striped table-hover"
-                             rowStyleClass="#{s.nameStatus eq 'ACCEPTED'?
-                                              'success': (s.nameStatus eq 'WRONG ANSWER'?
-                                              'danger': (s.nameStatus eq 'TIME LIMIT'?
-                                              'warning': (s.nameStatus eq 'RUNTIME ERROR'?
-                                              'info': (s.nameStatus eq 'COMPILATION ERROR'?
-                                              'warning': null)))) }"
+                             rowStyleClass="#{s.idStatus eq 'AC'?
+                                              'success': (s.idStatus eq 'WR'?
+                                              'danger': (s.idStatus eq 'TL'?
+                                              'info': (s.idStatus eq 'RE'?
+                                              'warning': (s.idStatus eq 'CE'?
+                                              'ce': null)))) }"
                              value="#{submitBean.submitsAll}"
                              var="s"
                              emptyMessage="#{msg['general.table.noinfo']}">
@@ -53,20 +40,28 @@
                         <h:outputText value="#{utilBean.formatIdSubmit(s.idSubmit)}" />
                     </p:column>
                     <p:column headerText="#{msg['problem.label.nameProblem']}" width="200">
-                        <h:commandLink value="#{utilBean.formatIdProblem(s.idProblem)} - #{s.nameProblem}" action="#{problemsBean.actionRedirectViewToSubmitProblem}">
-                            <f:setPropertyActionListener target="#{problemsBean.problemView.idProblem}" value="#{s.idProblem}" />
+                        <h:commandLink value="#{utilBean.formatIdProblem(s.problemMessage.idProblem)} - #{s.problemMessage.nameProblem}"
+                                       action="#{problemViewBean.actionRedirectViewToSubmitProblem}">
+                            <f:setPropertyActionListener target="#{problemViewBean.problemMessage.idProblem}"
+                                                         value="#{s.problemMessage.idProblem}" />
                         </h:commandLink>
                     </p:column>
                     <p:column headerText="#{msg['account.label.nameAccount']}" width="120">
-                        <h:commandLink value="#{s.nickname}" action="#{problemsBean.actionRedirectViewToProfile}">
-                            <f:setPropertyActionListener target="#{problemsBean.accountView.idAccount}" value="#{s.idAccount}" />
+                        <h:commandLink value="#{s.accountMessage.nickname}" action="#{problemViewBean.actionRedirectViewToProfile}">
+                            <f:setPropertyActionListener target="#{problemViewBean.accountMessage.idAccount}" 
+                                                         value="#{s.accountMessage.idAccount}" />
                         </h:commandLink>
                     </p:column>
                     <p:column headerText="#{msg['submit.label.nameStatus']}" styleClass="bold-font" width="150">
-                        <h:outputText value="#{s.statusSubmit}" />
+                        <h:outputText value="#{s.nameStatus}" />
+                    </p:column>
+                    <p:column headerText="#{msg['submit.label.tiempo']}" width="60">
+                        <h:outputText value="#{s.timeUsed}" >
+                            <f:convertDateTime pattern="s.SSS" />
+                        </h:outputText>
                     </p:column>
                     <p:column headerText="#{msg['submit.label.nameLanguag']}" width="60">
-                        <h:outputText value="#{s.nameLanguage}" />
+                        <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
                     </p:column>
                     <p:column headerText="#{msg['submit.label.dateSubmit']}" width="120">
                         <h:outputText value="#{s.dateSubmit}" >
@@ -81,9 +76,8 @@
                     <p:column headerText="#{msg['general.label.view']}" width="40">
                         <p:commandLink styleClass="glyphicon glyphicon-paperclip"
                                        oncomplete="PF('wv-view-code').show();"
-                                       action="#{problemsBean.actionViewCode(s.idSubmit)}" 
-                                       update=":form-dlg-view-code"
-                                       />
+                                       action="#{problemCreateBean.actionViewCode(s.idSubmit)}" 
+                                       update=":form-dlg-view-code" />
                     </p:column>
                 </p:dataTable>
 
@@ -94,54 +88,18 @@
                           widgetVar="wv-view-code" 
                           modal="true"
                           resizable="false" 
-                          width="90%"
-                          onShow="refreshTextAreaViewCode()">
-
+                          width="90%">
                     <div class="panel panel-default">
                         <div class="panel-heading">#{msg['general.label.codeSource']}</div>
                         <div id="panel-body-dlg-view-code" class="panel-body" >
                             <p:inputTextarea id="text-area-view-code"
-                                             value="#{problemsBean.textCode}"
+                                             value="#{problemCreateBean.viewTextCode}"
                                              readonly="true"
                                              style="width: 90% !important; cursor: pointer !important;" />
                         </div>
                     </div>
-                    <script>
-                        var mixedMode = {
-                            name: "htmlmixed",
-                            scriptTypes: [{
-                                    matches: /\/x-handlebars-template|\/x-mustache/i,
-                                    mode: null
-                                }, {
-                                    matches: /(text|application)\/(x-)?vb(a|script)/i,
-                                    mode: "vbscript"
-                                }]
-                        };
-
-                        var editor = CodeMirror.fromTextArea(document.getElementById("form-dlg-view-code:text-area-view-code"), {
-                            mode: "text/x-java",
-                            keyMap: "emacs",
-                            lineNumbers: false,
-                            styleActiveLine: true,
-                            matchBrackets: true,
-                            selectionPointer: true,
-                            readOnly: true
-                        });
-                        var theme = 'eclipse';
-                        editor.setOption("theme", theme);
-                    </script>
                 </p:dialog>
             </h:form>
-            <script>
-                function refreshTextAreaViewCode() {
-                    var eventObject = document.createEvent('Events');
-                    eventObject.initEvent('click', true, false);
-                    document.getElementsByClassName('CodeMirror cm-s-default')[0].dispatchEvent(eventObject);
-                    document.getElementById("panel-body-dlg-view-code").dispatchEvent(eventObject);
-                    console.log('refreshTextAreaViewCode - @echo');
-                }
-            </script>
-        
         </div>
     </ui:define>
 </ui:composition>

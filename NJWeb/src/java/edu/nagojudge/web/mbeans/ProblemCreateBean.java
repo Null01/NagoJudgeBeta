@@ -7,25 +7,21 @@ package edu.nagojudge.web.mbeans;
 
 import edu.nagojudge.app.business.dao.beans.ProblemFacade;
 import edu.nagojudge.app.business.dao.beans.SubmitFacade;
-import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.Category;
+import edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
-import edu.nagojudge.app.business.dao.entities.Problem;
-import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.AccountMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
-import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpSession;
+import javax.faces.event.ValueChangeEvent;
 import org.apache.log4j.Logger;
 import org.primefaces.model.UploadedFile;
 
@@ -35,7 +31,7 @@ import org.primefaces.model.UploadedFile;
  */
 @ManagedBean
 @ViewScoped
-public class ProblemsBean implements Serializable {
+public class ProblemCreateBean implements Serializable {
 
     @EJB
     private SubmitFacade submitFacadeDAO;
@@ -43,35 +39,25 @@ public class ProblemsBean implements Serializable {
     @EJB
     private ProblemFacade problemFacade;
 
-    private final Logger logger = Logger.getLogger(ProblemsBean.class);
+    private final Logger logger = Logger.getLogger(ProblemCreateBean.class);
 
     private final String TARGET_PATH = "/go/to/modules/content/problem/search.xhtml";
-    private final String KEYS_REQUEST[] = {"idProblem", "idAccount"};
 
-    private List<ProblemMessage> listProblems;
-    private List<ProblemMessage> filteredProblems;
-    private String searchParameter;
+    private ProblemMessage problemView = new ProblemMessage();
+    private AccountMessage accountView = new AccountMessage();
 
-    private Category categoryProblemView = new Category();
+    private ComplexityAlgorithm complexityAlgorithmView = new ComplexityAlgorithm();
+    private Category[] selectedCategory = new Category[50];
+    private List<Category> listCategorys = new ArrayList<Category>();
     private DifficultyLevel difficultyLevel = new DifficultyLevel();
-
-    private Problem problemView = new Problem();
-    private Account accountView = new Account();
 
     private String pathSourceProblem;
     private UploadedFile problemFile;
     private UploadedFile inputFile;
     private UploadedFile outputFile;
-    private String textCode;
+    private String viewTextCode;
 
-    public ProblemsBean() {
-    }
-
-    @PostConstruct
-    public void init() {
-        if (problemView.getIdProblem() == null) {
-            this.listProblems = problemFacade.findProblemMessage();
-        }
+    public ProblemCreateBean() {
     }
 
     public String actionRedirectViewToSubmitProblem() {
@@ -84,24 +70,25 @@ public class ProblemsBean implements Serializable {
         return "/modules/user/profile.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
-    public void actionCreateOneProblem(ActionEvent event) {
+    public void actionCreateProblem() {
         try {
             boolean validateTypeFile_I_O = validateTypeFile_I_O();
             if (validateTypeFile_I_O) {
 
                 List<Category> categorys = new ArrayList<Category>();
-                categorys.add(categoryProblemView);
-
-                String idProblemCreated = problemFacade.createProblem(problemView, categorys, difficultyLevel, problemFile.getContents(), inputFile.getContents(), outputFile.getContents());
+                if (selectedCategory != null) {
+                    for (Category category : selectedCategory) {
+                        categorys.add(category);
+                    }
+                }
+                String idProblemCreated = problemFacade.createProblem(problemView, categorys,
+                        difficultyLevel, complexityAlgorithmView,
+                        problemFile.getContents(), inputFile.getContents(), outputFile.getContents());
                 FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_INFO, "Creacion exitosa. Problema #" + idProblemCreated);
                 FacesUtil.getFacesUtil().redirect(TARGET_PATH);
             }
         } catch (IOException ex) {
             logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (UtilNagoJudgeException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
@@ -110,44 +97,12 @@ public class ProblemsBean implements Serializable {
 
     public void actionViewCode(Object idSubmit) {
         String codeText = submitFacadeDAO.findAttachmentSubmit(String.valueOf(idSubmit));
-        setTextCode(codeText);
+        setViewTextCode(codeText);
     }
 
-    public void actionPreRenderViewToSubmitProblem() {
-
-        boolean validationFailed = FacesUtil.getFacesUtil().isValidationFailed();
-        if (validationFailed) {
-            logger.error("params [" + problemView.getIdProblem() + "]");
-            HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
-            session.invalidate();
-            FacesUtil.getFacesUtil().printErrorResponse("Authentication failed, contact administrator.");
-        } else {
-            try {
-                logger.debug("params [" + +problemView.getIdProblem() + "]");
-                this.problemView = problemFacade.find(problemView.getIdProblem());
-                this.pathSourceProblem = submitFacadeDAO.getFullPathProblem(problemView.getIdProblem(), TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension());
-            } catch (IOException ex) {
-                logger.error(ex);
-                FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-            }
-
-        }
-    }
-
-    public List<ProblemMessage> getListProblems() {
-        return listProblems;
-    }
-
-    public void setListProblems(List<ProblemMessage> listProblems) {
-        this.listProblems = listProblems;
-    }
-
-    public List<ProblemMessage> getFilteredProblems() {
-        return filteredProblems;
-    }
-
-    public void setFilteredProblems(List<ProblemMessage> filteredProblems) {
-        this.filteredProblems = filteredProblems;
+    public void actionListenerAddCategory(ValueChangeEvent event) {
+        Object newValue = event.getNewValue();
+        logger.debug(newValue);
     }
 
     public String getPathSourceProblem() {
@@ -158,44 +113,12 @@ public class ProblemsBean implements Serializable {
         this.pathSourceProblem = pathSourceProblem;
     }
 
-    public Problem getProblemView() {
-        return problemView;
+    public Category[] getSelectedCategory() {
+        return selectedCategory;
     }
 
-    public void setProblemView(Problem problemView) {
-        this.problemView = problemView;
-    }
-
-    public String getSearchParameter() {
-        return searchParameter;
-    }
-
-    public void setSearchParameter(String searchParameter) {
-        this.searchParameter = searchParameter;
-    }
-
-    public Category getCategoryProblemView() {
-        return categoryProblemView;
-    }
-
-    public void setCategoryProblemView(Category categoryProblemView) {
-        this.categoryProblemView = categoryProblemView;
-    }
-
-    public Account getAccountView() {
-        return accountView;
-    }
-
-    public void setAccountView(Account AccountView) {
-        this.accountView = AccountView;
-    }
-
-    public String getTextCode() {
-        return textCode;
-    }
-
-    public void setTextCode(String textCode) {
-        this.textCode = textCode;
+    public void setSelectedCategory(Category[] selectedCategory) {
+        this.selectedCategory = selectedCategory;
     }
 
     public DifficultyLevel getDifficultyLevel() {
@@ -247,6 +170,46 @@ public class ProblemsBean implements Serializable {
 
     public void setOutputFile(UploadedFile outputFile) {
         this.outputFile = outputFile;
+    }
+
+    public ComplexityAlgorithm getComplexityAlgorithmView() {
+        return complexityAlgorithmView;
+    }
+
+    public void setComplexityAlgorithmView(ComplexityAlgorithm complexityAlgorithmView) {
+        this.complexityAlgorithmView = complexityAlgorithmView;
+    }
+
+    public ProblemMessage getProblemView() {
+        return problemView;
+    }
+
+    public void setProblemView(ProblemMessage problemView) {
+        this.problemView = problemView;
+    }
+
+    public AccountMessage getAccountView() {
+        return accountView;
+    }
+
+    public void setAccountView(AccountMessage accountView) {
+        this.accountView = accountView;
+    }
+
+    public List<Category> getListCategorys() {
+        return listCategorys;
+    }
+
+    public void setListCategorys(List<Category> listCategorys) {
+        this.listCategorys = listCategorys;
+    }
+
+    public String getViewTextCode() {
+        return viewTextCode;
+    }
+
+    public void setViewTextCode(String viewTextCode) {
+        this.viewTextCode = viewTextCode;
     }
 
 }

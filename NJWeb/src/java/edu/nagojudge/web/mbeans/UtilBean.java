@@ -21,10 +21,10 @@ public class UtilBean implements Serializable {
 
     private final Logger logger = Logger.getLogger(UtilBean.class);
 
-    private final int SIZE_FORMAT_PROBLEM_ID = 3;
+    private final int SIZE_FORMAT_PROBLEM_ID = 5;
     private final int SIZE_FORMAT_SUBMIT_ID = 5;
     private final int SIZE_FORMAT_ACCOUNT_ID = 5;
-    private final int SIZE_FORMAT_CHALLENGE_ID = 3;
+    private final int SIZE_FORMAT_CHALLENGE_ID = 5;
 
     public UtilBean() {
     }

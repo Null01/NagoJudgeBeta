@@ -12,10 +12,12 @@ import edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.ProblemCategory;
+import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
-import edu.nagojudge.app.utils.ValidatorUtil;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
+import edu.nagojudge.msg.pojo.CategoryMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
+import edu.nagojudge.msg.pojo.collections.ListMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
@@ -33,7 +35,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
 import org.apache.log4j.Logger;
 
 /**
@@ -60,26 +61,11 @@ public class ProblemFacade extends AbstractFacade<Problem> {
         super(Problem.class);
     }
 
-    private List<Problem> findProblemEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-        cq.select(cq.from(Problem.class));
-        Query q = em.createQuery(cq);
-        if (!all) {
-            q.setMaxResults(maxResults);
-            q.setFirstResult(firstResult);
-        }
-        return q.getResultList();
-
-    }
-
     public Map<String, Long> findStatisticsStatus(long idProblem) {
-        EntityManager em = getEntityManager();
         Map<String, Long> mapStatisticsStatus = new HashMap<String, Long>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? GROUP BY STATUS_SUBMIT ");
-        Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem);
-        List<Object[]> resultList = query.getResultList();
+        List<Object[]> resultList = em.createQuery("SELECT a.idSubmit.idStatus.keyStatus, COUNT(0) FROM AccountSubmit a WHERE a.idSubmit.idProblem.idProblem = :id_problem GROUP BY a.idSubmit.idStatus.keyStatus")
+                .setParameter("id_problem", idProblem)
+                .getResultList();
         for (Object[] r : resultList) {
             mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
         }
@@ -87,27 +73,20 @@ public class ProblemFacade extends AbstractFacade<Problem> {
     }
 
     public Map<String, Long> findStatisticsStatusByAccount(long idProblem, long idAccount) {
-        EntityManager em = getEntityManager();
         Map<String, Long> mapStatisticsStatus = new HashMap<String, Long>();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT STATUS_SUBMIT, COUNT(0) FROM SUBMIT WHERE ID_PROBLEM = ? AND ID_ACCOUNT = ? GROUP BY STATUS_SUBMIT ");
-        Query query = em.createNativeQuery(sb.toString()).setParameter(1, idProblem).setParameter(2, idAccount);
-        List<Object[]> resultList = query.getResultList();
+        List<Object[]> resultList = em.createQuery("SELECT a.idSubmit.idStatus.keyStatus, COUNT(0) FROM AccountSubmit a WHERE a.idSubmit.idProblem.idProblem = :id_problem AND a.idAccount.idAccount = :id_account GROUP BY a.idSubmit.idStatus.keyStatus")
+                .setParameter("id_problem", idProblem)
+                .setParameter("id_account", idAccount)
+                .getResultList();
         for (Object[] r : resultList) {
             mapStatisticsStatus.put(r[0].toString(), Long.parseLong(String.valueOf(r[1])));
         }
         return mapStatisticsStatus;
     }
 
-    public List<ProblemMessage> findProblemMessage() {
+    public List<ProblemMessage> findStatisticsFromAllProblem() {
         Map<Long, Map<String, Long>> map = new HashMap<Long, Map<String, Long>>();
-        EntityManager em = getEntityManager();
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.idStatus, COUNT(0) ");
-        sql.append("FROM AccountSubmit p GROUP BY p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.idStatus ");
-        sql.append("ORDER BY p.idSubmit.idProblem.idProblem DESC");
-        Query query = em.createQuery(sql.toString(), AccountSubmit.class);
+        Query query = em.createQuery("SELECT p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.keyStatus, COUNT(0) FROM AccountSubmit p GROUP BY p.idSubmit.idProblem.idProblem, p.idSubmit.idStatus.keyStatus ORDER BY p.idSubmit.idProblem.idProblem DESC", AccountSubmit.class);
         List<Object[]> resultList = query.getResultList();
 
         for (Object[] objects : resultList) {
@@ -120,129 +99,146 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             map.get(idProblem).put(status, value);
         }
 
-        List<ProblemMessage> problemPojos = new ArrayList<ProblemMessage>();
-        List<Problem> problems = findProblemEntities(true, -1, -1);
+        List<ProblemMessage> problemMessages = new ArrayList<ProblemMessage>();
+        List<Problem> problems = findAll();
         for (Problem p : problems) {
-            ProblemMessage problemPojo = new ProblemMessage(p.getIdProblem(), p.getNameProblem(), p.getAuthor(), p.getIdDifficulty().getNameDifficulty(),
-                    p.getDescription(), p.getTimeLimit(), 0, 0, 0, 0, 0, 0, 0, 0);
-            Map<String, Long> mapValues = map.get(problemPojo.getIdProblem());
+
+            ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
+            List<ProblemCategory> problemCategoryList = p.getProblemCategoryList();
+            for (ProblemCategory category : problemCategoryList) {
+                CategoryMessage categoryMessage = new CategoryMessage();
+                categoryMessage.setIdCategory(category.getIdCategory().getIdCategory());
+                categoryMessage.setNameCategory(category.getIdCategory().getNameCategory());
+                listMessage.add(categoryMessage);
+            }
+
+            ProblemMessage problemMessage = new ProblemMessage(p.getIdProblem(), p.getNameProblem(), p.getAuthor(),
+                    listMessage, p.getIdDifficulty().getNameDifficulty(), p.getDescription(), p.getIdComplexityAlgorithm().getNameComplexityAlgorithm(),
+                    p.getTimeLimit(), p.getMemoLimit(), 0, 0, 0, 0, 0, 0, 0, 0);
+
+            Map<String, Long> mapValues = map.get(problemMessage.getIdProblem());
             if (mapValues != null) {
                 int sumTotal = 0;
                 for (Map.Entry<String, Long> row : mapValues.entrySet()) {
                     sumTotal += row.getValue();
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.AC.getValue()) == 0) {
-                        problemPojo.setStatusAC(row.getValue().intValue());
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.AC.name()) == 0) {
+                        problemMessage.setStatusAC(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.CE.getValue()) == 0) {
-                        problemPojo.setStatusCE(row.getValue().intValue());
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.CE.name()) == 0) {
+                        problemMessage.setStatusCE(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.CS.getValue()) == 0) {
-                        problemPojo.setStatusCS(row.getValue().intValue());
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.CS.name()) == 0) {
+                        problemMessage.setStatusCS(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.IP.getValue()) == 0) {
-                        problemPojo.setStatusIP(row.getValue().intValue());
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.IP.name()) == 0) {
+                        problemMessage.setStatusIP(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.RE.getValue()) == 0) {
-                        problemPojo.setStatusRE(row.getValue().intValue());
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.RE.name()) == 0) {
+                        problemMessage.setStatusRE(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.TL.getValue()) == 0) {
-                        problemPojo.setStatusTL(row.getValue().intValue());
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.TL.name()) == 0) {
+                        problemMessage.setStatusTL(row.getValue().intValue());
                     }
-                    if (row.getKey().compareTo(TypeStateJudgeEnum.WR.getValue()) == 0) {
-                        problemPojo.setStatusWR(row.getValue().intValue());
+                    if (row.getKey().compareTo(TypeStateJudgeEnum.WR.name()) == 0) {
+                        problemMessage.setStatusWR(row.getValue().intValue());
                     }
-                    problemPojo.setTotalStatus(sumTotal);
+                    problemMessage.setTotalStatus(sumTotal);
                 }
             }
-            problemPojos.add(problemPojo);
+            problemMessages.add(problemMessage);
         }
-        return problemPojos;
+        return problemMessages;
     }
 
-    public List<Problem> findProblemTryEntities(long idAccount) {
-        EntityManager em = getEntityManager();
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT WHERE  ID_ACCOUNT = ").append(idAccount).append(")");
-        List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
-        if (resultList != null && resultList.size() >= 1) {
-            logger.debug(resultList.get(0).getProblemCategoryList());
+    public List<ProblemMessage> findProblemTry(long idAccount) {
+        List<ProblemMessage> problemMessages = new ArrayList<ProblemMessage>();
+        List<Problem> resultList = em.createQuery("SELECT b FROM Problem b WHERE b.idProblem IN (SELECT a.idSubmit.idProblem.idProblem FROM AccountSubmit a WHERE a.idAccount.idAccount = :id_account GROUP BY a.idSubmit.idProblem.idProblem)", Problem.class)
+                .setParameter("id_account", idAccount)
+                .getResultList();
+        if (resultList != null) {
+            for (Problem problem : resultList) {
+                problemMessages.add(parseEntityProblemToMessage(problem));
+            }
         }
+        return problemMessages;
+
+    }
+
+    public List<Problem> findProblemWithStatusFrom(long idAccount, TypeStateJudgeEnum status) {
+        List<Problem> resultList = em.createQuery("SELECT a.idSubmit.idProblem FROM AccountSubmit a WHERE a.idAccount.idAccount = :id_account AND a.idSubmit.idStatus.keyStatus = :key_status", Problem.class)
+                .setParameter("id_account", idAccount)
+                .setParameter("key_status", status.name())
+                .getResultList();
         return resultList;
 
     }
 
-    public List<Problem> findProblemTrySolveEntities(long idAccount) {
-        EntityManager em = getEntityManager();
-        StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT * FROM PROBLEM WHERE ID_PROBLEM IN (SELECT ID_PROBLEM FROM SUBMIT ");
-        sql.append(" WHERE STATUS_SUBMIT = '").append(TypeStateJudgeEnum.AC.getValue()).append("' AND ID_ACCOUNT = ").append(idAccount).append(")");
-        List<Problem> resultList = em.createNativeQuery(sql.toString(), Problem.class).getResultList();
-        return resultList;
-
-    }
-
-    public String createProblem(Problem problemView, List<Category> categoryProblem, DifficultyLevel difficultyLevel,
-            byte[] problem, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
+    public String createProblem(ProblemMessage problemView, List<Category> categoryProblemView,
+            DifficultyLevel difficultyLevelView, ComplexityAlgorithm complexityAlgorithmView,
+            byte[] info, byte[] input, byte[] output) throws IOException, NoSuchAlgorithmException, UtilNagoJudgeException, Exception {
         try {
             logger.debug("INICIA METODO - createProblem()");
+
+            Problem problem = new Problem();
+            problem.setDateCreated(Calendar.getInstance().getTime());
+            problem.setIdComplexityAlgorithm(complexityAlgorithmView);
+            problem.setIdDifficulty(difficultyLevelView);
+            problem.setAuthor(problemView.getAuthor());
+            problem.setNameProblem(problemView.getNameProblem());
+            problem.setTimeLimit(problemView.getTimeLimit());
+            problem.setMemoLimit(problemView.getMemoLimit());
+            problem.setDescription(problemView.getDescription());
             List<ProblemCategory> problemCategorys = new ArrayList<ProblemCategory>();
-            for (Category category : categoryProblem) {
+            for (Category category : categoryProblemView) {
                 ProblemCategory problemCategory = new ProblemCategory();
                 problemCategory.setIdCategory(category);
-                problemCategory.setIdProblem(problemView);
+                problemCategory.setIdProblem(problem);
                 problemCategorys.add(problemCategory);
             }
-            problemView.setProblemCategoryList(problemCategorys);
-            problemView.setDateCreated(Calendar.getInstance().getTime());
-            problemView.setIdComplexityAlgorithm(em.find(ComplexityAlgorithm.class, new String("1")));
-            problemView.setIdDifficulty(difficultyLevel);
-            
-            ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getAuthor());
-            problemView.setAuthor(problemView.getAuthor());
-            ValidatorUtil.getUtilValidator().onlyLetterNumberSpace(problemView.getNameProblem());
-            problemView.setNameProblem(problemView.getNameProblem());
-            
-            logger.debug(" getIdDifficulty=" + problemView.getIdDifficulty() + " @ECHO");
-            logger.debug(" getAuthor=" + problemView.getAuthor() + " @ECHO");
-            logger.debug(" getNameProblem=" + problemView.getNameProblem() + " @ECHO");
-            logger.debug(" getDescription=" + problemView.getDescription() + " @ECHO");
-            logger.debug(" getTimeLimit=" + problemView.getTimeLimit() + " @ECHO");
-            logger.debug(" getMemoLimit=" + problemView.getMemoLimit() + " @ECHO");
+            problem.setProblemCategoryList(problemCategorys);
 
-            create(problemView);
-            logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problemView.getIdProblem() + " @ECHO");
+            logger.debug(" getProblemCategoryList [" + problem.getProblemCategoryList() + "] @ECHO");
+            logger.debug(" getIdComplexityAlgorithm [" + problem.getIdComplexityAlgorithm() + "] @ECHO");
+            logger.debug(" getIdDifficulty [" + problem.getIdDifficulty() + "] @ECHO");
+            logger.debug(" getAuthor [" + problem.getAuthor() + "] @ECHO");
+            logger.debug(" getNameProblem [" + problem.getNameProblem() + "] @ECHO");
+            logger.debug(" getTimeLimit [" + problem.getTimeLimit() + "] @ECHO");
+            logger.debug(" getMemoLimit [" + problem.getMemoLimit() + "] @ECHO");
+            logger.debug(" getDescription [" + problem.getDescription() + "] @ECHO");
+
+            create(problem);
+            logger.debug("CREACION ENTIDAD PROBLEMA_ID=" + problem.getIdProblem() + " @ECHO");
 
             String pathProblem = IResourcesPaths.PATH_ROOT_SAVE_PROBLEMS_WEB;
-            String nameFileProblem = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
+            String nameFileProblem = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
             logger.debug("PATH_PROBLEM=" + pathProblem);
             logger.debug("NAME_FILE_PROBLEM=" + nameFileProblem);
-            FileUtil.getInstance().createFile(problem, pathProblem, nameFileProblem);
+            FileUtil.getInstance().createFile(info, pathProblem, nameFileProblem);
 
             String pathProblemLocal = IResourcesPaths.PATH_SAVE_PROBLEMS_LOCAL;
-            String nameFileProblemLocal = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
+            String nameFileProblemLocal = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7) + TypeFilesEnum.PDF.getExtension();
             logger.debug("PATH_PROBLEM_LOCAL=" + pathProblemLocal);
             logger.debug("NAME_FILE_PROBLEM_LOCAL=" + nameFileProblemLocal);
-            FileUtil.getInstance().createFile(problem, pathProblemLocal, nameFileProblemLocal);
+            FileUtil.getInstance().createFile(info, pathProblemLocal, nameFileProblemLocal);
 
             String pathInput = IResourcesPaths.PATH_SAVE_INPUT_LOCAL;
-            String nameFileInput = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7);
+            String nameFileInput = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7);
             logger.debug("PATH_INPUT=" + pathInput);
             logger.debug("NAME_FILE_INPUT=" + nameFileInput);
             FileUtil.getInstance().createFile(input, pathInput, nameFileInput);
 
             String pathOutput = IResourcesPaths.PATH_SAVE_OUTPUT_LOCAL;
-            String nameFileOutput = FormatUtil.getInstance().buildZerosToLeft(problemView.getIdProblem(), 7);
+            String nameFileOutput = FormatUtil.getInstance().buildZerosToLeft(problem.getIdProblem(), 7);
             logger.debug("PATH_OUTPUT=" + pathOutput);
             logger.debug("NAME_FILE_OUTPUT=" + nameFileOutput);
             FileUtil.getInstance().createFile(output, pathOutput, nameFileOutput);
 
             logger.debug("INIT - CREACION ATTACHMENTS @ECHO");
-
             List<Attachments> attachmentses = new ArrayList<Attachments>();
             Attachments attachment = new Attachments();
-            attachment.setChecksum(FileUtil.getInstance().generateChechSum(problem, TypeSHAEnum.SHA256));
+            attachment.setChecksum(FileUtil.getInstance().generateChechSum(info, TypeSHAEnum.SHA256));
             attachment.setDateCreated(Calendar.getInstance().getTime());
-            attachment.setIdProblem(problemView);
+            attachment.setIdProblem(problem);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension());
             attachmentses.add(attachment);
             attachmentsFacadeDAO.create(attachment);
@@ -251,7 +247,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(input, TypeSHAEnum.SHA256));
             attachment.setDateCreated(Calendar.getInstance().getTime());
-            attachment.setIdProblem(problemView);
+            attachment.setIdProblem(problem);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_IN.getExtension());
             attachmentses.add(attachment);
             attachmentsFacadeDAO.create(attachment);
@@ -260,28 +256,50 @@ public class ProblemFacade extends AbstractFacade<Problem> {
             attachment = new Attachments();
             attachment.setChecksum(FileUtil.getInstance().generateChechSum(output, TypeSHAEnum.SHA256));
             attachment.setDateCreated(Calendar.getInstance().getTime());
-            attachment.setIdProblem(problemView);
+            attachment.setIdProblem(problem);
             attachment.setTypeFileServer(TypeFilesEnum.TYPE_FILE_OUT.getExtension());
             attachmentses.add(attachment);
             attachmentsFacadeDAO.create(attachment);
             logger.debug("CREACION ATTACHMENT_ID=" + attachment.getIdAttachment() + "  @ECHO");
 
             return String.valueOf(problemView.getIdProblem());
-        } catch (IOException ex) {
-            logger.error(ex);
-            throw ex;
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error(ex);
-            throw ex;
-        } catch (UtilNagoJudgeException ex) {
-            logger.error(ex);
-            throw ex;
         } catch (Exception ex) {
+            ex.printStackTrace();
             logger.error(ex);
             throw ex;
         } finally {
             logger.debug("FINALIZA METODO - createProblem()");
         }
+    }
+
+    public ProblemMessage findProblemById(Long idProblem) {
+        ProblemMessage message = null;
+        Problem problem = em.find(Problem.class, idProblem);
+        if (problem != null) {
+            message = parseEntityProblemToMessage(problem);
+        }
+        return message;
+    }
+
+    private ProblemMessage parseEntityProblemToMessage(Problem problem) {
+        ProblemMessage problemMessage = new ProblemMessage();
+        problemMessage.setIdProblem(problem.getIdProblem());
+        problemMessage.setNameProblem(problem.getNameProblem());
+        problemMessage.setBestComplexity(problem.getIdComplexityAlgorithm().getNameComplexityAlgorithm());
+        problemMessage.setNameProblem(problem.getIdDifficulty().getNameDifficulty());
+        problemMessage.setMemoLimit(problem.getMemoLimit());
+        problemMessage.setTimeLimit(problem.getTimeLimit());
+        problemMessage.setDescription(problem.getDescription());
+        List<ProblemCategory> problemCategorys = problem.getProblemCategoryList();
+        ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
+        for (ProblemCategory category : problemCategorys) {
+            CategoryMessage categoryMessage = new CategoryMessage();
+            categoryMessage.setIdCategory(category.getIdCategory().getIdCategory());
+            categoryMessage.setNameCategory(category.getIdCategory().getNameCategory());
+            listMessage.add(categoryMessage);
+        }
+        problemMessage.setListCategoryMessage(listMessage);
+        return problemMessage;
     }
 
 }

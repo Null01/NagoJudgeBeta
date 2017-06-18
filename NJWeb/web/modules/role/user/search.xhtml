@@ -1,0 +1,73 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/home.xhtml">
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="idAccount" value="#{userViewBean.accountView.idAccount}"/>
+        </f:metadata>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="well">
+            <fieldset>
+                <div class="form-group">
+
+                    <h:form id="formProblemsAll" class="form-horizontal">
+                        <p:messages id="msgs" autoUpdate="true" closable="true"/>
+
+                        <p:dataTable id="table-submit-live"
+                                     var="user"
+                                     widgetVar="usWidgetVar"
+                                     tableStyleClass="table table-striped table-hover"
+                                     value="#{userViewBean.listUsers}"
+                                     paginator="true"
+                                     paginatorPosition="bottom" 
+                                     emptyMessage="#{msg['general.table.noinfo']}">
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-search" aria-hidden="true" />
+                                            </span>
+                                            <p:inputText id="globalFilter" styleClass="form-control" onkeyup="PF('usWidgetVar').filter();" placeholder="Parametros de busqueda" value="#{proproblemBeanarchParameter}"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column headerText="#{msg['account.label.nameAccount']}" width="120" 
+                                      filterBy="#{user.accountMessage.nickname}" filterStyle="display:none;"
+                                      filterMatchMode="contains">
+                                <h:commandLink value="#{user.accountMessage.nickname}" 
+                                               action="#{userViewBean.actionRedirectViewToProfile}">
+                                    <f:setPropertyActionListener target="#{userViewBean.accountView.idAccount}"
+                                                                 value="#{user.accountMessage.idAccount}" />
+                                </h:commandLink>
+                            </p:column>
+                            <p:column headerText="#{msg['general.user.label.firstName']}" width="120" filterBy="#{user.firstName}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{user.firstName}" />
+                            </p:column>
+                            <p:column headerText="#{msg['general.user.label.lastName']}" width="120" filterBy="#{user.lastName}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{user.lastName}" />
+                            </p:column>
+                            <p:column headerText="#{msg['general.user.label.email']}" width="120" filterBy="#{user.email}" filterStyle="display:none;" filterMatchMode="contains">
+                                <h:outputText value="#{user.email}" />
+                            </p:column>
+                            <p:column headerText="#{msg['general.user.label.typeUser']}" width="120" sortBy="#{user.nameTypeUser}" >
+                                <h:outputText value="#{user.nameTypeUser}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </fieldset> 
+        </div>
+    </ui:define>
+
+</ui:composition>

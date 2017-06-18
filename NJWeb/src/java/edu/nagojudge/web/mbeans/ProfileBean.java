@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.web.mbeans;
 
+import edu.nagojudge.app.business.dao.beans.AccountFacade;
 import edu.nagojudge.app.business.dao.beans.ProblemFacade;
 import edu.nagojudge.app.business.dao.beans.SubmitFacade;
 import edu.nagojudge.app.business.dao.beans.UserFacade;
@@ -13,8 +14,12 @@ import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.Submit;
 import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.utils.FacesUtil;
+import edu.nagojudge.msg.pojo.AccountMessage;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
+import edu.nagojudge.msg.pojo.UserMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
+import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -37,28 +43,25 @@ import org.primefaces.model.chart.PieChartModel;
 public class ProfileBean implements Serializable {
 
     @EJB
+    private AccountFacade accountFacade;
+    @EJB
     private SubmitFacade submitFacade;
     @EJB
     private ProblemFacade problemFacade;
-    @EJB
-    private UserFacade userFacade;
 
     private final Logger logger = Logger.getLogger(ProfileBean.class);
-
-    private final String KEYS_REQUEST[] = {"idAccount"};
 
     private boolean showPieChartModel = false;
     private PieChartModel pieChartModelStatistics = new PieChartModel();
 
-    private Account accountView = new Account();
-    private User userView = new User();
-    private Submit submitView = new Submit();
-    private Problem problemView = new Problem();
+    private AccountMessage accountMessage = new AccountMessage();
+    private ProblemMessage problemMessage = new ProblemMessage();
+    private UserMessage userMessage = new UserMessage();
 
     private String searchParameter;
 
-    private List<Problem> listProblemsTry;
-    private List<Problem> filteredProblemsTry;
+    private List<ProblemMessage> listProblemsTry;
+    private List<ProblemMessage> filteredProblemsTry;
 
     private List<Problem> listProblemsTrySolve;
     private List<Problem> filteredProblemsTrySolve;
@@ -92,8 +95,6 @@ public class ProfileBean implements Serializable {
         try {
             logger.debug("INICIA METODO onRowEditMySubmit()");
             SubmitMessage submitMessage = (SubmitMessage) event.getObject();
-            //submitMessage.setVisibleWeb(TypeStateEnum.valueOf(this.submitView.getVisibleWeb()).getType());
-            logger.debug("getVisibleWeb [" + submitMessage.getVisibleWeb() + "]");
             submitFacade.editSubmitMessage(submitMessage);
         } catch (Exception ex) {
             logger.error(ex);
@@ -104,22 +105,36 @@ public class ProfileBean implements Serializable {
     }
 
     public void actionPreRenderViewToProfile() {
-        logger.debug("getIdAccount [" + accountView.getIdAccount() + "]");
-        if (accountView.getIdAccount() != null) {
+        boolean validationFailed = FacesUtil.getFacesUtil().isValidationFailed();
+        if (validationFailed) {
+            logger.debug("params [" + accountMessage.getIdAccount() + "]");
+            HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
+            session.invalidate();
+            FacesUtil.getFacesUtil().printErrorResponse("Autenticación fallida, contacte al administrador.");
+        } else {
+            logger.debug("params [" + accountMessage.getIdAccount() + "]");
+            if (accountMessage.getIdAccount() == null) {
+                HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
+                session.invalidate();
+                FacesUtil.getFacesUtil().printErrorResponse("Cuenta no identificada, contacte al administrador.");
+            }
 
-            User findUser = userFacade.findUserByIdAccount(accountView.getIdAccount());
-            if (findUser != null) {
+            this.userMessage = accountFacade.findUserByIdAccount(accountMessage.getIdAccount());
+            if (userMessage == null) {
+                HttpSession session = FacesUtil.getFacesUtil().getCurrentSession();
+                session.invalidate();
+                FacesUtil.getFacesUtil().printErrorResponse("Cuenta no identificada, contacte al administrador.");
+            } else {
 
-                long idAccount = accountView.getIdAccount();
-                this.userView = findUser;
-                this.accountView = findUser.getIdAccount();
-                this.listProblemsTry = problemFacade.findProblemTryEntities(idAccount);
-                this.filteredProblemsTry = new ArrayList<Problem>(this.listProblemsTry);
+                this.accountMessage = userMessage.getAccountMessage();
 
-                this.listProblemsTrySolve = problemFacade.findProblemTrySolveEntities(idAccount);
+                this.listProblemsTry = problemFacade.findProblemTry(accountMessage.getIdAccount());
+                this.filteredProblemsTry = new ArrayList<ProblemMessage>(this.listProblemsTry);
+
+                this.listProblemsTrySolve = problemFacade.findProblemWithStatusFrom(accountMessage.getIdAccount(), TypeStateJudgeEnum.AC);
                 this.filteredProblemsTrySolve = new ArrayList<Problem>(this.listProblemsTrySolve);
 
-                this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(idAccount);
+                this.listSubmitsByAccount = submitFacade.findSubmitEntitiesByAccount(accountMessage.getIdAccount());
                 this.filterListSubmitsByAccount = new ArrayList<SubmitMessage>(this.listSubmitsByAccount);
             }
         }
@@ -145,51 +160,19 @@ public class ProfileBean implements Serializable {
         this.pieChartModelStatistics = pieChartModelStatistics;
     }
 
-    public Account getAccountView() {
-        return accountView;
-    }
-
-    public void setAccountView(Account accountView) {
-        this.accountView = accountView;
-    }
-
-    public User getUserView() {
-        return userView;
-    }
-
-    public void setUserView(User userView) {
-        this.userView = userView;
-    }
-
-    public Submit getSubmitView() {
-        return submitView;
-    }
-
-    public void setSubmitView(Submit submitView) {
-        this.submitView = submitView;
-    }
-
-    public Problem getProblemView() {
-        return problemView;
-    }
-
-    public void setProblemView(Problem problemView) {
-        this.problemView = problemView;
-    }
-
-    public List<Problem> getListProblemsTry() {
+    public List<ProblemMessage> getListProblemsTry() {
         return listProblemsTry;
     }
 
-    public void setListProblemsTry(List<Problem> listProblemsTry) {
+    public void setListProblemsTry(List<ProblemMessage> listProblemsTry) {
         this.listProblemsTry = listProblemsTry;
     }
 
-    public List<Problem> getFilteredProblemsTry() {
+    public List<ProblemMessage> getFilteredProblemsTry() {
         return filteredProblemsTry;
     }
 
-    public void setFilteredProblemsTry(List<Problem> filteredProblemsTry) {
+    public void setFilteredProblemsTry(List<ProblemMessage> filteredProblemsTry) {
         this.filteredProblemsTry = filteredProblemsTry;
     }
 
@@ -263,7 +246,7 @@ public class ProfileBean implements Serializable {
     private void createPieModelGraphStatisticsStatusSolve(Problem problem) {
         logger.debug("INICIA METODO - createPieModelGraphStatisticsStatusSolve()");
         logger.debug("getIdProblem()=" + problem.getIdProblem());
-        Map<String, Long> mapStatisticsStatus = problemFacade.findStatisticsStatusByAccount(problem.getIdProblem(), accountView.getIdAccount());
+        Map<String, Long> mapStatisticsStatus = problemFacade.findStatisticsStatusByAccount(problem.getIdProblem(), accountMessage.getIdAccount());
 
         pieChartModelStatistics = new PieChartModel();
         if (!mapStatisticsStatus.isEmpty()) {
@@ -275,6 +258,30 @@ public class ProfileBean implements Serializable {
         pieChartModelStatistics.setTitle("Estadisticas!");
         pieChartModelStatistics.setLegendPosition("w");
         logger.debug("FINALIZA METODO - createPieModelGraphStatisticsStatusSolve()");
+    }
+
+    public AccountMessage getAccountMessage() {
+        return accountMessage;
+    }
+
+    public void setAccountMessage(AccountMessage accountMessage) {
+        this.accountMessage = accountMessage;
+    }
+
+    public ProblemMessage getProblemMessage() {
+        return problemMessage;
+    }
+
+    public void setProblemMessage(ProblemMessage problemMessage) {
+        this.problemMessage = problemMessage;
+    }
+
+    public UserMessage getUserMessage() {
+        return userMessage;
+    }
+
+    public void setUserMessage(UserMessage userMessage) {
+        this.userMessage = userMessage;
     }
 
 }
