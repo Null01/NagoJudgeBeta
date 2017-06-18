@@ -69,7 +69,7 @@ public class AbstractConvertJSF {
                         return object;
                     }
                 }
-            } else if (!item.isNoSelectionOption()&& value.equals(converter.getAsString(context, component, item.getValue()))) {
+            } else if (!item.isNoSelectionOption() && value.equals(converter.getAsString(context, component, item.getValue()))) {
                 return item.getValue();
             }
         }
