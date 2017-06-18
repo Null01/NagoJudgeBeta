@@ -9,14 +9,14 @@ package edu.nagojudge.msg.pojo.constants;
  *
  * @author andresfelipegarciaduran
  */
-public enum TypeStateEnum {
+public enum TypeStateFileEnum {
 
     PRIVATE("PRIVATE"),
     PUBLIC("PUBLIC");
 
     private String type;
 
-    private TypeStateEnum(String type) {
+    private TypeStateFileEnum(String type) {
         this.type = type;
     }
 

@@ -22,7 +22,9 @@ public class ProblemMessage implements Serializable {
     private ListMessage<CategoryMessage> listCategoryMessage;
     private String nameDifficulty;
     private String description;
-    private int timeLimitSeg;
+    private String bestComplexity;
+    private int timeLimit;
+    private int memoLimit;
     private int totalStatus;
     private int statusAC;
     private int statusCE;
@@ -35,13 +37,16 @@ public class ProblemMessage implements Serializable {
     public ProblemMessage() {
     }
 
-    public ProblemMessage(Long idProblem, String nameProblem, String author, String nameDifficulty, String description, int timeLimitSeg, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
+    public ProblemMessage(Long idProblem, String nameProblem, String author, ListMessage<CategoryMessage> listCategoryMessage, String nameDifficulty, String description, String bestComplexity, int timeLimitSeg, int memoLimit, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
         this.idProblem = idProblem;
         this.nameProblem = nameProblem;
         this.author = author;
+        this.listCategoryMessage = listCategoryMessage;
         this.nameDifficulty = nameDifficulty;
         this.description = description;
-        this.timeLimitSeg = timeLimitSeg;
+        this.bestComplexity = bestComplexity;
+        this.timeLimit = timeLimitSeg;
+        this.memoLimit = memoLimit;
         this.totalStatus = totalStatus;
         this.statusAC = statusAC;
         this.statusCE = statusCE;
@@ -60,14 +65,6 @@ public class ProblemMessage implements Serializable {
         this.idProblem = idProblem;
     }
 
-    public ListMessage<CategoryMessage> getListCategoryMessage() {
-        return listCategoryMessage;
-    }
-
-    public void setListCategoryMessage(ListMessage<CategoryMessage> listCategoryMessage) {
-        this.listCategoryMessage = listCategoryMessage;
-    }
-
     public String getNameProblem() {
         return nameProblem;
     }
@@ -84,6 +81,22 @@ public class ProblemMessage implements Serializable {
         this.author = author;
     }
 
+    public ListMessage<CategoryMessage> getListCategoryMessage() {
+        return listCategoryMessage;
+    }
+
+    public void setListCategoryMessage(ListMessage<CategoryMessage> listCategoryMessage) {
+        this.listCategoryMessage = listCategoryMessage;
+    }
+
+    public String getNameDifficulty() {
+        return nameDifficulty;
+    }
+
+    public void setNameDifficulty(String nameDifficulty) {
+        this.nameDifficulty = nameDifficulty;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -92,12 +105,36 @@ public class ProblemMessage implements Serializable {
         this.description = description;
     }
 
-    public int getTimeLimitSeg() {
-        return timeLimitSeg;
+    public String getBestComplexity() {
+        return bestComplexity;
     }
 
-    public void setTimeLimitSeg(int timeLimitSeg) {
-        this.timeLimitSeg = timeLimitSeg;
+    public void setBestComplexity(String bestComplexity) {
+        this.bestComplexity = bestComplexity;
+    }
+
+    public int getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public int getMemoLimit() {
+        return memoLimit;
+    }
+
+    public void setMemoLimit(int memoLimit) {
+        this.memoLimit = memoLimit;
+    }
+
+    public int getTotalStatus() {
+        return totalStatus;
+    }
+
+    public void setTotalStatus(int totalStatus) {
+        this.totalStatus = totalStatus;
     }
 
     public int getStatusAC() {
@@ -155,21 +192,4 @@ public class ProblemMessage implements Serializable {
     public void setStatusWR(int statusWR) {
         this.statusWR = statusWR;
     }
-
-    public int getTotalStatus() {
-        return totalStatus;
-    }
-
-    public void setTotalStatus(int totalStatus) {
-        this.totalStatus = totalStatus;
-    }
-
-    public String getNameDifficulty() {
-        return nameDifficulty;
-    }
-
-    public void setNameDifficulty(String nameDifficulty) {
-        this.nameDifficulty = nameDifficulty;
-    }
-
 }

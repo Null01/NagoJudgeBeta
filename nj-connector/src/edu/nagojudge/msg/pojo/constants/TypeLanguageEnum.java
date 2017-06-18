@@ -9,7 +9,7 @@ package edu.nagojudge.msg.pojo.constants;
  *
  * @author andresfelipegarciaduran
  */
-public enum LanguageEnum {
+public enum TypeLanguageEnum {
 
-    JAVA, C;
+    JAVA, C, PYTHON;
 }
