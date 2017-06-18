@@ -52,11 +52,14 @@ public class SubmitService implements ISubmitService {
         try {
             logger.debug("INICIA SERVICIO - generateJudgmentByTeam()");
             authenticationFacade.authorization(token);
-            SubmitMessage startJudge = judgeFacade.startJudgeATeam(
+            /*
+            SubmitMessage startJudge = judgeFacade.startJudgeByTeam(
                     Long.parseLong(idChallenge),
                     Long.parseLong(idSubmit),
                     Long.parseLong(idTeam));
             return startJudge;
+            */
+            return null;
         } finally {
             logger.debug("FINALIZA SERVICIO - generateJudgmentByTeam()");
         }

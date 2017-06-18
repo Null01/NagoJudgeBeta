@@ -16,6 +16,7 @@ import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
+import edu.nagojudge.msg.pojo.constants.TypeLanguageEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.utils.FormatUtil;
 import java.io.File;
@@ -52,43 +53,56 @@ public class JudgeDAOFacade {
     }
 
     public SubmitMessage startJudgeByUser(Long idSubmit, String email) throws BusinessException {
-        logger.debug("STARTING JUDGE - startJudge()");
+        logger.debug("STARTING JUDGE - startJudgeByUser()");
         JudgeMessage judgetState = new JudgeMessage();
         judgetState.setMessageJudge(TypeStateJudgeEnum.CE.name());
         try {
             em = getEntityManager();
-            logger.debug("EVALUATE ID_SUBMIT=" + idSubmit + " @ECHO");
+            logger.debug("EVALUATE idSubmit [" + idSubmit + "] @ECHO");
             Submit submit = em.find(Submit.class, idSubmit);
             if (submit == null) {
-                throw new BusinessException("ID_PROBLEM [" + idSubmit + "] NO EXISTE.");
+                throw new BusinessException("ID_SUBMIT [" + idSubmit + "] NO EXISTE.");
             }
 
-            logger.debug("getIdSubmit()=" + submit.getIdSubmit());
-            logger.debug("getIdLanguage()=" + submit.getIdLanguage());
-            logger.debug("getIdStatus()=" + submit.getIdStatus().getNameStatus());
-            logger.debug("getIdProblem()=" + submit.getIdProblem());
-            String pathFileCodeSource = PATH_SAVE_CODE_SOURCE_USER + java.io.File.separatorChar + String.valueOf(email)
+            logger.debug("getIdSubmit() [" + submit.getIdSubmit() + "]");
+            logger.debug("getIdLanguage() [" + submit.getIdLanguage() + "]");
+            logger.debug("getIdStatus() [" + submit.getIdStatus().getNameStatus() + "]");
+            logger.debug("getIdProblem() [" + submit.getIdProblem() + "]");
+            String pathFileCodeSource = PATH_SAVE_CODE_SOURCE_USER
+                    + java.io.File.separatorChar + String.valueOf(email)
                     + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            String nameFileCodeSource = FormatUtil.getInstance().buildZerosToLeft(submit.getIdSubmit(), 7) + "." + submit.getIdLanguage().getExtension();
-            String fullPathInputFile = PATH_SAVE_INPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            //String fullPathOutputFile = PATH_SAVE_OUTPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            //logger.debug("fullPathOutputFile=" + fullPathOutputFile);
+            final String nameFileCodeSource = FormatUtil.getInstance().buildZerosToLeft(submit.getIdSubmit(), 7) + "." + submit.getIdLanguage().getExtension();
+            final String fullPathInputFile = PATH_SAVE_INPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
 
-            String checkSumOutputFile = findCheckSumOfFile(submit.getIdProblem().getAttachmentsList(), TypeFilesEnum.TYPE_FILE_OUT.getExtension());
+            final String checkSumOutputFile = findCheckSumOfFile(submit.getIdProblem().getAttachmentsList(), TypeFilesEnum.TYPE_FILE_OUT.getExtension());
             logger.debug("checkSumOutputFile [" + checkSumOutputFile + "]");
-            if (submit.getIdLanguage().getExtension().toLowerCase().compareTo(JudgeServiceJava.JAVA_EXTENSION) == 0) {
-                try {
-                    logger.debug("pathFileCodeSource=" + pathFileCodeSource);
-                    logger.debug("nameFileCodeSource=" + nameFileCodeSource);
-                    logger.debug("fullPathInputFile=" + fullPathInputFile);
+            logger.debug("pathFileCodeSource [" + pathFileCodeSource + "]");
+            logger.debug("nameFileCodeSource [" + nameFileCodeSource + "]");
+            logger.debug("fullPathInputFile [" + fullPathInputFile + "]");
+
+            TypeLanguageEnum typeLanguageEnum = TypeLanguageEnum.valueOf(submit.getIdLanguage().getNameLanguage().toUpperCase());
+            switch (typeLanguageEnum) {
+                case JAVA: {
                     JudgeServiceJava judgeServiceJava = new JudgeServiceJava();
-                    judgetState = judgeServiceJava.judgeProblemProcess(pathFileCodeSource, nameFileCodeSource, fullPathInputFile, checkSumOutputFile);
-                } catch (RunJudgeException ex) {
-                    logger.error(ex);
-                    judgetState.setStatusName(TypeStateJudgeEnum.RE.name());
-                    judgetState.setResumeStatus(ex.getLocalizedMessage());
+                    try {
+                        judgetState = judgeServiceJava.executeJudgment(pathFileCodeSource,
+                                nameFileCodeSource,
+                                fullPathInputFile,
+                                checkSumOutputFile,
+                                submit.getTimeUsed().longValue());
+                    } catch (RunJudgeException ex) {
+                        logger.error(ex);
+                        judgetState.setStatusName(TypeStateJudgeEnum.RE.name());
+                        judgetState.setResumeStatus(ex.getLocalizedMessage());
+                    }
                 }
+                break;
+                case C:
+                    break;
+                case PYTHON:
+                    break;
             }
+
             logger.debug("JUDGE_FINALLY [" + judgetState.getStatusName() + "]");
             submit.setDateJudge(Calendar.getInstance().getTime());
             submit.setTimeUsed(BigInteger.valueOf(judgetState.getTimeUsed()));
@@ -101,7 +115,7 @@ public class JudgeDAOFacade {
             logger.error(ex);
             throw ex;
         } finally {
-            logger.debug("ENDING JUDGE - startJudge()");
+            logger.debug("ENDING JUDGE - startJudgeByUser()");
         }
     }
 
@@ -120,8 +134,8 @@ public class JudgeDAOFacade {
      * @return
      * @throws BusinessException
      */
-    public SubmitMessage startJudgeATeam(Long idChallenge, Long idSubmit, Long idTeam) throws BusinessException {
-        logger.debug("STARTING JUDGE - startJudgeATeam()");
+    public SubmitMessage startJudgeByTeam(Long idChallenge, Long idSubmit, Long idTeam) throws BusinessException {
+        logger.debug("STARTING JUDGE - startJudgeByTeam()");
         JudgeMessage judgetState = new JudgeMessage();
         judgetState.setMessageJudge(TypeStateJudgeEnum.CE.name());
         try {
@@ -135,29 +149,42 @@ public class JudgeDAOFacade {
             logger.debug("getIdLanguage()=" + submit.getIdLanguage());
             logger.debug("getIdStatus()=" + submit.getIdStatus().getNameStatus());
             logger.debug("getIdProblem()=" + submit.getIdProblem());
-            String pathFileCodeSource = PATH_SAVE_CODE_SOURCE_TEAM + java.io.File.separatorChar
+            final String pathFileCodeSource = PATH_SAVE_CODE_SOURCE_TEAM + java.io.File.separatorChar
                     + FormatUtil.getInstance().buildZerosToLeft(idChallenge, 7) + java.io.File.separatorChar
                     + FormatUtil.getInstance().buildZerosToLeft(idTeam, 7) + java.io.File.separatorChar
                     + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            String nameFileCodeSource = FormatUtil.getInstance().buildZerosToLeft(submit.getIdSubmit(), 7) + "." + submit.getIdLanguage().getExtension();
-            String fullPathInputFile = PATH_SAVE_INPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
-            //String fullPathOutputFile = PATH_SAVE_OUTPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
+            final String nameFileCodeSource = FormatUtil.getInstance().buildZerosToLeft(submit.getIdSubmit(), 7) + "." + submit.getIdLanguage().getExtension();
+            final String fullPathInputFile = PATH_SAVE_INPUT_SOURCE + java.io.File.separatorChar + FormatUtil.getInstance().buildZerosToLeft(submit.getIdProblem().getIdProblem(), 7);
 
-            String checkSumOutputFile = findCheckSumOfFile(submit.getIdProblem().getAttachmentsList(), TypeFilesEnum.TYPE_FILE_OUT.getExtension());
-            if (submit.getIdLanguage().getExtension().toLowerCase().compareTo(JudgeServiceJava.JAVA_EXTENSION) == 0) {
-                try {
-                    logger.debug("pathFileCodeSource [" + pathFileCodeSource + "]");
-                    logger.debug("nameFileCodeSource [" + nameFileCodeSource + "]");
-                    logger.debug("fullPathInputFile [" + fullPathInputFile + "]");
-                    logger.debug("checkSumOutputFile [" + checkSumOutputFile + "]");
+            final String checkSumOutputFile = findCheckSumOfFile(submit.getIdProblem().getAttachmentsList(), TypeFilesEnum.TYPE_FILE_OUT.getExtension());
+            logger.debug("checkSumOutputFile [" + checkSumOutputFile + "]");
+            logger.debug("pathFileCodeSource [" + pathFileCodeSource + "]");
+            logger.debug("nameFileCodeSource [" + nameFileCodeSource + "]");
+            logger.debug("fullPathInputFile [" + fullPathInputFile + "]");
+
+            TypeLanguageEnum typeLanguageEnum = TypeLanguageEnum.valueOf(submit.getIdLanguage().getNameLanguage().toUpperCase());
+            switch (typeLanguageEnum) {
+                case JAVA: {
                     JudgeServiceJava judgeServiceJava = new JudgeServiceJava();
-                    judgetState = judgeServiceJava.judgeProblemProcess(pathFileCodeSource, nameFileCodeSource, fullPathInputFile, checkSumOutputFile);
-                } catch (RunJudgeException ex) {
-                    logger.error(ex);
-                    judgetState.setStatusName(TypeStateJudgeEnum.RE.name());
-                    judgetState.setResumeStatus(ex.getLocalizedMessage());
+                    try {
+                        judgetState = judgeServiceJava.executeJudgment(pathFileCodeSource,
+                                nameFileCodeSource,
+                                fullPathInputFile,
+                                checkSumOutputFile,
+                                submit.getTimeUsed().longValue());
+                    } catch (RunJudgeException ex) {
+                        logger.error(ex);
+                        judgetState.setStatusName(TypeStateJudgeEnum.RE.name());
+                        judgetState.setResumeStatus(ex.getLocalizedMessage());
+                    }
                 }
+                break;
+                case C:
+                    break;
+                case PYTHON:
+                    break;
             }
+
             logger.debug("JUDGE_FINALLY [" + judgetState.getStatusName() + "]");
             submit.setDateJudge(Calendar.getInstance().getTime());
             submit.setTimeUsed(BigInteger.valueOf(judgetState.getTimeUsed()));
