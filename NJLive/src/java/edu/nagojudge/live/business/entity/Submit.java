@@ -6,6 +6,7 @@
 package edu.nagojudge.live.business.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -29,7 +30,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -56,6 +56,10 @@ public class Submit implements Serializable {
     @Column(name = "DATE_JUDGE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateJudge;
+    @Column(name = "TIME_USED")
+    private BigInteger timeUsed;
+    @Column(name = "MEMO_USED")
+    private BigInteger memoUsed;
     @Lob
     @Size(max = 65535)
     @Column(name = "MSG_JUDGE")
@@ -110,6 +114,22 @@ public class Submit implements Serializable {
         this.dateJudge = dateJudge;
     }
 
+    public BigInteger getTimeUsed() {
+        return timeUsed;
+    }
+
+    public void setTimeUsed(BigInteger timeUsed) {
+        this.timeUsed = timeUsed;
+    }
+
+    public BigInteger getMemoUsed() {
+        return memoUsed;
+    }
+
+    public void setMemoUsed(BigInteger memoUsed) {
+        this.memoUsed = memoUsed;
+    }
+
     public String getMsgJudge() {
         return msgJudge;
     }
@@ -143,7 +163,6 @@ public class Submit implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public List<AccountSubmit> getAccountSubmitList() {
         return accountSubmitList;
     }
@@ -153,7 +172,6 @@ public class Submit implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public List<ChallengeSubmit> getChallengeSubmitList() {
         return challengeSubmitList;
     }
@@ -184,7 +202,7 @@ public class Submit implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.live.business.entity.Submit[ idSubmit=" + idSubmit + " ]";
+        return "edu.nagojudge.app.business.dao.entities.Submit[ idSubmit=" + idSubmit + " ]";
     }
     
 }

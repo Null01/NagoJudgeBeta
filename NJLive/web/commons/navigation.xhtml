@@ -17,19 +17,19 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand text-center" href="#">Nago Judge</a>
+                        <a class="navbar-brand text-center" href="#">NagoJudge</a>
                     </div>
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <div class="navbar-form navbar-left text-center">
                             <h:commandLink styleClass="btn btn-default" style="width: 160px;"
-                                           value="Problems"
+                                           value="Problemas"
                                            action="#{navegationRoomBean.actionRedirectContentBoard}" />
                             <h:commandLink styleClass="btn btn-default" style="width: 160px;"
-                                           value="Score"
+                                           value="Puntuación"
                                            action="#{navegationRoomBean.actionRedirectScoreBoard}" />
                             <h:commandLink styleClass="btn btn-default" style="width: 160px;"
-                                           value="Submits"
+                                           value="Mis Envios"
                                            action="#{navegationRoomBean.actionRedirectSubmitsBoard}" />
                         </div>
                         <ul class="nav navbar-nav navbar-form navbar-right text-center">
@@ -50,7 +50,7 @@
                 <div class="col-md-12 text-center">
                     <h3>
                         <pe:timer timeout="#{navegationRoomBean.timeEndingChallenge}"
-                                  format="[Running:] DD [days] HH:mm:ss" />
+                                  format="[Tiempo Restante:] DD [dias] HH:mm:ss" />
                     </h3>
                 </div>
             </nav>

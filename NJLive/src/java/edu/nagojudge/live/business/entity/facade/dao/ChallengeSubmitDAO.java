@@ -10,13 +10,14 @@ import edu.nagojudge.live.business.entity.ChallengeSubmit;
 import edu.nagojudge.live.business.entity.Submit;
 import edu.nagojudge.live.web.utils.constants.IKeysChallenge;
 import edu.nagojudge.msg.pojo.InfoScoreMessage;
+import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.ScoreMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.TeamMessage;
 import edu.nagojudge.msg.pojo.collections.ListMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -92,7 +93,6 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
             try {
                 Map<String, Map<Long, InfoScoreMessage>> map = new HashMap<String, Map<Long, InfoScoreMessage>>();
                 for (Object[] row : objects) {
-                    logger.debug(Arrays.toString(row));
                     if (map.get((String) row[0]) == null) {
                         map.put((String) row[0], crashCopyStructAllProblemsToChallenge(infoScore));
                     }
@@ -164,12 +164,21 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
                             .getResultList();
             for (Submit submit : submits) {
                 SubmitMessage submitMessage = new SubmitMessage();
+                submitMessage.setIdSubmit(submit.getIdSubmit());
                 submitMessage.setIdStatus(submit.getIdStatus().getKeyStatus());
                 submitMessage.setNameStatus(submit.getIdStatus().getNameStatus());
+                submitMessage.setDescriptionStatus(submit.getIdStatus().getDescription());
+                submitMessage.setTimeUsed(submit.getTimeUsed() == null ? 0 : submit.getTimeUsed().longValue());
                 submitMessage.setDateSubmit(submit.getDateSubmit() != null ? submit.getDateSubmit().getTime() : 0);
-                submitMessage.setNameLanguage(submit.getIdLanguage().getNameLanguage());
-                submitMessage.setIdProblem(submit.getIdProblem().getIdProblem());
-                submitMessage.setNameProblem(submit.getIdProblem().getNameProblem());
+
+                LanguageProgrammingMessage languageProgrammingMessage = new LanguageProgrammingMessage();
+                languageProgrammingMessage.setNameProgramming(submit.getIdLanguage().getNameLanguage());
+                submitMessage.setLanguageProgrammingMessage(languageProgrammingMessage);
+
+                ProblemMessage problemMessage = new ProblemMessage();
+                problemMessage.setIdProblem(submit.getIdProblem().getIdProblem());
+                problemMessage.setNameProblem(submit.getIdProblem().getNameProblem());
+                submitMessage.setProblemMessage(problemMessage);
                 outcome.add(submitMessage);
             }
         } catch (Exception ex) {

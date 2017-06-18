@@ -92,7 +92,7 @@ public class RoomSubmitBean implements Serializable {
         }
     }
 
-    public void actionSubmitSourceCode() {
+    public String actionSubmitSourceCode() {
         try {
             logger.debug("INICIA METODO - actionSubmitSourceCode()");
             logger.debug("codeSourceFile [" + fileSourceCode + "]");
@@ -113,6 +113,7 @@ public class RoomSubmitBean implements Serializable {
 
             logger.debug("FINALIZA METODO - actionSubmitSourceCode()");
         }
+        return "/challenge/submit.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public UploadedFile getFileSourceCode() {

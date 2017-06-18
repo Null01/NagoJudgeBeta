@@ -53,7 +53,7 @@ public class TeamDAO extends AbstractDAO<Team> {
         logger.debug("getIdTeam [" + idTeam.getIdTeam() + "]");
         HttpSession session = FacesUtil.getFacesUtil().getSession(true);
         session.setAttribute(IKeysApplication.KEY_SESSION_TEAM_ID, idTeam.getIdTeam());
-        session.setAttribute(IKeysApplication.KEY_SESSION_TEAM_NAME_ID, idTeam.getNameTeam());
+        session.setAttribute(IKeysApplication.KEY_SESSION_TEAM_NAME, idTeam.getNameTeam());
         return idTeam.getIdTeam();
     }
 
