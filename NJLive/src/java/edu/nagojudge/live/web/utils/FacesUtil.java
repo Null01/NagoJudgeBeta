@@ -138,7 +138,7 @@ public class FacesUtil {
         return text.getString(key);
     }
 
-    public String getInitParameter(String key) {
+    public String getInitParameter(String key) throws NullPointerException {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         String initParameter = externalContext.getInitParameter(key);
         return initParameter;

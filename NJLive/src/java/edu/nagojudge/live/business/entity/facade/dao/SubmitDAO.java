@@ -111,15 +111,16 @@ public class SubmitDAO extends AbstractDAO<Submit> {
             FileUtil.getInstance().createFile(contentCodeSource, pathFile, nameFile);
 
             final Long idSubmit = submit.getIdSubmit();
+            final String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.path.submit.team");
+            final String host = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.url");
             final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.path.submit.team");
                     Object objects[] = {String.valueOf(idTeam), String.valueOf(idSubmit)};
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("token", TOKEN);
                     params.put("idChallenge", idChallenge);
-                    SubmitMessage submitMessage = (SubmitMessage) ClientService.getInstance().callRestfulGet(path, objects, params, SubmitMessage.class);
+                    SubmitMessage submitMessage = (SubmitMessage) ClientService.getInstance().callRestfulGet(host, path, objects, params, SubmitMessage.class);
                     logger.debug("outcome [" + submitMessage + "]");
                 }
             });

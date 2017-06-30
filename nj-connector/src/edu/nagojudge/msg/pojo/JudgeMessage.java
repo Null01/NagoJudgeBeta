@@ -17,6 +17,7 @@ public class JudgeMessage implements Serializable {
 
     private Long _idStatusName;
     private String statusName;
+    private long _penality;
     private String resumeStatus;
     private String messageJudge;
     private long _timeUsed;
@@ -78,6 +79,14 @@ public class JudgeMessage implements Serializable {
 
     public void setMemoUsed(long _memoUsed) {
         this._memoUsed = _memoUsed;
+    }
+
+    public long getPenality() {
+        return _penality;
+    }
+
+    public void setPenality(long _penality) {
+        this._penality = _penality;
     }
 
 }

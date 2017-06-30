@@ -19,7 +19,9 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -51,6 +53,9 @@ public class RoomContentBean implements Serializable {
 
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
+    private Map<Long, String> mapColorsGlogs = new HashMap<Long, String>();
+    private Map<Long, String> mapLettersGlobs = new HashMap<Long, String>();
+
     public RoomContentBean() {
     }
 
@@ -59,6 +64,8 @@ public class RoomContentBean implements Serializable {
         HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
         Long challengeId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
         listProblems = new ArrayList<ProblemMessage>(challengeProblemFacade.findProblemsByChallenge(challengeId));
+        mapColorsGlogs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_GLOBES);
+        mapLettersGlobs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_LETTERS);
     }
 
     public List<ProblemMessage> getListProblems() {
@@ -75,6 +82,22 @@ public class RoomContentBean implements Serializable {
 
     public void setChallengeMessageView(ChallengeMessage challengeMessageView) {
         this.challengeMessageView = challengeMessageView;
+    }
+
+    public Map<Long, String> getMapColorsGlogs() {
+        return mapColorsGlogs;
+    }
+
+    public void setMapColorsGlogs(Map<Long, String> mapColorsGlogs) {
+        this.mapColorsGlogs = mapColorsGlogs;
+    }
+
+    public Map<Long, String> getMapLettersGlobs() {
+        return mapLettersGlobs;
+    }
+
+    public void setMapLettersGlobs(Map<Long, String> mapLettersGlobs) {
+        this.mapLettersGlobs = mapLettersGlobs;
     }
 
     public String getRealPathOfPDF(Long idProblem) {

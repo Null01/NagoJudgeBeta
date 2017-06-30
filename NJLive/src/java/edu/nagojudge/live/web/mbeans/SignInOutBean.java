@@ -42,7 +42,6 @@ public class SignInOutBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        teamMessage.setNameTeam("teamyellow");
     }
 
     public String actionSignInSession() {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.business.servicios.restful;
+package edu.nagojudge.business.judge.services;
 
 import edu.nagojudge.business.dao.beans.AttachmentsDAOFacade;
 import edu.nagojudge.business.dao.beans.AuthenticationDAOFacade;
@@ -52,14 +52,18 @@ public class SubmitService implements ISubmitService {
         try {
             logger.debug("INICIA SERVICIO - generateJudgmentByTeam()");
             authenticationFacade.authorization(token);
-            /*
+
             SubmitMessage startJudge = judgeFacade.startJudgeByTeam(
                     Long.parseLong(idChallenge),
                     Long.parseLong(idSubmit),
                     Long.parseLong(idTeam));
             return startJudge;
-            */
-            return null;
+        } catch (AuthenticationException ex) {
+            logger.error(ex);
+            throw ex;
+        } catch (BusinessException ex) {
+            logger.error(ex);
+            throw ex;
         } finally {
             logger.debug("FINALIZA SERVICIO - generateJudgmentByTeam()");
         }

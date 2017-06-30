@@ -37,7 +37,7 @@ public class NJProviderServiceException implements ExceptionMapper {
     @Context
     private HttpServletResponse response;
 
-    private final String pageError = "/error.html";
+    private final String PAGE_ERROR = "/error.html";
 
     @Override
     public Response toResponse(Throwable throwable) {
@@ -52,10 +52,12 @@ public class NJProviderServiceException implements ExceptionMapper {
             WebApplicationException applicationException = (WebApplicationException) throwable;
             status = Response.Status.fromStatusCode(applicationException.getResponse().getStatus());
             try {
-                context.getRequestDispatcher(pageError).forward(request, response);
+                context.getRequestDispatcher(PAGE_ERROR).forward(request, response);
             } catch (ServletException ex) {
                 logger.error(ex);
             } catch (IOException ex) {
+                logger.error(ex);
+            } catch (IllegalStateException ex) {
                 logger.error(ex);
             }
         }

@@ -6,31 +6,26 @@
 package edu.nagojudge.business.dao.entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "submit_status", catalog = "njlive", schema = "")
+@Table(name = "SUBMIT_STATUS", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "SubmitStatus.findAll", query = "SELECT s FROM SubmitStatus s")})
@@ -56,8 +51,10 @@ public class SubmitStatus implements Serializable {
     @Size(max = 65535)
     @Column(name = "DESCRIPTION")
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idStatus", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PENALITY")
+    private int penality;
 
     public SubmitStatus() {
     }
@@ -66,10 +63,11 @@ public class SubmitStatus implements Serializable {
         this.idStatus = idStatus;
     }
 
-    public SubmitStatus(Integer idStatus, String keyStatus, String nameStatus) {
+    public SubmitStatus(Integer idStatus, String keyStatus, String nameStatus, int penality) {
         this.idStatus = idStatus;
         this.keyStatus = keyStatus;
         this.nameStatus = nameStatus;
+        this.penality = penality;
     }
 
     public Integer getIdStatus() {
@@ -104,13 +102,12 @@ public class SubmitStatus implements Serializable {
         this.description = description;
     }
 
-    @XmlTransient
-    public List<Submit> getSubmitList() {
-        return submitList;
+    public int getPenality() {
+        return penality;
     }
 
-    public void setSubmitList(List<Submit> submitList) {
-        this.submitList = submitList;
+    public void setPenality(int penality) {
+        this.penality = penality;
     }
 
     @Override

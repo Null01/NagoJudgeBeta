@@ -26,7 +26,10 @@
                                      paginatorPosition="bottom"                                     
                                      emptyMessage="#{msg['general.table.noinfo']}">
                             <p:column headerText="#" width="5%" styleClass="text-center">
-                                <h:outputText value="&amp;&#35;#{64+(indexKey+1)};" escape="false"/>
+                                <h:outputText value="#{roomContentBean.mapLettersGlobs[p.idProblem]}" escape="false"/>
+                            </p:column>
+                            <p:column width="4%" styleClass="text-center" >
+                                <img src="#{roomContentBean.mapColorsGlogs[p.idProblem]}" class="globe" />
                             </p:column>
                             <p:column headerText="Problema" width="30%" styleClass="text-left" >
                                 <h:outputLink 

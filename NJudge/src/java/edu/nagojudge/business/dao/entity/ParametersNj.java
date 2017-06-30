@@ -23,10 +23,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "parameters_nj", catalog = "njlive", schema = "")
+@Table(name = "PARAMETERS_NJ", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ParametersNj.findAll", query = "SELECT p FROM ParametersNj p")})
@@ -132,7 +132,7 @@ public class ParametersNj implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.nagojudge.live.business.entity.ParametersNj[ idParameter=" + idParameter + " ]";
+        return "edu.nagojudge.business.dao.entity.ParametersNj[ idParameter=" + idParameter + " ]";
     }
     
 }

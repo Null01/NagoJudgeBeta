@@ -30,7 +30,6 @@
                             <p:column headerText="Equipo" width="15%" styleClass="text-center" >
                                 <h:outputText value="#{p.team.nameTeam}" />
                             </p:column>
-
                             <p:column headerText="A" width="8%" rendered="#{roomScoreBean.sizeListScoreTeams ge 1}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[0].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[0].idProblem]}" class="globe" />
@@ -39,7 +38,6 @@
                                     <h:outputText value="#{p.resumeScore.list[0].tries}/#{p.resumeScore.list[0].time}" />
                                 </div>
                             </p:column>
-
                             <p:column headerText="B"  width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 2}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[1].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[1].idProblem]}" class="globe" />

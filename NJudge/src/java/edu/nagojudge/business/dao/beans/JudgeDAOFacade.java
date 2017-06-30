@@ -8,7 +8,7 @@ package edu.nagojudge.business.dao.beans;
 import edu.nagojudge.business.dao.entity.Attachments;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.dao.entity.SubmitStatus;
-import edu.nagojudge.business.logic.java.JudgeServiceJava;
+import edu.nagojudge.business.logic.exe.JudgeServiceJava;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.business.servicios.restful.exceptions.RunJudgeException;
 import edu.nagojudge.msg.pojo.JudgeMessage;
@@ -171,7 +171,7 @@ public class JudgeDAOFacade {
                                 nameFileCodeSource,
                                 fullPathInputFile,
                                 checkSumOutputFile,
-                                submit.getTimeUsed().longValue());
+                                (submit.getTimeUsed() != null ? submit.getTimeUsed().longValue() : 0));
                     } catch (RunJudgeException ex) {
                         logger.error(ex);
                         judgetState.setStatusName(TypeStateJudgeEnum.RE.name());

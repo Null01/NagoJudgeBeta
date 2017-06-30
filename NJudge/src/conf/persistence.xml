@@ -1,8 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="NJBusinessPU" transaction-type="JTA">
     <jta-data-source>jdbc/njlive</jta-data-source>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <class>edu.nagojudge.business.dao.entity.SubmitStatus</class>
+<class>edu.nagojudge.business.dao.entity.ComplexityAlgorithm</class>
+<class>edu.nagojudge.business.dao.entity.Category</class>
+<class>edu.nagojudge.business.dao.entity.DifficultyLevel</class>
+<class>edu.nagojudge.business.dao.entity.LanguageProgramming</class>
+<exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>
 </persistence>

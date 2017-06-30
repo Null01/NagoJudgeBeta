@@ -46,7 +46,7 @@ public class ChallengeProblemDAO extends AbstractDAO<ChallengeProblem> {
 
     public List<ProblemMessage> findProblemsByChallenge(Long challengeId) {
         List<ProblemMessage> outome = new ArrayList<ProblemMessage>();
-        List<Problem> problems = em.createQuery("SELECT a.idProblem FROM ChallengeProblem a WHERE a.idChallenge.idChallenge = :id_challenge ", Problem.class)
+        List<Problem> problems = em.createQuery("SELECT a.idProblem FROM ChallengeProblem a WHERE a.idChallenge.idChallenge = :id_challenge ORDER BY a.idProblem.idProblem ASC", Problem.class)
                 .setParameter("id_challenge", challengeId).getResultList();
         for (Problem problem : problems) {
             outome.add(parseProblemEntityToMessage(problem));

@@ -7,6 +7,9 @@ package edu.nagojudge.business.dao.beans;
 
 import javax.ejb.Stateless;
 import javax.naming.AuthenticationException;
+import javax.ws.rs.core.Context;
+import org.apache.cxf.rs.security.oauth2.client.OAuthClientUtils;
+import org.apache.cxf.rs.security.oauth2.utils.OAuthUtils;
 
 /**
  *
@@ -18,6 +21,9 @@ public class AuthenticationDAOFacade {
     private final String TOKEN = "asd";
 
     public void authorization(String token) throws AuthenticationException {
+        
+        
+        
         if (token == null || token.isEmpty()) {
             throw new AuthenticationException("Parametros denegados, comuniquese con el administrador. #TeamNJ");
         }

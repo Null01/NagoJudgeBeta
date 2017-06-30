@@ -17,6 +17,7 @@ public interface IProblemService {
 
     public String getExternalPathFromProblem(
             String idProblem,
-            CredentialsMessage credentials) throws AuthenticationException, BusinessException;
+            String idChallenge,
+            String token) throws AuthenticationException, BusinessException;
 
 }
