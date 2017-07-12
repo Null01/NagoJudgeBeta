@@ -16,21 +16,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class JudgeMessage implements Serializable {
 
     private Long _idStatusName;
+    private String keyStatus;
     private String statusName;
-    private long _penality;
-    private String resumeStatus;
+    private String descriptionStatus;
     private String messageJudge;
-    private long _timeUsed;
-    private long _memoUsed;
+    private Long timeUsed;
+    private Long memoUsed;
 
     public JudgeMessage() {
     }
 
-    public JudgeMessage(Long _idStatusName, String statusName, String resumeStatus, String messageJudge) {
+    public JudgeMessage(Long _idStatusName, String keyStatus, String statusName, String descriptionStatus, String messageJudge, Long timeUsed, Long memoUsed) {
         this._idStatusName = _idStatusName;
+        this.keyStatus = keyStatus;
         this.statusName = statusName;
-        this.resumeStatus = resumeStatus;
+        this.descriptionStatus = descriptionStatus;
         this.messageJudge = messageJudge;
+        this.timeUsed = timeUsed;
+        this.memoUsed = memoUsed;
     }
 
     public Long getIdStatusName() {
@@ -41,6 +44,14 @@ public class JudgeMessage implements Serializable {
         this._idStatusName = _idStatusName;
     }
 
+    public String getKeyStatus() {
+        return keyStatus;
+    }
+
+    public void setKeyStatus(String keyStatus) {
+        this.keyStatus = keyStatus;
+    }
+
     public String getStatusName() {
         return statusName;
     }
@@ -49,12 +60,12 @@ public class JudgeMessage implements Serializable {
         this.statusName = statusName;
     }
 
-    public String getResumeStatus() {
-        return resumeStatus;
+    public String getDescriptionStatus() {
+        return descriptionStatus;
     }
 
-    public void setResumeStatus(String resumeStatus) {
-        this.resumeStatus = resumeStatus;
+    public void setDescriptionStatus(String descriptionStatus) {
+        this.descriptionStatus = descriptionStatus;
     }
 
     public String getMessageJudge() {
@@ -65,28 +76,20 @@ public class JudgeMessage implements Serializable {
         this.messageJudge = messageJudge;
     }
 
-    public long getTimeUsed() {
-        return _timeUsed;
+    public Long getTimeUsed() {
+        return timeUsed;
     }
 
-    public void setTimeUsed(long _timeUsed) {
-        this._timeUsed = _timeUsed;
+    public void setTimeUsed(Long timeUsed) {
+        this.timeUsed = timeUsed;
     }
 
-    public long getMemoUsed() {
-        return _memoUsed;
+    public Long getMemoUsed() {
+        return memoUsed;
     }
 
-    public void setMemoUsed(long _memoUsed) {
-        this._memoUsed = _memoUsed;
-    }
-
-    public long getPenality() {
-        return _penality;
-    }
-
-    public void setPenality(long _penality) {
-        this._penality = _penality;
+    public void setMemoUsed(Long memoUsed) {
+        this.memoUsed = memoUsed;
     }
 
 }

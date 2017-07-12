@@ -5,18 +5,15 @@ import edu.nagojudge.msg.pojo.JudgeMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import edu.nagojudge.tools.utils.FileUtil;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
-import java.util.logging.Level;
 import org.apache.catalina.tribes.util.Arrays;
 import org.apache.log4j.Logger;
 
@@ -36,34 +33,6 @@ public class JudgeServiceJava extends JudgeService {
     private final Runtime runtime = Runtime.getRuntime();
     private Process process;
 
-    /*
-    public void copyFile(Reader input, Writer output) throws IOException {
-        try {
-            int DEFAULT_BUFFER_SIZE = 1024 * 8;
-            if (input == null || output == null) {
-                throw new IOException("#NJ - OBJETOS READER/WRITER NO SE ENCUENTRAN INICIALIZADOS");
-            }
-            char[] buffer = new char[DEFAULT_BUFFER_SIZE];
-            int n;
-            logger.debug("copyFile() 01 - @ECHO");
-            while ((n = input.read(buffer)) != -1) {
-                output.write(buffer, 0, n);
-            }
-            logger.debug("copyFile() 02 - @ECHO");
-            output.flush();
-            logger.debug("copyFile() 03 - @ECHO");
-        } catch (IOException ex) {
-            throw ex;
-        } finally {
-            if (input != null) {
-                input.close();
-            }
-            if (output != null) {
-                output.close();
-            }
-        }
-    }
-     */
     @Override
     public JudgeMessage executeJudgment(String pathCodeSource, String nameCodeSource, String fullPathInputFile, String checkSumOutputFile, long timeLimit) throws RunJudgeException {
         try {
@@ -76,12 +45,12 @@ public class JudgeServiceJava extends JudgeService {
                 logger.debug("fullPathCodeSource [" + fullPathCodeSource + "]");
                 try {
                     lockFile(fullPathCodeSource, fullPathCodeSourceTemp);
-                    runCompilation(fullPathCodeSourceTemp);
-                    judgeMessage = runRuntime(pathCodeSource, fullPathInputFile, checkSumOutputFile, timeLimit);
+                    runCompile(fullPathCodeSourceTemp);
+                    judgeMessage = runExecute(pathCodeSource, fullPathInputFile, checkSumOutputFile, timeLimit);
                 } catch (RunJudgeException ex) {
                     logger.error(ex);
                     judgeMessage.setStatusName(TypeStateJudgeEnum.CE.name());
-                    judgeMessage.setResumeStatus(ex.getMessage());
+                    judgeMessage.setMessageJudge(ex.getMessage());
                 } finally {
                     unLockFile(fullPathCodeSource, fullPathCodeSourceTemp);
                 }
@@ -93,7 +62,7 @@ public class JudgeServiceJava extends JudgeService {
     }
 
     @Override
-    public void runCompilation(String fullPathCodeSource) throws RunJudgeException {
+    public void runCompile(String fullPathCodeSource) throws RunJudgeException {
         try {
             logger.debug("START - COMPILATION JVM");
             process = runtime.exec(JAVAC_COMPILE + fullPathCodeSource);
@@ -117,7 +86,7 @@ public class JudgeServiceJava extends JudgeService {
     }
 
     @Override
-    public JudgeMessage runRuntime(String pathSourceCode, String fullPathInputFileServer, String checkSumOutputFileServer, long timeLimit) throws RunJudgeException {
+    public JudgeMessage runExecute(String pathSourceCode, String fullPathInputFileServer, String checkSumOutputFileServer, long timeLimit) throws RunJudgeException {
         JudgeMessage judgeMessage = new JudgeMessage();
         try {
             logger.debug("INICIA JUDGE_RULING_NOW_CODE_SOURCE JVM");
@@ -135,8 +104,8 @@ public class JudgeServiceJava extends JudgeService {
             final long endTime = Calendar.getInstance().getTimeInMillis();
             writeIntoStream(process.getOutputStream(), fullPathInputFileServer); // READER_INPUTS_SERVER @ECHO
             byte[] outputFileUser = FileUtil.getInstance().parseFromInputStreamToArrayByte(process.getInputStream()); // WRITER_OUTPUTS_SERVER @ECHO
-            final String tempOutputUserAnswer = pathSourceCode + java.io.File.separatorChar + "temp_out";
-            FileUtil.getInstance().createFile(outputFileUser, tempOutputUserAnswer);
+            //final String tempOutputUserAnswer = pathSourceCode + java.io.File.separatorChar + "temp_out";
+            //FileUtil.getInstance().createFile(outputFileUser, tempOutputUserAnswer);
             logger.debug("END_PROCESS @ECHO");
             boolean judge = FileUtil.getInstance().compareFilesByCheckSumSHA(outputFileUser, checkSumOutputFileServer, TypeSHAEnum.SHA256); // COMPARE FILES GENERATED
             if (process.exitValue() != 0) {

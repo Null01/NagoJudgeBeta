@@ -6,11 +6,17 @@
 package edu.nagojudge.live.web.utils;
 
 import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
+import edu.nagojudge.live.web.utils.constants.IKeysApplication;
+import edu.nagojudge.msg.pojo.MetadataMessage;
+import edu.nagojudge.msg.pojo.constants.TypeRoleEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -25,6 +31,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -259,7 +266,46 @@ public class FacesUtil {
         } finally {
             logger.debug("FINALIZA METODO - sendProcessingError()");
         }
+    }
 
+    public void downloadFile(InputStream stream, final String extension) {
+
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        externalContext.responseReset();
+        externalContext.setResponseContentType(MediaType.APPLICATION_OCTET_STREAM);
+        externalContext.setResponseContentLength(1024 * 8);
+        externalContext.setResponseHeader("Content-Disposition", "attachment; filename=main." + ((extension != null) ? extension : "txt"));
+        OutputStream out = null;
+        try {
+            byte[] buffer = new byte[1024 * 8];
+            out = externalContext.getResponseOutputStream();
+            int i;
+            while ((i = stream.read(buffer)) != -1) {
+                out.write(buffer);
+                out.flush();
+            }
+            FacesContext.getCurrentInstance().getResponseComplete();
+        } catch (IOException ex) {
+            logger.error(ex);
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex) {
+                    logger.error(ex);
+                }
+            }
+        }
+
+    }
+
+    public Map<String, Object> getMetadataRest(final String userId) {
+        Map<String, Object> metadataMap = new HashMap<String, Object>();
+        metadataMap.put("token", "asd");
+        metadataMap.put("i18", getParameterWEBINF("init-config", "judge.nagojudge.i18"));
+        metadataMap.put("role", TypeRoleEnum.TEAM);
+        metadataMap.put("user", userId);
+        return metadataMap;
     }
 
 }

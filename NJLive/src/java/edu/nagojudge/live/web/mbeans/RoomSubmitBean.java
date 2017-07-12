@@ -11,10 +11,12 @@ import edu.nagojudge.live.business.entity.facade.dao.LanguageProgrammingDAO;
 import edu.nagojudge.live.business.entity.facade.dao.SubmitDAO;
 import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
 import edu.nagojudge.live.web.utils.FacesUtil;
+import edu.nagojudge.live.web.utils.clients.ClientService;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.PairMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +39,8 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean
 @ViewScoped
 public class RoomSubmitBean implements Serializable {
+
+    private final String TOKEN = "asd";
 
     @EJB
     private SubmitDAO submitDAO;
@@ -77,11 +81,12 @@ public class RoomSubmitBean implements Serializable {
 
             mapColorsGlogs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_GLOBES);
             mapLettersGlobs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_LETTERS);
+            Map<Long, String> mapNamesProblems = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_NAME_PROBLEMS);
 
             listLanguageProgrammingItems = parseToLanguageProgrammingItems(languageProgrammingDAO.findAll());
 
-            if (mapLettersGlobs != null) {
-                listProblemItems = parseToPairChallengeProblemItems(mapLettersGlobs);
+            if (mapNamesProblems != null) {
+                listProblemItems = parseToPairChallengeProblemItems(mapLettersGlobs, mapNamesProblems);
             }
 
         } catch (Exception ex) {
@@ -102,8 +107,11 @@ public class RoomSubmitBean implements Serializable {
                 HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
                 Long challengeId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
                 Long teamId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_TEAM_ID);
-                submitDAO.sendSubmit(challengeId, teamId,
-                        Long.parseLong(pairMessageView.getFirst()), languageProgrammingMessage.getIdLanguage(), fileSourceCode.getContents());
+                submitDAO.sendSubmit(challengeId,
+                        teamId,
+                        Long.parseLong(pairMessageView.getFirst()),
+                        languageProgrammingMessage.getIdLanguage(),
+                        fileSourceCode.getContents());
                 listSubmits = new ArrayList<SubmitMessage>(challengeSubmitDAO.findAllSubmitByTeam(teamId, challengeId));
             }
         } catch (NagoJudgeLiveException ex) {
@@ -114,6 +122,30 @@ public class RoomSubmitBean implements Serializable {
             logger.debug("FINALIZA METODO - actionSubmitSourceCode()");
         }
         return "/challenge/submit.xhtml?faces-redirect=true&includeViewParams=true";
+    }
+
+    public void actionDownloadCodeSource(final String idProblem, final String idSubmit, final String language) {
+        try {
+            if (idProblem != null && idSubmit != null && language != null) {
+                HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
+                final Long idChallenge = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
+                final Long idTeam = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_TEAM_ID);
+
+                final String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.path.submit.team.download");
+                final String host = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.url");
+
+                Object objects[] = {String.valueOf(idChallenge), String.valueOf(idTeam), String.valueOf(idProblem)};
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("idSubmit", idSubmit);
+                params.put("language", language.toLowerCase());
+                params.put("token", TOKEN);
+                InputStream inputStream = (InputStream) ClientService.getInstance().callRestfulGet(host, path, objects, params, InputStream.class);
+                FacesUtil.getFacesUtil().downloadFile(inputStream, language.toLowerCase());
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        }
     }
 
     public UploadedFile getFileSourceCode() {
@@ -192,12 +224,12 @@ public class RoomSubmitBean implements Serializable {
 
     }
 
-    private List<SelectItem> parseToPairChallengeProblemItems(Map<Long, String> mapLettersGlobs) {
+    private List<SelectItem> parseToPairChallengeProblemItems(Map<Long, String> mapLetters, Map<Long, String> mapNameProblems) {
         List<SelectItem> outcome = new ArrayList<SelectItem>();
-        for (Map.Entry<Long, String> entry : mapLettersGlobs.entrySet()) {
+        for (Map.Entry<Long, String> entry : mapNameProblems.entrySet()) {
             PairMessage pm = new PairMessage();
             pm.setFirst(String.valueOf(entry.getKey()));
-            pm.setSecond(entry.getValue());
+            pm.setSecond(mapLetters.get(entry.getKey()) + "  -  " + entry.getValue());
             outcome.add(new SelectItem(pm, pm.getSecond()));
         }
         return outcome;

@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import org.apache.log4j.Logger;
 
 /**
@@ -33,10 +32,10 @@ public abstract class JudgeService {
             final String checkSumOutputFile,
             final long timeLimit) throws RunJudgeException;
 
-    public abstract void runCompilation(
+    public abstract void runCompile(
             final String fullPathCodeSource) throws RunJudgeException;
 
-    public abstract JudgeMessage runRuntime(
+    public abstract JudgeMessage runExecute(
             final String pathSourceCode,
             final String fullPathInputFileServer,
             final String checkSumOutputFileServer,

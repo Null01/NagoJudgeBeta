@@ -6,9 +6,19 @@
 package edu.nagojudge.live.web.utils.clients;
 
 import edu.nagojudge.live.web.utils.FacesUtil;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.rs.security.oauth2.client.HttpRequestProperties;
 import org.apache.cxf.rs.security.oauth2.client.OAuthClientUtils;
@@ -37,30 +47,35 @@ public class ClientService {
             logger.debug("INICIA METODO - callRestfulGet()");
             logger.debug("BASE_ADDRESS_RESTFUL_NJ [" + BASE_ADDRESS_RESTFUL_NJ + "]");
             logger.debug("path [" + path + "]");
-            logger.debug("objects [" + Arrays.toString(objects) + "]");
             logger.debug("params [" + params + "]");
-            logger.debug("class [" + t.getName() + "]");
+            if (objects != null) {
+                logger.debug("objects [" + Arrays.toString(objects) + "]");
+            }
+            if (t != null) {
+                logger.debug("class [" + t.getName() + "]");
+            }
 
             WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL_NJ, false)
                     .path(path, objects)
-                    .accept(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM)
                     .type(MediaType.APPLICATION_JSON);
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                client.query(entry.getKey(), entry.getValue());
+            if (params != null) {
+                for (Map.Entry<String, Object> entry : params.entrySet()) {
+                    client.query(entry.getKey(), entry.getValue());
+                }
             }
             /*
-// represents client registration
+            // represents client registration
             OAuthClientUtils.Consumer consumer = getConsumer();
-// the token issued by AccessTokenService
+            // the token issued by AccessTokenService
             ClientAccessToken token = getToken();
 
             HttpRequestProperties httpProps = new HttpRequestProperties(client, "GET");
             String authorizationHeader = OAuthClientUtils.createAuthorizationHeader(consumer, token, httpProps);
-
-            client.header("Content-Type", MediaType.APPLICATION_JSON_TYPE);
+             client.header("Content-Type", MediaType.APPLICATION_JSON);
             client.header("Authorization", authorizationHeader);
              */
-            return client.get(t);
+            return (t != null) ? client.get(t) : client.get();
         } finally {
             logger.debug("FINALIZA METODO - callRestfulGet()");
         }
@@ -71,36 +86,29 @@ public class ClientService {
             logger.debug("INICIA METODO - callRestfulGetList()");
             logger.debug("BASE_ADDRESS_RESTFUL_NJ [" + BASE_ADDRESS_RESTFUL_NJ + "]");
             logger.debug("path [" + path + "]");
-            logger.debug("objects [" + Arrays.toString(objects) + "]");
-            logger.debug("class [" + t.getName() + "]");
             logger.debug("params [" + params + "]");
+            if (objects != null) {
+                logger.debug("objects [" + Arrays.toString(objects) + "]");
+            }
+            if (t != null) {
+                logger.debug("class [" + t.getName() + "]");
+            }
 
             WebClient client = WebClient.create(BASE_ADDRESS_RESTFUL_NJ, false)
                     .path(path, objects)
-                    .accept(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM)
                     .type(MediaType.APPLICATION_JSON);
+            if (params != null) {
+                for (Map.Entry<String, Object> entry : params.entrySet()) {
+                    client.query(entry.getKey(), entry.getValue());
+                }
+            }
 
-            client.header("Content-Type", MediaType.APPLICATION_JSON_TYPE);
             //client.header("Authorization", authorizationHeader);
-
-            return client.getCollection(t);
+            return (t != null) ? client.getCollection(t) : client.get();
         } finally {
             logger.debug("FINALIZA METODO - callRestfulGetList()");
         }
-
     }
 
-    /*
-     public static void main(String args[]) {
-     String email = "agarcia@ucentral.edu.co";
-     int submitView = 1;
-     String TOKEN = "asd";
-     String path = "submit/evaluate/{email}/{idSubmit}";
-     Object objects[] = {String.valueOf(email), String.valueOf(submitView)};
-     Map<String, Object> params = new HashMap<String, Object>();
-     params.put("token", TOKEN);
-     Object callRestfulGet = ClientService.getInstance().callRestfulGet(path, objects, params, ResponseMessage.class);
-     System.out.println(callRestfulGet);
-     }
-     */
 }

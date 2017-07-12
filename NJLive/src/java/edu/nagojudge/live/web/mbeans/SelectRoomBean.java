@@ -50,8 +50,9 @@ public class SelectRoomBean implements Serializable {
     public String actionRedirectInitConfigBoard() {
         HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
         currentSession.setAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID, challengeMessageView.getIdChallenge());
+        currentSession.setAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_NAME, challengeMessageView.getNameChallenge());
         currentSession.setAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_END, challengeMessageView.getDateEnd());
-        List<Long> idProblems = problemDAO.findIdsProblemsByChallenge((Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID));
+        List<Object[]> idProblems = problemDAO.findProblemsByChallenge((Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID));
         buildResourceScore(idProblems, 'A');
         return "/challenge/content.xhtml?faces-redirect=true&includeViewParams=true";
     }
@@ -79,11 +80,12 @@ public class SelectRoomBean implements Serializable {
         }
     }
 
-    private void buildResourceScore(List<Long> idProblems, char key) {
+    private void buildResourceScore(List<Object[]> idProblems, char key) {
         final String PATH_GLOBES = "/now/img/globes/";
         List<String> colors = new ArrayList<String>();
         Map<Long, String> cookieColors = new HashMap<Long, String>();
         Map<Long, String> cookieLetters = new HashMap<Long, String>();
+        Map<Long, String> cookieNameProblems = new HashMap<Long, String>();
         switch (key) {
             case '0':
                 colors.add("aquamarine.svg");
@@ -138,11 +140,13 @@ public class SelectRoomBean implements Serializable {
                 break;
         }
         for (int i = 0; i < idProblems.size(); i++) {
-            cookieColors.put(idProblems.get(i), PATH_GLOBES + colors.get(i));
-            cookieLetters.put(idProblems.get(i), String.valueOf((char) ('A' + i)));
+            cookieColors.put((Long) idProblems.get(i)[0], PATH_GLOBES + colors.get(i));
+            cookieLetters.put((Long) idProblems.get(i)[0], String.valueOf((char) ('A' + i)));
+            cookieNameProblems.put((Long) idProblems.get(i)[0], (String) idProblems.get(i)[1]);
         }
         FacesUtil.getFacesUtil().addCookie(IKeysApplication.KEY_COOKIE_GLOBES, cookieColors);
         FacesUtil.getFacesUtil().addCookie(IKeysApplication.KEY_COOKIE_LETTERS, cookieLetters);
+        FacesUtil.getFacesUtil().addCookie(IKeysApplication.KEY_COOKIE_NAME_PROBLEMS, cookieNameProblems);
     }
 
     public TeamMessage getTeamMessageView() {

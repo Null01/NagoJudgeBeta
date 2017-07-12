@@ -17,6 +17,7 @@ import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.clients.ClientService;
 //import edu.nagojudge.live.web.utils.constants.IKeysChallenge;
 import edu.nagojudge.live.web.utils.constants.IResourcesPath;
+import edu.nagojudge.msg.pojo.MetadataMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
@@ -42,7 +43,6 @@ public class SubmitDAO extends AbstractDAO<Submit> {
     @EJB
     private ChallengeSubmitDAO challengeSubmitDAO;
 
-    private final String RELATIVE_PATH = "localhost:8484\\go\\to";
     private final String TOKEN = "asd";
 
     private final Logger logger = Logger.getLogger(SubmitDAO.class);
@@ -57,22 +57,6 @@ public class SubmitDAO extends AbstractDAO<Submit> {
 
     public SubmitDAO() {
         super(Submit.class);
-    }
-
-    public String getFullPathProblem(Long idProblem, String type) throws IOException {
-        String fullPath = "None";
-        try {
-            logger.debug("INICIA METODO - getFullPathProblem()");
-            String nameFile = FormatUtil.getInstance().buildZerosToLeft(idProblem, 7) + TypeFilesEnum.PDF.getExtension();
-            if (type.compareTo(TypeFilesEnum.TYPE_FILE_PROBLEM.getExtension()) == 0) {
-                String tempFullPath = IResourcesPath.PATH_ROOT_SAVE_PROBLEMS_WEB + java.io.File.separatorChar + nameFile;
-                fullPath = RELATIVE_PATH + tempFullPath.substring(tempFullPath.lastIndexOf("\\external"));
-            }
-            logger.debug("PATH_VIEW_FILE_PUBLIC=" + fullPath);
-            return fullPath;
-        } finally {
-            logger.debug("FINALIZA METODO - getFullPathProblem()");
-        }
     }
 
     public void sendSubmit(final Long idChallenge, final Long idTeam, Long idProblem,
@@ -111,15 +95,16 @@ public class SubmitDAO extends AbstractDAO<Submit> {
             FileUtil.getInstance().createFile(contentCodeSource, pathFile, nameFile);
 
             final Long idSubmit = submit.getIdSubmit();
-            final String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.path.submit.team");
+            final String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.path.submit.team.send");
             final String host = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.url");
+            final Map<String, Object> metadata = FacesUtil.getFacesUtil().getMetadataRest(String.valueOf(idTeam));
             final Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Object objects[] = {String.valueOf(idTeam), String.valueOf(idSubmit)};
+                    Object objects[] = {String.valueOf(idChallenge), String.valueOf(idTeam)};
                     Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("token", TOKEN);
-                    params.put("idChallenge", idChallenge);
+                    params.put("idSubmit", idSubmit);
+                    params.putAll(metadata);
                     SubmitMessage submitMessage = (SubmitMessage) ClientService.getInstance().callRestfulGet(host, path, objects, params, SubmitMessage.class);
                     logger.debug("outcome [" + submitMessage + "]");
                 }

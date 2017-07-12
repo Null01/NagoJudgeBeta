@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nagojudge.business.judge.services;
+package edu.nagojudge.business.contest.services;
 
 import edu.nagojudge.business.dao.beans.AuthenticationDAOFacade;
+import edu.nagojudge.business.dao.beans.JudgeDAOFacade;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.business.servicios.restful.interfaces.IProblemService;
-import edu.nagojudge.msg.pojo.CredentialsMessage;
+import edu.nagojudge.msg.pojo.StringMessage;
+import edu.nagojudge.tools.utils.FileUtil;
+import java.io.IOException;
 import javax.ejb.EJB;
 import javax.naming.AuthenticationException;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -32,20 +34,38 @@ public class ProblemService implements IProblemService {
     @EJB
     private AuthenticationDAOFacade authenticationFacade;
 
+    @EJB
+    private JudgeDAOFacade judgeFacade;
+
     private final Logger logger = Logger.getLogger(ProblemService.class);
 
     @GET
     @Path("/external/{idProblem}")
     @Override
-    public String getExternalPathFromProblem(
+    public StringMessage getExternalPathFromProblem(
             @PathParam("idProblem") String idProblem,
-            @QueryParam("idChallenge") String idChallenge,
             @NotNull @QueryParam("token") String token) throws AuthenticationException, BusinessException {
-        String outcome = "hola-mundo-3";
+        StringMessage outcome = new StringMessage();
         try {
             logger.debug("INICIA SERVICIO - getExternalPathFromProblem()");
             authenticationFacade.authorization(token);
-            logger.debug(outcome);
+            String fullPathProblemFile = judgeFacade.getFullPathProblemFile(new Long(idProblem));
+            logger.debug("fullPathProblemFile [" + fullPathProblemFile + "]");
+
+            String tempFullPath = judgeFacade.getFullPathProblemFileToWrite(new Long(idProblem));
+            logger.debug("tempFullPath [" + tempFullPath + "]");
+            boolean existFile = FileUtil.getInstance().existFile(tempFullPath);
+            if (!existFile) {
+                logger.debug("FILE NOT EXIST FULL_PATH [" + tempFullPath + "]");
+                String fullPathLocal = judgeFacade.getFullPathProblemFile(new Long(idProblem));
+                try {
+                    FileUtil.getInstance().copyFile(fullPathLocal, tempFullPath);
+                } catch (IOException ex) {
+                    logger.error(ex);
+                }
+            }
+            outcome.setString(judgeFacade.getFullPathProblemFileFromWEB(new Long(idProblem)));
+            logger.debug("outcome [" + outcome + "]");
         } finally {
             logger.debug("FINALIZA SERVICIO - getExternalPathFromProblem()");
         }

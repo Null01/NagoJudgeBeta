@@ -77,4 +77,12 @@ public class NavegationRoomBean implements Serializable {
         return String.valueOf(nameTeam);
     }
 
+    public String getNameChallengeInSession() {
+        Object nameChallenge = FacesUtil.getFacesUtil().getSessionMap().get(IKeysApplication.KEY_SESSION_CHALLENGE_NAME);
+        if (nameChallenge != null) {
+            return String.valueOf(nameChallenge);
+        }
+        return "";
+    }
+
 }

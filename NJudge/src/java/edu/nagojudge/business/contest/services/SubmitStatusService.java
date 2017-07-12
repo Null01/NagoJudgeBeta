@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.business.contest.services;
 
-import edu.nagojudge.business.dao.entity.DifficultyLevel;
+import edu.nagojudge.business.dao.entity.SubmitStatus;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,27 +25,27 @@ import javax.ws.rs.core.MediaType;
  * @author andresfelipegarciaduran
  */
 @Stateless
-@Path("difficultylevel")
-public class DifficultyLevelFacadeREST extends AbstractFacade<DifficultyLevel> {
+@Path("submitstatus")
+public class SubmitStatusService extends AbstractFacade<SubmitStatus> {
 
     @PersistenceContext(unitName = "NJBusinessPU")
     private EntityManager em;
 
-    public DifficultyLevelFacadeREST() {
-        super(DifficultyLevel.class);
+    public SubmitStatusService() {
+        super(SubmitStatus.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(DifficultyLevel entity) {
+    public void create(SubmitStatus entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, DifficultyLevel entity) {
+    public void edit(@PathParam("id") Integer id, SubmitStatus entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class DifficultyLevelFacadeREST extends AbstractFacade<DifficultyLevel> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public DifficultyLevel find(@PathParam("id") Integer id) {
+    public SubmitStatus find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<DifficultyLevel> findAll() {
+    public List<SubmitStatus> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<DifficultyLevel> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<SubmitStatus> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

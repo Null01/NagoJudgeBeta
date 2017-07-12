@@ -18,19 +18,19 @@
                                      tableStyleClass="table table-striped table-hover"
                                      value="#{roomScoreBean.listScoreTeams}"
                                      var="p"
-                                     styleClass="center-block"
+                                     styleClass="center-block bordersolid"
                                      rowKey="#{p.team.idTeam}"
                                      rowIndexVar="indexKey"
                                      paginator="false"
                                      paginatorPosition="bottom"
                                      emptyMessage="#{msg['general.table.noinfo']}" >
-                            <p:column headerText="#" width="5%" styleClass="text-center" >
+                            <p:column headerText="#" width="5" styleClass="text-center" >
                                 #{indexKey + 1}
                             </p:column>
-                            <p:column headerText="Equipo" width="15%" styleClass="text-center" >
+                            <p:column headerText="Equipo" width="50" styleClass="text-center" >
                                 <h:outputText value="#{p.team.nameTeam}" />
                             </p:column>
-                            <p:column headerText="A" width="8%" rendered="#{roomScoreBean.sizeListScoreTeams ge 1}" styleClass="text-center" >
+                            <p:column headerText="A" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 1}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[0].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[0].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -38,7 +38,7 @@
                                     <h:outputText value="#{p.resumeScore.list[0].tries}/#{p.resumeScore.list[0].time}" />
                                 </div>
                             </p:column>
-                            <p:column headerText="B"  width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 2}" styleClass="text-center" >
+                            <p:column headerText="B"  width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 2}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[1].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[1].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -47,7 +47,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="C" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 3}" styleClass="text-center" >
+                            <p:column headerText="C" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 3}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[2].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[2].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -56,7 +56,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="D" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 4}" styleClass="text-center" >
+                            <p:column headerText="D" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 4}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[3].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[3].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -65,7 +65,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="E" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 5}" styleClass="text-center" >
+                            <p:column headerText="E" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 5}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[4].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[4].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -74,7 +74,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="F" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 6}" styleClass="text-center" >
+                            <p:column headerText="F" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 6}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[5].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[5].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -83,7 +83,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="G" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 7}" styleClass="text-center" >
+                            <p:column headerText="G" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 7}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[6].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[6].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -92,7 +92,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="H" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 8}" styleClass="text-center" >
+                            <p:column headerText="H" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 8}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[7].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[7].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -101,7 +101,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="I" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 9}" styleClass="text-center" >
+                            <p:column headerText="I" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 9}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[8].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[8].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -110,7 +110,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="J" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 10}" styleClass="text-center" >
+                            <p:column headerText="J" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 10}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[9].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[9].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -119,7 +119,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="K" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 11}" styleClass="text-center" >
+                            <p:column headerText="K" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 11}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[10].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[10].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -128,7 +128,7 @@
                                 </div>    
                             </p:column>
 
-                            <p:column headerText="L" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 12}" styleClass="text-center" >
+                            <p:column headerText="L" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 12}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[11].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[11].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -137,7 +137,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="M" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 13}" styleClass="text-center" >
+                            <p:column headerText="M" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 13}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[12].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[12].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -146,7 +146,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="N" width="7%" rendered="#{roomScoreBean.sizeListScoreTeams ge 14}" styleClass="text-center" >
+                            <p:column headerText="N" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 14}" styleClass="text-center" >
                                 <ui:fragment rendered="#{p.resumeScore.list[13].solved}">
                                     <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[13].idProblem]}" class="globe" />
                                 </ui:fragment>
@@ -155,7 +155,7 @@
                                 </div>
                             </p:column>
 
-                            <p:column headerText="Total" width="7%" styleClass="text-center" >
+                            <p:column headerText="Total" width="5" styleClass="text-center" >
                                 <div class="text-score-unit">
                                     <h:outputText value="#{p.time}" />
                                 </div>

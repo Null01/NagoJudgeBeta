@@ -10,6 +10,7 @@ import edu.nagojudge.live.business.entity.ChallengeSubmit;
 import edu.nagojudge.live.business.entity.Submit;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.InfoScoreMessage;
+import edu.nagojudge.msg.pojo.JudgeMessage;
 import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.ScoreMessage;
@@ -70,7 +71,7 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
                 infoScore.put(infoScoreMessage.getIdProblem(), infoScoreMessage);
             }
 
-            Long penalityTime = Long.parseLong(FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.penality.time"));
+            Long penalityTime = Long.parseLong(FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.penality.time"));
 
             StringBuilder sql = new StringBuilder();
             sql.append("(select \n"
@@ -167,20 +168,28 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
             for (Submit submit : submits) {
                 SubmitMessage submitMessage = new SubmitMessage();
                 submitMessage.setIdSubmit(submit.getIdSubmit());
-                submitMessage.setIdStatus(submit.getIdStatus().getKeyStatus());
-                submitMessage.setNameStatus(submit.getIdStatus().getNameStatus());
-                submitMessage.setDescriptionStatus(submit.getIdStatus().getDescription());
-                submitMessage.setTimeUsed(submit.getTimeUsed() == null ? 0 : submit.getTimeUsed().longValue());
                 submitMessage.setDateSubmit(submit.getDateSubmit() != null ? submit.getDateSubmit().getTime() : 0);
 
                 LanguageProgrammingMessage languageProgrammingMessage = new LanguageProgrammingMessage();
                 languageProgrammingMessage.setNameProgramming(submit.getIdLanguage().getNameLanguage());
+                languageProgrammingMessage.setExtension(submit.getIdLanguage().getExtension());
                 submitMessage.setLanguageProgrammingMessage(languageProgrammingMessage);
 
                 ProblemMessage problemMessage = new ProblemMessage();
                 problemMessage.setIdProblem(submit.getIdProblem().getIdProblem());
                 problemMessage.setNameProblem(submit.getIdProblem().getNameProblem());
                 submitMessage.setProblemMessage(problemMessage);
+
+                JudgeMessage judgeMessage = new JudgeMessage();
+                judgeMessage.setIdStatusName(submit.getIdStatus().getIdStatus().longValue());
+                judgeMessage.setKeyStatus(submit.getIdStatus().getKeyStatus());
+                judgeMessage.setStatusName(submit.getIdStatus().getNameStatus());
+                judgeMessage.setDescriptionStatus(submit.getIdStatus().getDescription());
+                judgeMessage.setTimeUsed(submit.getTimeUsed() == null ? 0 : submit.getTimeUsed().longValue());
+                judgeMessage.setMemoUsed(submit.getMemoUsed() == null ? 0 : submit.getMemoUsed().longValue());
+                judgeMessage.setMessageJudge(submit.getMsgJudge());
+                submitMessage.setJudgeMessage(judgeMessage);
+
                 outcome.add(submitMessage);
             }
         } catch (Exception ex) {

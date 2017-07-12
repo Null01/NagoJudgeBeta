@@ -6,32 +6,22 @@
 package edu.nagojudge.live.web.mbeans;
 
 import edu.nagojudge.live.business.entity.facade.dao.ChallengeProblemDAO;
-import edu.nagojudge.live.business.entity.facade.dao.SubmitDAO;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
 import edu.nagojudge.msg.pojo.ChallengeMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
-import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
-import edu.nagojudge.tools.utils.FormatUtil;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -40,9 +30,6 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean
 @ViewScoped
 public class RoomContentBean implements Serializable {
-
-    @EJB
-    private SubmitDAO submitDAO;
 
     @EJB
     private ChallengeProblemDAO challengeProblemFacade;
@@ -101,7 +88,7 @@ public class RoomContentBean implements Serializable {
     }
 
     public String getRealPathOfPDF(Long idProblem) {
-        String realPath = "";
+        String realPath = "none";
         try {
             realPath = challengeProblemFacade.getFullPathProblem(idProblem);
             return realPath;

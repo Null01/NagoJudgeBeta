@@ -113,7 +113,7 @@ body {
 
 /* --- GLOBE ---- */
 .globe{
-    float: right;
+    float: left !important;
     width: 45px !important;
     height: 65px !important;
 }
@@ -152,12 +152,21 @@ body {
 .table > thead > tr.ce > th,
 .table > tbody > tr.ce > th,
 .table > tfoot > tr.ce > th {
-  background-color: #8B1BFF;
+    background-color: #8B1BFF;
 }
 .table-hover > tbody > tr > td.ce:hover,
 .table-hover > tbody > tr > th.ce:hover,
 .table-hover > tbody > tr.ce:hover > td,
 .table-hover > tbody > tr:hover > .ce,
 .table-hover > tbody > tr.ce:hover > th {
-  background-color: #AA85D1;
+    background-color: #AA85D1;
+}
+
+/**/
+.ui-datatable.bordersolid thead th,
+.ui-datatable.bordersolid tbody,
+.ui-datatable.bordersolid tbody tr,
+.ui-datatable.bordersolid tbody td {
+    border: 1.5px solid black !important;
+    border-collapse: collapse !important;
 }

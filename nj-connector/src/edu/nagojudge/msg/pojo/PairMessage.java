@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class PairMessage implements Serializable {
 
-    private String first, second;
+    private String _metaId, first, second;
 
     public PairMessage() {
     }
@@ -39,6 +39,19 @@ public class PairMessage implements Serializable {
 
     public void setSecond(String second) {
         this.second = second;
+    }
+
+    public String getMetaId() {
+        return _metaId;
+    }
+
+    public void setMetaId(String _metaId) {
+        this._metaId = _metaId;
+    }
+
+    @Override
+    public String toString() {
+        return "PairMessage{" + "_metaId=" + _metaId + ", first=" + first + ", second=" + second + '}';
     }
 
 }

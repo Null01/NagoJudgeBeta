@@ -6,7 +6,7 @@
 package edu.nagojudge.business.servicios.restful.interfaces;
 
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
-import edu.nagojudge.msg.pojo.CredentialsMessage;
+import edu.nagojudge.msg.pojo.StringMessage;
 import javax.naming.AuthenticationException;
 
 /**
@@ -15,9 +15,8 @@ import javax.naming.AuthenticationException;
  */
 public interface IProblemService {
 
-    public String getExternalPathFromProblem(
+    public StringMessage getExternalPathFromProblem(
             String idProblem,
-            String idChallenge,
             String token) throws AuthenticationException, BusinessException;
 
 }

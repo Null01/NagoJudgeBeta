@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.business.contest.services;
 
-import edu.nagojudge.business.dao.entity.ComplexityAlgorithm;
+import edu.nagojudge.business.dao.entity.Category;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,27 +25,27 @@ import javax.ws.rs.core.MediaType;
  * @author andresfelipegarciaduran
  */
 @Stateless
-@Path("complexityalgorithm")
-public class ComplexityAlgorithmFacadeREST extends AbstractFacade<ComplexityAlgorithm> {
+@Path("category")
+public class CategoryService extends AbstractFacade<Category> {
 
     @PersistenceContext(unitName = "NJBusinessPU")
     private EntityManager em;
 
-    public ComplexityAlgorithmFacadeREST() {
-        super(ComplexityAlgorithm.class);
+    public CategoryService() {
+        super(Category.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(ComplexityAlgorithm entity) {
+    public void create(Category entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, ComplexityAlgorithm entity) {
+    public void edit(@PathParam("id") Integer id, Category entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class ComplexityAlgorithmFacadeREST extends AbstractFacade<ComplexityAlgo
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public ComplexityAlgorithm find(@PathParam("id") Integer id) {
+    public Category find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<ComplexityAlgorithm> findAll() {
+    public List<Category> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<ComplexityAlgorithm> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Category> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

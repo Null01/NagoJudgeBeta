@@ -11,5 +11,5 @@ package edu.nagojudge.msg.pojo.constants;
  */
 public enum TypeLanguageEnum {
 
-    JAVA, C, PYTHON;
+    JAVA, C, CPP, PYTHON;
 }

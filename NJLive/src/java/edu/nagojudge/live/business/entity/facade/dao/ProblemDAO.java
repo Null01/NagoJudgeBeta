@@ -5,14 +5,7 @@
  */
 package edu.nagojudge.live.business.entity.facade.dao;
 
-import edu.nagojudge.live.business.entity.ChallengeProblem;
 import edu.nagojudge.live.business.entity.Problem;
-import edu.nagojudge.live.web.mbeans.SignInOutBean;
-import edu.nagojudge.live.web.utils.constants.IResourcesPath;
-import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
-import edu.nagojudge.tools.utils.FileUtil;
-import edu.nagojudge.tools.utils.FormatUtil;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -41,12 +34,12 @@ public class ProblemDAO extends AbstractDAO<Problem> {
         super(Problem.class);
     }
 
-    public List<Long> findIdsProblemsByChallenge(Long idChallenge) {
-        List<Long> idProblems = new ArrayList<Long>();
+    public List<Object[]> findProblemsByChallenge(Long idChallenge) {
+        List<Object[]> idProblems = new ArrayList<Object[]>();
         try {
             logger.debug("INICIA METODO - findIdsProblemsByChallenge()");
             EntityManager manager = getEntityManager();
-            idProblems = manager.createQuery("SELECT cp.idProblem.idProblem FROM ChallengeProblem cp WHERE cp.idChallenge.idChallenge = :id_challenge ORDER BY cp.idProblem.idProblem ")
+            idProblems = manager.createQuery("SELECT cp.idProblem.idProblem, cp.idProblem.nameProblem FROM ChallengeProblem cp WHERE cp.idChallenge.idChallenge = :id_challenge ORDER BY cp.idProblem.idProblem ")
                     .setParameter("id_challenge", idChallenge)
                     .getResultList();
         } finally {

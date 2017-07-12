@@ -17,13 +17,15 @@ public class LanguageProgrammingMessage implements Serializable {
 
     private Long idLanguage;
     private String nameProgramming;
+    private String extension;
 
     public LanguageProgrammingMessage() {
     }
 
-    public LanguageProgrammingMessage(Long idLanguage, String nameProgramming) {
+    public LanguageProgrammingMessage(Long idLanguage, String nameProgramming, String extension) {
         this.idLanguage = idLanguage;
         this.nameProgramming = nameProgramming;
+        this.extension = extension;
     }
 
     public Long getIdLanguage() {
@@ -40,6 +42,14 @@ public class LanguageProgrammingMessage implements Serializable {
 
     public void setNameProgramming(String nameProgramming) {
         this.nameProgramming = nameProgramming;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
 }

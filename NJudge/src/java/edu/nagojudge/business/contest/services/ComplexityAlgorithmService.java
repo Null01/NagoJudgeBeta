@@ -5,7 +5,7 @@
  */
 package edu.nagojudge.business.contest.services;
 
-import edu.nagojudge.business.dao.entity.SubmitStatus;
+import edu.nagojudge.business.dao.entity.ComplexityAlgorithm;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,27 +25,27 @@ import javax.ws.rs.core.MediaType;
  * @author andresfelipegarciaduran
  */
 @Stateless
-@Path("submitstatus")
-public class SubmitStatusFacadeREST extends AbstractFacade<SubmitStatus> {
+@Path("complexityalgorithm")
+public class ComplexityAlgorithmService extends AbstractFacade<ComplexityAlgorithm> {
 
     @PersistenceContext(unitName = "NJBusinessPU")
     private EntityManager em;
 
-    public SubmitStatusFacadeREST() {
-        super(SubmitStatus.class);
+    public ComplexityAlgorithmService() {
+        super(ComplexityAlgorithm.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(SubmitStatus entity) {
+    public void create(ComplexityAlgorithm entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, SubmitStatus entity) {
+    public void edit(@PathParam("id") Integer id, ComplexityAlgorithm entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class SubmitStatusFacadeREST extends AbstractFacade<SubmitStatus> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public SubmitStatus find(@PathParam("id") Integer id) {
+    public ComplexityAlgorithm find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<SubmitStatus> findAll() {
+    public List<ComplexityAlgorithm> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<SubmitStatus> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<ComplexityAlgorithm> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

@@ -32,12 +32,19 @@
                                            value="Mis Envios"
                                            action="#{navegationRoomBean.actionRedirectSubmitsBoard}" />
                         </div>
+
+
+
                         <ul class="nav navbar-nav navbar-form navbar-right text-center">
                             <li style="margin-top: 8px; margin-right: 10px;">
-                                <h:outputText styleClass="label label-default" style="font-size: 20px; font-weight: bold;"
-                                               value="#{navegationRoomBean.nameTeamInSession}"  />
+                                <h:outputText styleClass="label label-info" style="font-size: 20px; font-weight: bold;"
+                                              value="#{navegationRoomBean.nameChallengeInSession}"  />
                             </li>
-                            <li class="text-center" style="margin-top: -5px;">
+                            <li style="margin-top: 8px; margin-right: 10px;">
+                                <h:outputText styleClass="label label-default" style="font-size: 20px; font-weight: bold;"
+                                              value="#{navegationRoomBean.nameTeamInSession}"  />
+                            </li>
+                            <li class="text-center">
                                 <p:commandLink styleClass="glyphicon glyphicon-off"
                                                actionListener="#{signInOutBean.actionSignOutSession}"
                                                ajax="false">
