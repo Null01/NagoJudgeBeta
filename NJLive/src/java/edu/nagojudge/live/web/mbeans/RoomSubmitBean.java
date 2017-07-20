@@ -40,8 +40,6 @@ import org.primefaces.model.UploadedFile;
 @ViewScoped
 public class RoomSubmitBean implements Serializable {
 
-    private final String TOKEN = "asd";
-
     @EJB
     private SubmitDAO submitDAO;
 
@@ -51,7 +49,7 @@ public class RoomSubmitBean implements Serializable {
     @EJB
     private ChallengeSubmitDAO challengeSubmitDAO;
 
-    private final Logger logger = Logger.getLogger(RoomSubmitBean.class);
+    private static final Logger logger = Logger.getLogger(RoomSubmitBean.class);
 
     private List<SelectItem> listProblemItems = new ArrayList<SelectItem>();
     private PairMessage pairMessageView = new PairMessage();
@@ -72,7 +70,6 @@ public class RoomSubmitBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            logger.debug("INICIA METODO - init()");
             HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
             Long challengeId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
             Long teamId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_TEAM_ID);
@@ -92,8 +89,6 @@ public class RoomSubmitBean implements Serializable {
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } finally {
-            logger.debug("FINALIZA METODO - init()");
         }
     }
 
@@ -105,14 +100,15 @@ public class RoomSubmitBean implements Serializable {
 
             } else {
                 HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
-                Long challengeId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
-                Long teamId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_TEAM_ID);
+                final Long challengeId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
+                final Long teamId = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_TEAM_ID);
+                final String letterProblem = mapLettersGlobs.get(new Long(pairMessageView.getFirst()));
                 submitDAO.sendSubmit(challengeId,
                         teamId,
-                        Long.parseLong(pairMessageView.getFirst()),
+                        Long.parseLong(pairMessageView.getFirst()), //Problema seleccionado.
                         languageProgrammingMessage.getIdLanguage(),
-                        fileSourceCode.getContents());
-                listSubmits = new ArrayList<SubmitMessage>(challengeSubmitDAO.findAllSubmitByTeam(teamId, challengeId));
+                        fileSourceCode.getContents(),
+                        letterProblem);
             }
         } catch (NagoJudgeLiveException ex) {
             logger.error(ex);
@@ -133,12 +129,12 @@ public class RoomSubmitBean implements Serializable {
 
                 final String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.path.submit.team.download");
                 final String host = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.url");
-
-                Object objects[] = {String.valueOf(idChallenge), String.valueOf(idTeam), String.valueOf(idProblem)};
+                final Map<String, Object> metadata = FacesUtil.getFacesUtil().getMetadataRest(String.valueOf(idTeam));
+                final Object objects[] = {String.valueOf(idChallenge), String.valueOf(idTeam), String.valueOf(idProblem)};
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("idSubmit", idSubmit);
-                params.put("language", language.toLowerCase());
-                params.put("token", TOKEN);
+                params.put("language", language);
+                params.putAll(metadata);
                 InputStream inputStream = (InputStream) ClientService.getInstance().callRestfulGet(host, path, objects, params, InputStream.class);
                 FacesUtil.getFacesUtil().downloadFile(inputStream, language.toLowerCase());
             }

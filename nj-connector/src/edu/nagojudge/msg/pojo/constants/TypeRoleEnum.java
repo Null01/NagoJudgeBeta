@@ -9,5 +9,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public enum TypeRoleEnum {
 
-    ADMIN, TEAM, JUDGE, COMPETITOR;
+    ADMIN, PUBLIC_USER, ADD_CONTENT, TEAM, JUDGE_HUMAN;
 }

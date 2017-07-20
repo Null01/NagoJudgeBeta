@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class ProblemDAO extends AbstractDAO<Problem> {
 
-    private final Logger logger = Logger.getLogger(ProblemDAO.class);
+    private static final Logger logger = Logger.getLogger(ProblemDAO.class);
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;

@@ -9,6 +9,7 @@ import edu.nagojudge.business.dao.beans.AuthenticationDAOFacade;
 import edu.nagojudge.business.dao.beans.JudgeDAOFacade;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
 import edu.nagojudge.business.servicios.restful.interfaces.IProblemService;
+import edu.nagojudge.msg.pojo.MetadataMessage;
 import edu.nagojudge.msg.pojo.StringMessage;
 import edu.nagojudge.tools.utils.FileUtil;
 import java.io.IOException;
@@ -27,8 +28,6 @@ import org.apache.log4j.Logger;
  *
  * @author andresfelipegarciaduran
  */
-@Path("/problem")
-@Produces({MediaType.APPLICATION_JSON + ";charset=UTF-8"})
 public class ProblemService implements IProblemService {
 
     @EJB
@@ -39,16 +38,14 @@ public class ProblemService implements IProblemService {
 
     private final Logger logger = Logger.getLogger(ProblemService.class);
 
-    @GET
-    @Path("/external/{idProblem}")
     @Override
     public StringMessage getExternalPathFromProblem(
-            @PathParam("idProblem") String idProblem,
-            @NotNull @QueryParam("token") String token) throws AuthenticationException, BusinessException {
+            String idProblem,
+            MetadataMessage metadata) throws AuthenticationException, BusinessException {
         StringMessage outcome = new StringMessage();
         try {
             logger.debug("INICIA SERVICIO - getExternalPathFromProblem()");
-            authenticationFacade.authorization(token);
+            authenticationFacade.authorization(metadata.getToken());
             String fullPathProblemFile = judgeFacade.getFullPathProblemFile(new Long(idProblem));
             logger.debug("fullPathProblemFile [" + fullPathProblemFile + "]");
 

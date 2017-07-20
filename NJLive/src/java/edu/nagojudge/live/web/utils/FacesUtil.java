@@ -35,6 +35,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -42,7 +43,7 @@ import org.codehaus.jackson.type.TypeReference;
  */
 public class FacesUtil {
 
-    private final Logger logger = Logger.getLogger(FacesUtil.class);
+    private static final Logger logger = Logger.getLogger(FacesUtil.class);
 
     private static FacesUtil FacesUtil;
 
@@ -140,6 +141,11 @@ public class FacesUtil {
         return response;
     }
 
+    public void execute(String cmd) {
+        RequestContext currentInstance = RequestContext.getCurrentInstance();
+        currentInstance.execute(cmd);
+    }
+
     public String getResourceBundle(String key, String basename) {
         ResourceBundle text = ResourceBundle.getBundle(basename, FacesContext.getCurrentInstance().getViewRoot().getLocale());
         return text.getString(key);
@@ -220,8 +226,8 @@ public class FacesUtil {
                             + "<head>"
                             + "  <meta content='text/html; charset=UTF-8' http-equiv=\"Content-Type\"/>\n"
                             + "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n"
-                            + "  <link rel=\"stylesheet\" href=\"/now/tools/frameworks/bootstrap/css/bootstrap.min.css\"/>\n"
-                            + "  <link rel=\"icon\" type=\"image/ico\" href=\"/now/img/logo-icon.png\"/>"
+                            + "  <link rel=\"stylesheet\" href=\"/live/now/tools/frameworks/bootstrap/css/bootstrap.min.css\"/>\n"
+                            + "  <link rel=\"icon\" type=\"image/ico\" href=\"/live/now/img/logo-icon.png\"/>"
                             + "  <title>Nago Judge</title>"
                             + "</head>"
                             + "<body>"
@@ -233,7 +239,7 @@ public class FacesUtil {
                             + "<h1> " + messageThrowable + "</h1>\n"
                             + "                </div>\n"
                             + "                <div class=\"error-actions\">\n"
-                            + "                    <a href=\"/now/signin.xhtml\" class=\"btn btn-primary btn-lg\"><span class=\"glyphicon glyphicon-home\"></span>\n Return to home </a>"
+                            + "                    <a href=\"/live/now/signin.xhtml\" class=\"btn btn-primary btn-lg\"><span class=\"glyphicon glyphicon-home\"></span>\n Return to home </a>"
                             + "                </div>\n"
                             + "            </div>\n"
                             + "        </div>\n"

@@ -1,10 +1,3 @@
-/*
- * Codejudge
- * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
- * Licensed under MIT License.
- *
- * Codejudge Compiler Server: The base interface for each language
- */
 package edu.nagojudge.business.codejuge.language;
 
 import edu.nagojudge.msg.pojo.JudgeMessage;
@@ -13,6 +6,7 @@ import edu.nagojudge.msg.pojo.PairMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import edu.nagojudge.tools.utils.FileUtil;
+import edu.nagojudge.tools.utils.FormatUtil;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,10 +17,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 import org.apache.log4j.Logger;
 
 public abstract class AbstractLanguage {
@@ -48,11 +43,13 @@ public abstract class AbstractLanguage {
     static {
         i18.put("label.tl.es", "Tu programa no es optimo, revisa tu codigo.");
         i18.put("label.ce.rename.es", "El archivo [:param1] no fue renombrado a un archivo temporal [:param2].");
+        i18.put("label.ce.generic.es", "Recuerda tener presente las siguientes consideraciones [link], a continuacion el datalle:");
         i18.put("label.ac.es", "Bien hecho, solucion correcta.");
-        i18.put("label.wr.precision.es", "Existe diferencias en tus respuestas, revisa la precicion numerica.");
-        i18.put("label.wr.spaces.es", "Existe diferencias en tus respuestas, revisa espacios en blanco generados.");
-        i18.put("label.wr.caseletter.es", "Existe diferencias en tus respuestas, revisa letras mayusculas, minusculas y signos.");
-        i18.put("label.wr.generic.es", "Revisa el formato de salida, generada por tu codigo.");
+        i18.put("label.wr.spaces.es", "Revisa espacios en blanco generados por tu codigo, al inicio o al final de un palabra, numero, signo, etc.");
+        i18.put("label.wr.caseletter.es", "Revisa letras mayusculas, minusculas y signos.");
+        i18.put("label.wr.newline.es", "Revisa saltos de linea generados por tu codigo, recuerda revisar las especificaciones dadas en el enunciado del problema.");
+        i18.put("label.wr.precision.es", "Revisa la precision numerica utilizada, recuerda que el tipo de dato y la cantidad de divisiones afectan la precision.");
+        i18.put("label.wr.generic.es", "Revisa el formato de salida, generado por tu codigo.");
 
         i18.put("label.tl.en", "Your program is not optimize.");
         i18.put("label.ce.rename.en", "The file source [:param1] was not renamed to temporality file [:param2].");
@@ -110,16 +107,6 @@ public abstract class AbstractLanguage {
         return judgeMessage;
     }
 
-    private String generateMessageJudgeAnalyzeResultset(List<PairMessage> diffResults) {
-        String messageJudge = i18.get("label.wr.generic." + metadata.getI18());
-        if (diffResults != null) {
-            for (PairMessage pair : diffResults) {
-                logger.debug(pair);
-            }
-        }
-        return messageJudge;
-    }
-
     // method to return the compiler errors
     public StringBuilder getCompileErrors(final String pathFile) {
         String line;
@@ -151,12 +138,12 @@ public abstract class AbstractLanguage {
 
     // method to return the lists of differences beetwen two files
     public String generateMessageJudgeOfDiffResults(final String pathFileCodeSource, final String fullPathFileOutputServer, final String fullPathFileOutputUser) {
-        String line, first = null, messageJudge = null;
+        String line, messageJudge = null;
         BufferedReader reader = null;
         BufferedWriter out = null;
         final int MAX_NUMBER_OF_CASE_OF_DIFF = 3;
         int it = 0;
-        List<PairMessage> diffResults = new ArrayList<PairMessage>();
+        Stack<PairMessage> diffResults = new Stack<PairMessage>();
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(pathFileCodeSource, NAME_FILE_SHELL_DIFF))));
             out.write("cd \"" + pathFileCodeSource + "\"\n");
@@ -170,10 +157,10 @@ public abstract class AbstractLanguage {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(pathFileCodeSource, NAME_FILE_DIFF_OUTPUT_EXECUTE))));
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("<")) {
-                    first = line;
+                    diffResults.push(new PairMessage(line, null));
                 } else {
                     if (line.startsWith(">")) {
-                        diffResults.add(new PairMessage(first, line));
+                        diffResults.peek().setSecond(line);
                         ++it;
                     }
                 }
@@ -181,7 +168,7 @@ public abstract class AbstractLanguage {
                     break;
                 }
             }
-            String msgJudge = generateMessageJudgeAnalyzeResultset(diffResults);
+            String msgJudge = generateMessageJudgeAnalyzeResultset(new LinkedList<PairMessage>(diffResults));
             messageJudge = (msgJudge != null) ? msgJudge : i18.get("label.wr.generic." + metadata.getI18());
         } catch (IOException ex) {
             logger.error(ex);
@@ -205,4 +192,39 @@ public abstract class AbstractLanguage {
         }
         return messageJudge;
     }
+
+    private String generateMessageJudgeAnalyzeResultset(Queue<PairMessage> diffResults) {
+        if (diffResults != null) {
+            for (PairMessage pair : diffResults) {
+                logger.debug(pair);
+            }
+            PairMessage pair = diffResults.poll();
+            if (pair.getFirst() != null && pair.getSecond() != null) {
+                String a = FormatUtil.getInstance().nvl(pair.getFirst(), "");
+                String b = FormatUtil.getInstance().nvl(pair.getSecond(), "");
+                a = (a.length() > 2) ? a.substring(2) : a;
+                b = (b.length() > 2) ? b.substring(2) : b;
+                if (FormatUtil.getInstance().isValidNumberFloatPoint(a) && FormatUtil.getInstance().isValidNumberFloatPoint(b)) {
+                    int lastIndexOf_a = a.lastIndexOf(".");
+                    int lastIndexOf_b = b.lastIndexOf(".");
+                    if (lastIndexOf_a > 0 && lastIndexOf_b > 0 && lastIndexOf_a == lastIndexOf_b) {
+                        if (a.substring(0, lastIndexOf_a).compareTo(b.substring(0, lastIndexOf_b)) == 0) {
+                            return i18.get("label.wr.precision." + metadata.getI18());
+                        }
+                    }
+                }
+                if (a.compareToIgnoreCase(b) == 0) {
+                    return i18.get("label.wr.caseletter." + metadata.getI18());
+                }
+                if (a.trim().length() == b.trim().length() && a.compareTo(b) == 0) {
+                    return i18.get("label.wr.spaces." + metadata.getI18());
+                }
+
+            }
+        } else {
+            return i18.get("label.wr.newline." + metadata.getI18());
+        }
+        return i18.get("label.wr.generic." + metadata.getI18());
+    }
+
 }

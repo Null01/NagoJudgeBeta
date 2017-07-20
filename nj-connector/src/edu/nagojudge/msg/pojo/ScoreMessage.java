@@ -6,6 +6,7 @@
 package edu.nagojudge.msg.pojo;
 
 import edu.nagojudge.msg.pojo.collections.ListMessage;
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,12 +14,21 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author andres.garcia
  */
 @XmlRootElement
-public class ScoreMessage {
+public class ScoreMessage implements Serializable {
 
     private TeamMessage team;
     private ListMessage<InfoScoreMessage> resumeScore = new ListMessage<InfoScoreMessage>();
-    private Long time;
-    private Long solved;
+    private Long timeTotal;
+    private int numberSolvedProblem;
+
+    public ScoreMessage() {
+    }
+
+    public ScoreMessage(TeamMessage team, Long timeTotal, int numberSolvedProblem) {
+        this.team = team;
+        this.timeTotal = timeTotal;
+        this.numberSolvedProblem = numberSolvedProblem;
+    }
 
     public TeamMessage getTeam() {
         return team;
@@ -36,20 +46,20 @@ public class ScoreMessage {
         this.resumeScore = resumeScore;
     }
 
-    public Long getSolved() {
-        return solved;
+    public Long getTimeTotal() {
+        return timeTotal;
     }
 
-    public void setSolved(Long solved) {
-        this.solved = solved;
+    public void setTimeTotal(Long timeTotal) {
+        this.timeTotal = timeTotal;
     }
 
-    public Long getTime() {
-        return time;
+    public int getNumberSolvedProblem() {
+        return numberSolvedProblem;
     }
 
-    public void setTime(Long time) {
-        this.time = time;
+    public void setNumberSolvedProblem(int numberSolvedProblem) {
+        this.numberSolvedProblem = numberSolvedProblem;
     }
 
 }

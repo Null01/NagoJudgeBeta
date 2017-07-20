@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class ChallengeDAO extends AbstractDAO<Challenge> {
 
-    private final Logger logger = Logger.getLogger(ChallengeDAO.class);
+    private static final Logger logger = Logger.getLogger(ChallengeDAO.class);
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;
@@ -50,6 +50,9 @@ public class ChallengeDAO extends AbstractDAO<Challenge> {
                             .setParameter("idTeam", idTeam)
                             .setParameter("currentDate", new Timestamp(Calendar.getInstance().getTimeInMillis()))
                             .getResultList();
+            if (challenges == null || challenges.isEmpty()) {
+                return null;
+            }
             for (Challenge challenge : challenges) {
                 challengeMessages.add(parseEntityToMessage(challenge));
             }
@@ -76,8 +79,9 @@ public class ChallengeDAO extends AbstractDAO<Challenge> {
         ChallengeMessage challengeMessage = new ChallengeMessage();
         challengeMessage.setIdChallenge(challenge.getIdChallenge());
         challengeMessage.setNameChallenge(challenge.getNameChallenge());
-        challengeMessage.setDateStart(challenge.getDateStart());
-        challengeMessage.setDateEnd(challenge.getDateEnd());
+        challengeMessage.setDateStart(challenge.getDateStart() != null ? challenge.getDateStart().getTime() : 0);
+        challengeMessage.setDateEnd(challenge.getDateEnd() != null ? challenge.getDateEnd().getTime() : 0);
+        challengeMessage.setDateCreated(challenge.getDateCreated() != null ? challenge.getDateCreated().getTime() : 0);
         return challengeMessage;
     }
 

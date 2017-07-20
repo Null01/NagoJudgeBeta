@@ -33,7 +33,7 @@ public class RoomScoreBean implements Serializable {
     @EJB
     private ChallengeSubmitDAO challengeSubmitDAO;
 
-    private final Logger logger = Logger.getLogger(RoomScoreBean.class);
+    private static final Logger logger = Logger.getLogger(RoomScoreBean.class);
 
     private int sizeListScoreTeams;
     private List<ScoreMessage> listScoreTeams = new ArrayList<ScoreMessage>();
@@ -56,6 +56,16 @@ public class RoomScoreBean implements Serializable {
                 mapColorsGlogs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_GLOBES);
                 mapLettersGlobs = FacesUtil.getFacesUtil().getCookieMap(IKeysApplication.KEY_COOKIE_LETTERS);
             }
+        } catch (Exception ex) {
+            logger.error(ex);
+            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
+        }
+    }
+
+    public void actionRefreshScore() {
+        try {
+            Long challengeId = (Long) FacesUtil.getFacesUtil().getAttributeCurrentSession(IKeysApplication.KEY_SESSION_CHALLENGE_ID);
+            this.listScoreTeams = new ArrayList<ScoreMessage>(challengeSubmitDAO.calculateScoreByChallenge(challengeId));
         } catch (Exception ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());

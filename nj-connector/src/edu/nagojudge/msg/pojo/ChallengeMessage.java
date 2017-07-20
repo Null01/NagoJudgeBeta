@@ -6,7 +6,6 @@
 package edu.nagojudge.msg.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,16 +19,16 @@ public class ChallengeMessage implements Serializable {
     private Long idChallenge;
     private String nameChallenge;
     private String emailOrganizer;
-    private Date dateStart;
-    private Date dateEnd;
+    private Long dateStart;
+    private Long dateEnd;
     private String description;
-    private Date dateCreated;
+    private Long dateCreated;
     private List<ProblemMessage> problemMessages;
 
     public ChallengeMessage() {
     }
 
-    public ChallengeMessage(Long idChallenge, String nameChallenge, String emailOrganizer, Date dateStart, Date dateEnd, String description, Date dateCreated, List<ProblemMessage> problemMessages) {
+    public ChallengeMessage(Long idChallenge, String nameChallenge, String emailOrganizer, Long dateStart, Long dateEnd, String description, Long dateCreated, List<ProblemMessage> problemMessages) {
         this.idChallenge = idChallenge;
         this.nameChallenge = nameChallenge;
         this.emailOrganizer = emailOrganizer;
@@ -64,19 +63,19 @@ public class ChallengeMessage implements Serializable {
         this.emailOrganizer = emailOrganizer;
     }
 
-    public Date getDateStart() {
+    public Long getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(Date dateStart) {
+    public void setDateStart(Long dateStart) {
         this.dateStart = dateStart;
     }
 
-    public Date getDateEnd() {
+    public Long getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(Date dateEnd) {
+    public void setDateEnd(Long dateEnd) {
         this.dateEnd = dateEnd;
     }
 
@@ -88,11 +87,11 @@ public class ChallengeMessage implements Serializable {
         this.description = description;
     }
 
-    public Date getDateCreated() {
+    public Long getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(Long dateCreated) {
         this.dateCreated = dateCreated;
     }
 

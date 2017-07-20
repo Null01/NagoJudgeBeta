@@ -6,7 +6,6 @@
 package edu.nagojudge.msg.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -19,7 +18,23 @@ public class TeamMessage implements Serializable {
     private Long idTeam;
     private String nameTeam;
     private String passwordTeam;
-    private Date dateRegister;
+    private String nameInstitution;
+    private String nameCity;
+    private String nameContry;
+    private Long dateRegister;
+
+    public TeamMessage() {
+    }
+
+    public TeamMessage(Long idTeam, String nameTeam, String passwordTeam, String nameInstitution, String nameCity, String nameContry, Long dateRegister) {
+        this.idTeam = idTeam;
+        this.nameTeam = nameTeam;
+        this.passwordTeam = passwordTeam;
+        this.nameInstitution = nameInstitution;
+        this.nameCity = nameCity;
+        this.nameContry = nameContry;
+        this.dateRegister = dateRegister;
+    }
 
     public Long getIdTeam() {
         return idTeam;
@@ -27,14 +42,6 @@ public class TeamMessage implements Serializable {
 
     public void setIdTeam(Long idTeam) {
         this.idTeam = idTeam;
-    }
-
-    public String getPasswordTeam() {
-        return passwordTeam;
-    }
-
-    public void setPasswordTeam(String passwordTeam) {
-        this.passwordTeam = passwordTeam;
     }
 
     public String getNameTeam() {
@@ -45,11 +52,43 @@ public class TeamMessage implements Serializable {
         this.nameTeam = nameTeam;
     }
 
-    public Date getDateRegister() {
+    public String getPasswordTeam() {
+        return passwordTeam;
+    }
+
+    public void setPasswordTeam(String passwordTeam) {
+        this.passwordTeam = passwordTeam;
+    }
+
+    public String getNameInstitution() {
+        return nameInstitution;
+    }
+
+    public void setNameInstitution(String nameInstitution) {
+        this.nameInstitution = nameInstitution;
+    }
+
+    public String getNameCity() {
+        return nameCity;
+    }
+
+    public void setNameCity(String nameCity) {
+        this.nameCity = nameCity;
+    }
+
+    public String getNameContry() {
+        return nameContry;
+    }
+
+    public void setNameContry(String nameContry) {
+        this.nameContry = nameContry;
+    }
+
+    public Long getDateRegister() {
         return dateRegister;
     }
 
-    public void setDateRegister(Date dateRegister) {
+    public void setDateRegister(Long dateRegister) {
         this.dateRegister = dateRegister;
     }
 

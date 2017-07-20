@@ -27,10 +27,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "complexity_algorithm", catalog = "njlive", schema = "")
+@Table(name = "COMPLEXITY_ALGORITHM", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ComplexityAlgorithm.findAll", query = "SELECT c FROM ComplexityAlgorithm c")})

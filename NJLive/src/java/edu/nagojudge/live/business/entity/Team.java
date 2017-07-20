@@ -30,10 +30,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "team", catalog = "njlive", schema = "")
+@Table(name = "TEAM", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Team.findAll", query = "SELECT t FROM Team t")})
@@ -50,6 +50,9 @@ public class Team implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "NAME_TEAM")
     private String nameTeam;
+    @Size(max = 255)
+    @Column(name = "INSTITUTION_TEAM")
+    private String institutionTeam;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -90,6 +93,14 @@ public class Team implements Serializable {
 
     public void setNameTeam(String nameTeam) {
         this.nameTeam = nameTeam;
+    }
+
+    public String getInstitutionTeam() {
+        return institutionTeam;
+    }
+
+    public void setInstitutionTeam(String institutionTeam) {
+        this.institutionTeam = institutionTeam;
     }
 
     public String getPasswordTeam() {

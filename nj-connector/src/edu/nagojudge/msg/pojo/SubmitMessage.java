@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.msg.pojo;
 
+import edu.nagojudge.msg.pojo.constants.TypeActionEnum;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,6 +16,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class SubmitMessage implements Serializable {
 
+    private String _rowIdMetadata;
+    private TypeActionEnum _rowActionMetadata;
+    private String _rowLetterMetadata;
     private Long idSubmit;
     private Long dateSubmit;
     private Long dateJudge;
@@ -22,12 +26,16 @@ public class SubmitMessage implements Serializable {
     private LanguageProgrammingMessage languageProgrammingMessage;
     private ProblemMessage problemMessage;
     private AccountMessage accountMessage;
+    private TeamMessage teamMessage;
     private JudgeMessage judgeMessage;
 
     public SubmitMessage() {
     }
 
-    public SubmitMessage(Long idSubmit, Long dateSubmit, Long dateJudge, String visibleWeb, LanguageProgrammingMessage languageProgrammingMessage, ProblemMessage problemMessage, AccountMessage accountMessage, JudgeMessage judgeMessage) {
+    public SubmitMessage(String _rowIdMetadata, TypeActionEnum _rowActionMetadata, String _rowLetterMetadata, Long idSubmit, Long dateSubmit, Long dateJudge, String visibleWeb, LanguageProgrammingMessage languageProgrammingMessage, ProblemMessage problemMessage, AccountMessage accountMessage, TeamMessage teamMessage, JudgeMessage judgeMessage) {
+        this._rowIdMetadata = _rowIdMetadata;
+        this._rowActionMetadata = _rowActionMetadata;
+        this._rowLetterMetadata = _rowLetterMetadata;
         this.idSubmit = idSubmit;
         this.dateSubmit = dateSubmit;
         this.dateJudge = dateJudge;
@@ -35,7 +43,32 @@ public class SubmitMessage implements Serializable {
         this.languageProgrammingMessage = languageProgrammingMessage;
         this.problemMessage = problemMessage;
         this.accountMessage = accountMessage;
+        this.teamMessage = teamMessage;
         this.judgeMessage = judgeMessage;
+    }
+
+    public String getRowIdMetadata() {
+        return _rowIdMetadata;
+    }
+
+    public void setRowIdMetadata(String _rowIdMetadata) {
+        this._rowIdMetadata = _rowIdMetadata;
+    }
+
+    public TypeActionEnum getRowActionMetadata() {
+        return _rowActionMetadata;
+    }
+
+    public void setRowActionMetadata(TypeActionEnum _rowActionMetadata) {
+        this._rowActionMetadata = _rowActionMetadata;
+    }
+
+    public String getRowLetterMetadata() {
+        return _rowLetterMetadata;
+    }
+
+    public void setRowLetterMetadata(String _rowLetterMetadata) {
+        this._rowLetterMetadata = _rowLetterMetadata;
     }
 
     public Long getIdSubmit() {
@@ -92,6 +125,14 @@ public class SubmitMessage implements Serializable {
 
     public void setAccountMessage(AccountMessage accountMessage) {
         this.accountMessage = accountMessage;
+    }
+
+    public TeamMessage getTeamMessage() {
+        return teamMessage;
+    }
+
+    public void setTeamMessage(TeamMessage teamMessage) {
+        this.teamMessage = teamMessage;
     }
 
     public JudgeMessage getJudgeMessage() {

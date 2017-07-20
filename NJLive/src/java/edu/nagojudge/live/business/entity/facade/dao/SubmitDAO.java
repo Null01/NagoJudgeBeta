@@ -15,14 +15,19 @@ import edu.nagojudge.live.business.entity.Team;
 import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.clients.ClientService;
-//import edu.nagojudge.live.web.utils.constants.IKeysChallenge;
+import edu.nagojudge.live.web.utils.clients.NotifyPushClientService;
 import edu.nagojudge.live.web.utils.constants.IResourcesPath;
+import edu.nagojudge.msg.pojo.JudgeMessage;
 import edu.nagojudge.msg.pojo.MetadataMessage;
+import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
+import edu.nagojudge.msg.pojo.TeamMessage;
+import edu.nagojudge.msg.pojo.constants.TypeActionEnum;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import edu.nagojudge.tools.utils.FormatUtil;
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -32,6 +37,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
+import org.primefaces.push.EventBusFactory;
 
 /**
  *
@@ -43,9 +49,7 @@ public class SubmitDAO extends AbstractDAO<Submit> {
     @EJB
     private ChallengeSubmitDAO challengeSubmitDAO;
 
-    private final String TOKEN = "asd";
-
-    private final Logger logger = Logger.getLogger(SubmitDAO.class);
+    private static final Logger logger = Logger.getLogger(SubmitDAO.class);
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;
@@ -60,7 +64,7 @@ public class SubmitDAO extends AbstractDAO<Submit> {
     }
 
     public void sendSubmit(final Long idChallenge, final Long idTeam, Long idProblem,
-            Long idLanguage, byte[] contentCodeSource) throws NagoJudgeLiveException {
+            Long idLanguage, byte[] contentCodeSource, final String letterProblem) throws NagoJudgeLiveException {
         try {
             logger.debug("INICIA METODO - createSubmitSolve()");
 
@@ -98,18 +102,37 @@ public class SubmitDAO extends AbstractDAO<Submit> {
             final String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.path.submit.team.send");
             final String host = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.url");
             final Map<String, Object> metadata = FacesUtil.getFacesUtil().getMetadataRest(String.valueOf(idTeam));
-            final Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Object objects[] = {String.valueOf(idChallenge), String.valueOf(idTeam)};
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("idSubmit", idSubmit);
-                    params.putAll(metadata);
-                    SubmitMessage submitMessage = (SubmitMessage) ClientService.getInstance().callRestfulGet(host, path, objects, params, SubmitMessage.class);
-                    logger.debug("outcome [" + submitMessage + "]");
-                }
-            });
-            thread.start();
+            final Object objects[] = {String.valueOf(idChallenge), String.valueOf(idTeam)};
+            final Map<String, Object> params = new HashMap<String, Object>();
+            params.put("idSubmit", idSubmit);
+            params.putAll(metadata);
+
+            SubmitMessage submitMessage = new SubmitMessage();
+            submitMessage.setRowIdMetadata(String.valueOf(submitMessage.hashCode()));
+            submitMessage.setRowActionMetadata(TypeActionEnum.CREATE);
+            submitMessage.setRowLetterMetadata(letterProblem);
+            submitMessage.setIdSubmit(idSubmit);
+            submitMessage.setDateJudge(challengeSubmit.getIdSubmit().getDateJudge() != null ? challengeSubmit.getIdSubmit().getDateJudge().getTime() : 0);
+            submitMessage.setDateSubmit(challengeSubmit.getIdSubmit().getDateSubmit() != null ? challengeSubmit.getIdSubmit().getDateSubmit().getTime() : 0);
+            JudgeMessage judgeMessage = new JudgeMessage();
+            judgeMessage.setKeyStatus(challengeSubmit.getIdSubmit().getIdStatus().getKeyStatus());
+            judgeMessage.setStatusName(challengeSubmit.getIdSubmit().getIdStatus().getNameStatus());
+            submitMessage.setJudgeMessage(judgeMessage);
+            TeamMessage teamMessage = new TeamMessage();
+            teamMessage.setIdTeam(challengeSubmit.getIdTeam().getIdTeam());
+            teamMessage.setNameTeam(challengeSubmit.getIdTeam().getNameTeam());
+            submitMessage.setTeamMessage(teamMessage);
+            ProblemMessage problemMessage = new ProblemMessage();
+            problemMessage.setIdProblem(challengeSubmit.getIdSubmit().getIdProblem().getIdProblem());
+            problemMessage.setNameProblem(challengeSubmit.getIdSubmit().getIdProblem().getNameProblem());
+            submitMessage.setProblemMessage(problemMessage);
+
+            NotifyPushClientService clientService = new NotifyPushClientService(IResourcesPath.ENDPOINT_CONTEST_LIVE + File.separatorChar + String.valueOf(idChallenge),
+                    EventBusFactory.getDefault().eventBus(),
+                    host, path, objects, params, SubmitMessage.class);
+            clientService.setSubmitMessage(submitMessage);
+            clientService.start();
+
         } catch (IOException ex) {
             logger.error(ex);
             throw new NagoJudgeLiveException(ex);

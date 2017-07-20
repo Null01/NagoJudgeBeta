@@ -61,78 +61,83 @@
             </h:form>
         </div>
 
-        <div class="well">
-            <h:form id="form-table-results" class="form-horizontal" enctype="multipart/form-data">
-                <p:messages id="msgs" autoUpdate="true" closable="true"/>
-                <fieldset>
-                    <div class="form-group">
-                        <p:dataTable id="table-problems-client"
-                                     widgetVar="widgetSubmitsClient"
-                                     tableStyleClass="table table-striped table-hover"
-                                     value="#{roomSubmitBean.listSubmits}"
-                                     var="s"
-                                     rowStyleClass="#{s.judgeMessage.keyStatus eq 'AC'?
-                                                      'success': (s.judgeMessage.keyStatus eq 'WR'?
-                                                      'danger': (s.judgeMessage.keyStatus eq 'TL'?
-                                                      'info': (s.judgeMessage.keyStatus eq 'RE'?
-                                                      'warning': (s.judgeMessage.keyStatus eq 'CE'?
-                                                      'ce': null)))) }"
-                                     styleClass="center-block text-bold bordersolid"
-                                     rowKey="#{s.idSubmit}"
-                                     rowIndexVar="indexKey"
-                                     paginator="false"
-                                     paginatorPosition="bottom"                                     
-                                     emptyMessage="#{msg['general.table.noinfo']}">
-                            <p:column headerText="#" width="5%" styleClass="text-center" >
-                                #{roomSubmitBean.listSubmits.size() - indexKey} 
-                            </p:column>
-                            <p:column headerText="Id" width="3%" styleClass="text-center" >
-                                <h:outputText value="#{roomSubmitBean.mapLettersGlobs[s.problemMessage.idProblem]}" />
-                            </p:column>
-                            <p:column headerText="Id Envio" width="8%" styleClass="text-center" >
-                                <h:outputText value="#{s.idSubmit}" />
-                            </p:column>
-                            <p:column headerText="Problema" width="20%" styleClass="text-left" >
-                                <h:outputText value="#{s.problemMessage.nameProblem}" />
-                            </p:column>
-                            <p:column headerText="Lenguaje" width="8%" styleClass="text-center" >
-                                <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
-                            </p:column>
-                            <p:column headerText="Tiempo" width="8%" styleClass="text-center" >
-                                <h:outputText value="#{s.judgeMessage.timeUsed}" >
-                                    <f:convertDateTime pattern="s.SSS" />
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="Fecha Envio" width="15%" styleClass="text-center" >
-                                <h:outputText value="#{s.dateSubmit}" >
-                                    <f:convertDateTime pattern="dd MMM yyyy - HH:mm:ss" timeZone=""  />
-                                </h:outputText>
-                            </p:column>
-                            <p:column headerText="Estado" width="15%" styleClass="text-center" >
-                                <h:outputText id="tooltipEstado" value="#{s.judgeMessage.statusName}" />
-                                <p:tooltip for="tooltipEstado" value="#{s.judgeMessage.descriptionStatus}" position="left"/>
-                            </p:column>
-                            <p:column width="5%" styleClass="text-center" >
-                                <ui:fragment rendered="#{s.judgeMessage.keyStatus eq 'AC'}" >
-                                    <img src="#{roomSubmitBean.mapColorsGlogs[s.problemMessage.idProblem]}" class="globe-center"  />
-                                </ui:fragment>
-                                <ui:fragment rendered="#{s.judgeMessage.keyStatus ne 'AC'}" >
-                                    <h:outputText value="-/-" styleClass="text-center" />
-                                </ui:fragment>
-                            </p:column>
-                            <p:column headerText="" width="4%" styleClass="text-center">
-                                <h:commandLink id="link-download-file"
-                                               styleClass="glyphicon glyphicon-download"
-                                               action="#{roomSubmitBean.actionDownloadCodeSource(s.problemMessage.idProblem, s.idSubmit,  s.languageProgrammingMessage.extension)}">
-                                </h:commandLink>
-                                <p:tooltip for="link-download-file" value="Descargar" position="left"/>
-                            </p:column>
-                        </p:dataTable>
+        <p:panel id="panel-table-results" rendered="#{not empty roomSubmitBean.listSubmits}" >
+            <div class="well">
+                <h:form id="form-table-results" class="form-horizontal" enctype="multipart/form-data" >
+                    <fieldset>
+                        <div class="form-group">
+                            <p:dataTable id="table-problems-client"
+                                         widgetVar="widgetSubmitsClient"
+                                         tableStyleClass="table table-striped table-hover"
+                                         value="#{roomSubmitBean.listSubmits}"
+                                         var="s"
+                                         rowStyleClass="#{s.judgeMessage.keyStatus eq 'AC'?
+                                                          'success': (s.judgeMessage.keyStatus eq 'WR'?
+                                                          'danger': (s.judgeMessage.keyStatus eq 'TL'?
+                                                          'info': (s.judgeMessage.keyStatus eq 'RE'?
+                                                          'warning': (s.judgeMessage.keyStatus eq 'CE'?
+                                                          'ce': null)))) }"
+                                         styleClass="center-block bordersolid text-bold"
+                                         rowKey="#{s.idSubmit}"
+                                         rowIndexVar="indexKey"
+                                         paginator="false"
+                                         style="width: 100%;"
+                                         paginatorPosition="bottom"                                     
+                                         emptyMessage="#{msg['general.table.noinfo']}">
+                                <p:column headerText="#" width="5" styleClass="text-center" >
+                                    #{roomSubmitBean.listSubmits.size() - indexKey} 
+                                </p:column>
+                                <p:column headerText="Id" width="10" styleClass="text-center" >
+                                    <h:outputText value="#{roomSubmitBean.mapLettersGlobs[s.problemMessage.idProblem]}" />
+                                </p:column>
+                                <p:column headerText="Envio" width="20" styleClass="text-center" >
+                                    <h:outputText value="#{s.idSubmit}" />
+                                </p:column>
+                                <p:column headerText="" width="25" styleClass="text-center container-globe" >
+                                    <ui:fragment rendered="#{s.judgeMessage.keyStatus eq 'AC'}" >
+                                        <img src="#{roomSubmitBean.mapColorsGlogs[s.problemMessage.idProblem]}" class="globe img-responsive"  />
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{s.judgeMessage.keyStatus ne 'AC'}" >
+                                        <h:outputText value="-/-" styleClass="text-center" />
+                                    </ui:fragment>
+                                </p:column>
+                                <p:column headerText="Problema" width="100" styleClass="text-left" >
+                                    <h:outputText value="#{s.problemMessage.nameProblem}" />
+                                </p:column>
+                                <p:column headerText="Lenguaje" width="30" styleClass="text-center" >
+                                    <h:outputText value="#{s.languageProgrammingMessage.nameProgramming}" />
+                                </p:column>
+                                <p:column headerText="Tiempo" width="25" styleClass="text-center" >
+                                    <h:outputText value="#{s.judgeMessage.timeUsed}" >
+                                        <f:convertDateTime pattern="s.SSS" timeZone="#{initParam.timezone}" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Fecha Envio" width="40" styleClass="text-center" >
+                                    <h:outputText value="#{s.dateSubmit}" >
+                                        <f:convertDateTime pattern="dd MMM yyyy HH:mm:ss" timeZone="#{initParam.timezone}" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Estado" width="40" styleClass="text-center" >
+                                    <h:outputText id="tooltipEstado" value="#{s.judgeMessage.statusName}" />
+                                    <p:tooltip for="tooltipEstado" value="#{s.judgeMessage.descriptionStatus}" position="left"/>
+                                </p:column>
+                                <p:column headerText="Juez" width="120" styleClass="text-center" >
+                                    <h:outputText value="#{s.judgeMessage.messageJudge}" />                                        
+                                </p:column>
+                                <p:column headerText="" width="8" styleClass="text-center">
+                                    <h:commandLink id="link-download-file"
+                                                   styleClass="glyphicon glyphicon-download"
+                                                   action="#{roomSubmitBean.actionDownloadCodeSource(s.problemMessage.idProblem, s.idSubmit,  s.languageProgrammingMessage.extension)}">
+                                    </h:commandLink>
+                                    <p:tooltip for="link-download-file" value="Descargar" position="left"/>
+                                </p:column>                                
+                            </p:dataTable>
 
-                    </div>
-                </fieldset> 
-            </h:form>
-        </div>
+                        </div>
+                    </fieldset> 
+                </h:form>
+            </div>
+        </p:panel>
     </ui:define>
 </ui:composition>
 

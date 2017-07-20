@@ -37,7 +37,7 @@ public class SelectRoomBean implements Serializable {
     @EJB
     private ChallengeDAO challengeDAO;
 
-    private final Logger logger = Logger.getLogger(SelectRoomBean.class);
+    private static final Logger logger = Logger.getLogger(SelectRoomBean.class);
 
     private TeamMessage teamMessageView = new TeamMessage();
 
@@ -54,7 +54,7 @@ public class SelectRoomBean implements Serializable {
         currentSession.setAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_END, challengeMessageView.getDateEnd());
         List<Object[]> idProblems = problemDAO.findProblemsByChallenge((Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_ID));
         buildResourceScore(idProblems, 'A');
-        return "/challenge/content.xhtml?faces-redirect=true&includeViewParams=true";
+        return "/challenge/score.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public void actionListenerPreRender() {
@@ -81,7 +81,7 @@ public class SelectRoomBean implements Serializable {
     }
 
     private void buildResourceScore(List<Object[]> idProblems, char key) {
-        final String PATH_GLOBES = "/now/img/globes/";
+        final String PATH_GLOBES = "/live/now/img/globes/";
         List<String> colors = new ArrayList<String>();
         Map<Long, String> cookieColors = new HashMap<Long, String>();
         Map<Long, String> cookieLetters = new HashMap<Long, String>();

@@ -12,14 +12,14 @@ import edu.nagojudge.business.codejuge.language.Java;
 import edu.nagojudge.business.dao.entity.Attachments;
 import edu.nagojudge.business.dao.entity.Submit;
 import edu.nagojudge.business.dao.entity.SubmitStatus;
-import edu.nagojudge.business.logic.exe.JudgeServiceJava;
+import edu.nagojudge.business.dao.entity.Team;
 import edu.nagojudge.business.servicios.restful.exceptions.BusinessException;
-import edu.nagojudge.business.servicios.restful.exceptions.RunJudgeException;
 import edu.nagojudge.msg.pojo.JudgeMessage;
 import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.MetadataMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
+import edu.nagojudge.msg.pojo.TeamMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
 import edu.nagojudge.msg.pojo.constants.TypeLanguageEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
@@ -70,7 +70,6 @@ public class JudgeDAOFacade {
             if (submit == null) {
                 throw new BusinessException("ID_SUBMIT [" + idSubmit + "] NO EXISTE.");
             }
-
             logger.debug("getIdSubmit() [" + submit.getIdSubmit() + "]");
             logger.debug("getIdLanguage() [" + submit.getIdLanguage() + "]");
             logger.debug("getIdStatus() [" + submit.getIdStatus().getNameStatus() + "]");
@@ -103,7 +102,7 @@ public class JudgeDAOFacade {
                     .setParameter("id_status", judgetState.getStatusName())
                     .getSingleResult());
             em.merge(submit);
-            return parseSubmitEntityToMessage(submit, judgetState);
+            return parseSubmitEntityToMessage(submit, null, judgetState);
         } catch (BusinessException ex) {
             logger.error(ex);
             throw ex;
@@ -133,10 +132,15 @@ public class JudgeDAOFacade {
         JudgeMessage judgetState = new JudgeMessage();
         try {
             em = getEntityManager();
-            logger.debug("EVALUATE ID_SUBMIT=" + idSubmit + " @ECHO");
+            logger.debug("idSubmit [" + idSubmit + "] @ECHO");
             Submit submit = em.find(Submit.class, idSubmit);
             if (submit == null) {
                 throw new BusinessException("idSubmit [" + idSubmit + "] NO EXISTE.");
+            }
+            logger.debug("idTeam [" + idTeam + "] @ECHO");
+            final Team team = em.find(Team.class, idTeam);
+            if (team == null) {
+                throw new BusinessException("team [" + idTeam + "] NO EXISTE.");
             }
             logger.debug("getIdSubmit()=" + submit.getIdSubmit());
             logger.debug("getIdLanguage()=" + submit.getIdLanguage());
@@ -205,7 +209,7 @@ public class JudgeDAOFacade {
                     .getSingleResult());
             em.merge(submit);
             logger.debug("JUDGE_FINALLY [" + submit.getIdStatus().getNameStatus() + "]");
-            return parseSubmitEntityToMessage(submit, judgetState);
+            return parseSubmitEntityToMessage(submit, team, judgetState);
         } catch (BusinessException ex) {
             logger.error(ex);
             throw ex;
@@ -279,7 +283,7 @@ public class JudgeDAOFacade {
         return null;
     }
 
-    private SubmitMessage parseSubmitEntityToMessage(Submit submit, JudgeMessage judgetState) {
+    private SubmitMessage parseSubmitEntityToMessage(Submit submit, Team team, JudgeMessage judgetState) {
         SubmitMessage submitMessage = new SubmitMessage();
         submitMessage.setIdSubmit(submit.getIdSubmit());
         submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
@@ -297,10 +301,19 @@ public class JudgeDAOFacade {
         languageProgrammingMessage.setExtension(submit.getIdLanguage().getExtension());
         submitMessage.setLanguageProgrammingMessage(languageProgrammingMessage);
 
+        if (team != null) {
+            TeamMessage teamMessage = new TeamMessage();
+            teamMessage.setIdTeam(team.getIdTeam());
+            teamMessage.setNameTeam(team.getNameTeam());
+            teamMessage.setNameInstitution(team.getInstitutionTeam());
+            submitMessage.setTeamMessage(teamMessage);
+        }
+
+        judgetState.setKeyStatus(submit.getIdStatus().getKeyStatus());
         judgetState.setStatusName(submit.getIdStatus().getNameStatus());
         judgetState.setDescriptionStatus(submit.getIdStatus().getDescription());
         judgetState.setTimeUsed(submit.getTimeUsed() != null ? submit.getTimeUsed().longValue() : 0);
-        //judgetState.setMemoUsed(submit.getMemoUsed() != null ? submit.getMemoUsed().longValue() : 0);
+        judgetState.setMemoUsed(submit.getMemoUsed() != null ? submit.getMemoUsed().longValue() : 0);
         submitMessage.setJudgeMessage(judgetState);
 
         return submitMessage;

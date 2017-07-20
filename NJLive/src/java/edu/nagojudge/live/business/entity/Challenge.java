@@ -31,10 +31,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "challenge", catalog = "njlive", schema = "")
+@Table(name = "CHALLENGE", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Challenge.findAll", query = "SELECT c FROM Challenge c")})
@@ -76,9 +76,9 @@ public class Challenge implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
     private List<ChallengeTeam> challengeTeamList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
-    private List<ChallengeProblem> challengeProblemList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
     private List<ChallengeSubmit> challengeSubmitList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idChallenge", fetch = FetchType.LAZY)
+    private List<ChallengeProblem> challengeProblemList;
 
     public Challenge() {
     }
@@ -163,22 +163,22 @@ public class Challenge implements Serializable {
 
     @XmlTransient
     @JsonIgnore
-    public List<ChallengeProblem> getChallengeProblemList() {
-        return challengeProblemList;
-    }
-
-    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
-        this.challengeProblemList = challengeProblemList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
     public List<ChallengeSubmit> getChallengeSubmitList() {
         return challengeSubmitList;
     }
 
     public void setChallengeSubmitList(List<ChallengeSubmit> challengeSubmitList) {
         this.challengeSubmitList = challengeSubmitList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<ChallengeProblem> getChallengeProblemList() {
+        return challengeProblemList;
+    }
+
+    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
+        this.challengeProblemList = challengeProblemList;
     }
 
     @Override

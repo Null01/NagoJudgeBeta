@@ -28,10 +28,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "submit_status", catalog = "njlive", schema = "")
+@Table(name = "SUBMIT_STATUS", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "SubmitStatus.findAll", query = "SELECT s FROM SubmitStatus s")})
@@ -57,6 +57,10 @@ public class SubmitStatus implements Serializable {
     @Size(max = 65535)
     @Column(name = "DESCRIPTION")
     private String description;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PENALITY")
+    private int penality;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idStatus", fetch = FetchType.LAZY)
     private List<Submit> submitList;
 
@@ -67,10 +71,11 @@ public class SubmitStatus implements Serializable {
         this.idStatus = idStatus;
     }
 
-    public SubmitStatus(Integer idStatus, String keyStatus, String nameStatus) {
+    public SubmitStatus(Integer idStatus, String keyStatus, String nameStatus, int penality) {
         this.idStatus = idStatus;
         this.keyStatus = keyStatus;
         this.nameStatus = nameStatus;
+        this.penality = penality;
     }
 
     public Integer getIdStatus() {
@@ -103,6 +108,14 @@ public class SubmitStatus implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getPenality() {
+        return penality;
+    }
+
+    public void setPenality(int penality) {
+        this.penality = penality;
     }
 
     @XmlTransient

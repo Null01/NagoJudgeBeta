@@ -11,6 +11,7 @@ import edu.nagojudge.msg.pojo.ChallengeMessage;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
 @ViewScoped
 public class NavegationRoomBean implements Serializable {
 
-    private final Logger logger = Logger.getLogger(NavegationRoomBean.class);
+    private static final Logger logger = Logger.getLogger(NavegationRoomBean.class);
 
     private ChallengeMessage challengeMessageView = new ChallengeMessage();
 
@@ -43,25 +44,32 @@ public class NavegationRoomBean implements Serializable {
         return "/challenge/submit.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
+    public String actionRedirectContestLiveBoard() {
+        return "/challenge/contest.xhtml?faces-redirect=true&includeViewParams=true";
+    }
+
     public long getTimeEndingChallenge() {
         try {
             logger.debug("INICIA METODO - getTimeEndingChallenge()");
-            Calendar endTimeChallenge = Calendar.getInstance();
             Date currentTime = Calendar.getInstance().getTime();
             HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
-            Date dateStarted = (Date) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_END);
-            endTimeChallenge.setTimeInMillis(dateStarted.getTime() - currentTime.getTime());
-            logger.debug("TIME LEFT [" + endTimeChallenge.getTime() + "]");
-            return (60 * 60 * 24 * (endTimeChallenge.get(Calendar.DATE) - 1))
-                    + (60 * 60 * endTimeChallenge.get(Calendar.HOUR_OF_DAY))
-                    + (60 * (endTimeChallenge.get(Calendar.MINUTE)))
-                    + endTimeChallenge.get(Calendar.SECOND);
+            Long dateEnding = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_END);
+            logger.debug("dateEnding [" + new Date(dateEnding) + "]");
+            logger.debug("currentTime [" + new Date(currentTime.getTime()) + "]");
+            return TimeUnit.MILLISECONDS.toSeconds(dateEnding - currentTime.getTime());
         } catch (Exception ex) {
             logger.error(ex);
         } finally {
             logger.debug("FINALIZA METODO - getTimeEndingChallenge()");
         }
         return 0;
+    }
+
+    public boolean getShowDaysInTimer() {
+        Date currentTime = Calendar.getInstance().getTime();
+        HttpSession currentSession = FacesUtil.getFacesUtil().getCurrentSession();
+        Long dateEnding = (Long) currentSession.getAttribute(IKeysApplication.KEY_SESSION_CHALLENGE_DATE_END);
+        return TimeUnit.MILLISECONDS.toDays(dateEnding - currentTime.getTime()) != 0;
     }
 
     public ChallengeMessage getChallengeMessageView() {

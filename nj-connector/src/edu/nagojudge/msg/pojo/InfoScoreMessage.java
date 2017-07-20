@@ -16,15 +16,17 @@ public class InfoScoreMessage {
 
     private long idProblem;
     private boolean solved;
-    private int tries;
-    private long time;
+    private long timeFirstTrie;
+    private int numberTries;
 
-    public void isSolve(boolean tempSolve) {
-        this.solved = this.solved ? this.solved : tempSolve;
+    public InfoScoreMessage() {
     }
 
-    public void addTry() {
-        this.tries = this.tries + 1;
+    public InfoScoreMessage(long idProblem, boolean solved, long timeFirstTrie, int numberTries) {
+        this.idProblem = idProblem;
+        this.solved = solved;
+        this.timeFirstTrie = timeFirstTrie;
+        this.numberTries = numberTries;
     }
 
     public long getIdProblem() {
@@ -43,19 +45,20 @@ public class InfoScoreMessage {
         this.solved = solved;
     }
 
-    public int getTries() {
-        return tries;
+    public long getTimeFirstTrie() {
+        return timeFirstTrie;
     }
 
-    public void setTries(int tries) {
-        this.tries = tries;
+    public void setTimeFirstTrie(long timeFirstTrie) {
+        this.timeFirstTrie = timeFirstTrie;
     }
 
-    public long getTime() {
-        return time;
+    public int getNumberTries() {
+        return numberTries;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setNumberTries(int numberTries) {
+        this.numberTries = numberTries;
     }
+
 }

@@ -34,7 +34,7 @@ public class RoomContentBean implements Serializable {
     @EJB
     private ChallengeProblemDAO challengeProblemFacade;
 
-    private final Logger logger = Logger.getLogger(RoomContentBean.class);
+    private static final Logger logger = Logger.getLogger(RoomContentBean.class);
 
     private List<ProblemMessage> listProblems = new ArrayList<ProblemMessage>();
 

@@ -31,11 +31,11 @@ public class SignInOutBean implements Serializable {
     @EJB
     private TeamDAO teamDAO;
 
-    private final Logger logger = Logger.getLogger(SignInOutBean.class);
+    private static final Logger logger = Logger.getLogger(SignInOutBean.class);
 
     private TeamMessage teamMessage = new TeamMessage();
 
-    private final String TARGET_PATH_NEXT_STEP_LOGOUT = "/";
+    private final String TARGET_PATH_NEXT_STEP_LOGOUT = "/live";
 
     public SignInOutBean() {
     }
@@ -46,7 +46,8 @@ public class SignInOutBean implements Serializable {
 
     public String actionSignInSession() {
         try {
-            teamMessage.setIdTeam(teamDAO.findTeamAvailable(teamMessage.getNameTeam(), teamMessage.getPasswordTeam()));
+            Long teamId = teamDAO.findTeamAvailable(teamMessage.getNameTeam(), teamMessage.getPasswordTeam());
+            teamMessage.setIdTeam(teamId);
             return "/challenge/select.xhtml?faces-redirect=true&includeViewParams=true";
         } catch (NagoJudgeLiveException ex) {
             logger.error(ex);

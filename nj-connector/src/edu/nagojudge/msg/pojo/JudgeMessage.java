@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.msg.pojo;
 
+import edu.nagojudge.msg.pojo.collections.ListMessage;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,6 +23,7 @@ public class JudgeMessage implements Serializable {
     private String messageJudge;
     private Long timeUsed;
     private Long memoUsed;
+    private ListMessage<CaseTestMessage> listCaseTestMessage = new ListMessage<CaseTestMessage>();
 
     public JudgeMessage() {
     }
@@ -90,6 +92,14 @@ public class JudgeMessage implements Serializable {
 
     public void setMemoUsed(Long memoUsed) {
         this.memoUsed = memoUsed;
+    }
+
+    public ListMessage<CaseTestMessage> getListCaseTestMessage() {
+        return listCaseTestMessage;
+    }
+
+    public void setListCaseTestMessage(ListMessage<CaseTestMessage> listCaseTestMessage) {
+        this.listCaseTestMessage = listCaseTestMessage;
     }
 
 }

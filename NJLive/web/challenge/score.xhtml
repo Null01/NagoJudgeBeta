@@ -12,158 +12,152 @@
             <fieldset>
                 <div class="form-group">
                     <h:form id="form-score-client" class="form-horizontal">
+                        <p:remoteCommand name="loopRefreshContest" update="table-score-client" process="@this" actionListener="#{roomScoreBean.actionRefreshScore}" />
                         <p:messages id="msgs" autoUpdate="true" closable="true"/>
                         <p:dataTable id="table-score-client"
                                      widgetVar="widgetScoreClient"
-                                     tableStyleClass="table table-striped table-hover"
+                                     tableStyleClass="table table-striped table-hover text-bold"
                                      value="#{roomScoreBean.listScoreTeams}"
                                      var="p"
                                      styleClass="center-block bordersolid"
                                      rowKey="#{p.team.idTeam}"
                                      rowIndexVar="indexKey"
                                      paginator="false"
+                                     style="width: 80%;"
                                      paginatorPosition="bottom"
                                      emptyMessage="#{msg['general.table.noinfo']}" >
-                            <p:column headerText="#" width="5" styleClass="text-center" >
-                                #{indexKey + 1}
+                            <p:column headerText="Rk" width="25" styleClass="text-center" >
+                                <h:outputText value="#{indexKey + 1}" styleClass="text-score-unit" />
                             </p:column>
-                            <p:column headerText="Equipo" width="50" styleClass="text-center" >
-                                <h:outputText value="#{p.team.nameTeam}" />
+                            <p:column headerText="Institucion" width="100" styleClass="text-center" >
+                                <h:outputText value="#{p.team.nameInstitution}" rendered="#{not empty p.team.nameInstitution}" styleClass="text-score-unit" />
+                                <h:outputText value="-/-" rendered="#{empty p.team.nameInstitution}" styleClass="text-score-unit" />
                             </p:column>
-                            <p:column headerText="A" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 1}" styleClass="text-center" >
+                            <p:column headerText="Equipo" width="140" styleClass="text-center" >
+                                <h:outputText value="#{p.team.nameTeam}" styleClass="text-score-unit" />
+                            </p:column>
+
+                            <p:column headerText="A" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 1}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[0].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[0].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[0].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[0].tries}/#{p.resumeScore.list[0].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[0].numberTries}/#{p.resumeScore.list[0].timeFirstTrie}" styleClass="#{p.resumeScore.list[0].solved? '':'text-score-unit'}" />
                             </p:column>
-                            <p:column headerText="B"  width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 2}" styleClass="text-center" >
+
+                            <p:column headerText="B"  width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 2}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[1].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[1].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[1].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[1].tries}/#{p.resumeScore.list[1].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[1].numberTries}/#{p.resumeScore.list[1].timeFirstTrie}" styleClass="#{p.resumeScore.list[1].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="C" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 3}" styleClass="text-center" >
+                            <p:column headerText="C" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 3}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[2].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[2].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[2].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[2].tries}/#{p.resumeScore.list[2].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[2].numberTries}/#{p.resumeScore.list[2].timeFirstTrie}" styleClass="#{p.resumeScore.list[2].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="D" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 4}" styleClass="text-center" >
+                            <p:column headerText="D" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 4}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[3].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[3].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[3].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[3].tries}/#{p.resumeScore.list[3].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[3].numberTries}/#{p.resumeScore.list[3].timeFirstTrie}" styleClass="#{p.resumeScore.list[3].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="E" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 5}" styleClass="text-center" >
+                            <p:column headerText="E" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 5}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[4].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[4].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[4].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[4].tries}/#{p.resumeScore.list[4].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[4].numberTries}/#{p.resumeScore.list[4].timeFirstTrie}" styleClass="#{p.resumeScore.list[4].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="F" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 6}" styleClass="text-center" >
+                            <p:column headerText="F" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 6}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[5].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[5].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[5].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[5].tries}/#{p.resumeScore.list[5].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[5].numberTries}/#{p.resumeScore.list[5].timeFirstTrie}" styleClass="#{p.resumeScore.list[5].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="G" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 7}" styleClass="text-center" >
+                            <p:column headerText="G" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 7}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[6].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[6].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[6].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[6].tries}/#{p.resumeScore.list[6].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[6].numberTries}/#{p.resumeScore.list[6].timeFirstTrie}" styleClass="#{p.resumeScore.list[6].solved? '':'text-score-unit'}" />                               
                             </p:column>
 
-                            <p:column headerText="H" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 8}" styleClass="text-center" >
+                            <p:column headerText="H" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 8}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[7].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[7].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[7].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[7].tries}/#{p.resumeScore.list[7].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[7].numberTries}/#{p.resumeScore.list[7].timeFirstTrie}" styleClass="#{p.resumeScore.list[7].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="I" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 9}" styleClass="text-center" >
+                            <p:column headerText="I" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 9}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[8].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[8].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[8].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[8].tries}/#{p.resumeScore.list[8].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[8].numberTries}/#{p.resumeScore.list[8].timeFirstTrie}" styleClass="#{p.resumeScore.list[8].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="J" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 10}" styleClass="text-center" >
+                            <p:column headerText="J" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 10}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[9].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[9].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[9].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[9].tries}/#{p.resumeScore.list[9].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[9].numberTries}/#{p.resumeScore.list[9].timeFirstTrie}" styleClass="#{p.resumeScore.list[9].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="K" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 11}" styleClass="text-center" >
+                            <p:column headerText="K" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 11}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[10].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[10].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[10].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[10].tries}/#{p.resumeScore.list[10].time}" />
-                                </div>    
+                                <h:outputText value="#{p.resumeScore.list[10].numberTries}/#{p.resumeScore.list[10].timeFirstTrie}" styleClass="#{p.resumeScore.list[10].solved? '':'text-score-unit'}" />
+
                             </p:column>
 
-                            <p:column headerText="L" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 12}" styleClass="text-center" >
+                            <p:column headerText="L" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 12}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[11].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[11].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[11].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[11].tries}/#{p.resumeScore.list[11].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[11].numberTries}/#{p.resumeScore.list[11].timeFirstTrie}" styleClass="#{p.resumeScore.list[11].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="M" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 13}" styleClass="text-center" >
+                            <p:column headerText="M" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 13}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[12].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[12].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[12].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[12].tries}/#{p.resumeScore.list[12].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[12].numberTries}/#{p.resumeScore.list[12].timeFirstTrie}" styleClass="#{p.resumeScore.list[12].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="N" width="5" rendered="#{roomScoreBean.sizeListScoreTeams ge 14}" styleClass="text-center" >
+                            <p:column headerText="N" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 14}" styleClass="text-center container-globe" >
                                 <ui:fragment rendered="#{p.resumeScore.list[13].solved}">
-                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[13].idProblem]}" class="globe" />
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[13].idProblem]}" class="globe img-responsive" />
                                 </ui:fragment>
-                                <div class="text-score-unit">
-                                    <h:outputText value="#{p.resumeScore.list[13].tries}/#{p.resumeScore.list[13].time}" />
-                                </div>
+                                <h:outputText value="#{p.resumeScore.list[13].numberTries}/#{p.resumeScore.list[13].timeFirstTrie}" styleClass="#{p.resumeScore.list[13].solved? '':'text-score-unit'}" />
                             </p:column>
 
-                            <p:column headerText="Total" width="5" styleClass="text-center" >
+                            <p:column headerText="O" width="50" rendered="#{roomScoreBean.sizeListScoreTeams ge 15}" styleClass="text-center container-globe" >
+                                <ui:fragment rendered="#{p.resumeScore.list[14].solved}">
+                                    <img src="#{roomScoreBean.mapColorsGlogs[p.resumeScore.list[14].idProblem]}" class="globe img-responsive" />
+                                </ui:fragment>
+                                <h:outputText value="#{p.resumeScore.list[14].numberTries}/#{p.resumeScore.list[14].timeFirstTrie}" styleClass="#{p.resumeScore.list[14].solved? '':'text-score-unit'}" />
+                            </p:column>
+
+                            <p:column headerText="Puntuacion" width="65" styleClass="text-center" >
                                 <div class="text-score-unit">
-                                    <h:outputText value="#{p.time}" />
+                                    <h:outputText value="#{p.numberSolvedProblem} (#{p.timeTotal})" />
                                 </div>
                             </p:column>
                         </p:dataTable>
                     </h:form>
                 </div>
-            </fieldset> 
+            </fieldset>
+            <script type="text/javascript" >
+                var minutes = 10;
+                setInterval(function () {
+                    loopRefreshContest();
+                }, 1000 * 60 * minutes);
+            </script>
         </div>
     </ui:define>
 </ui:composition>

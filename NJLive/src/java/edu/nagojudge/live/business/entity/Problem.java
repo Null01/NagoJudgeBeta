@@ -33,10 +33,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "problem", catalog = "njlive", schema = "")
+@Table(name = "PROBLEM", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Problem.findAll", query = "SELECT p FROM Problem p")})
@@ -74,13 +74,7 @@ public class Problem implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Attachments> attachmentsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<Submit> submitList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
     private List<ProblemCategory> problemCategoryList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
-    private List<ChallengeProblem> challengeProblemList;
     @JoinColumn(name = "ID_COMPLEXITY_ALGORITHM", referencedColumnName = "ID_COMPLEXITY_ALGORITHM")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ComplexityAlgorithm idComplexityAlgorithm;
@@ -89,6 +83,12 @@ public class Problem implements Serializable {
     private DifficultyLevel idDifficulty;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
     private List<TestCaseProblem> testCaseProblemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<ChallengeProblem> challengeProblemList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Attachments> attachmentsList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProblem", fetch = FetchType.LAZY)
+    private List<Submit> submitList;
 
     public Problem() {
     }
@@ -163,42 +163,12 @@ public class Problem implements Serializable {
 
     @XmlTransient
     @JsonIgnore
-    public List<Attachments> getAttachmentsList() {
-        return attachmentsList;
-    }
-
-    public void setAttachmentsList(List<Attachments> attachmentsList) {
-        this.attachmentsList = attachmentsList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<Submit> getSubmitList() {
-        return submitList;
-    }
-
-    public void setSubmitList(List<Submit> submitList) {
-        this.submitList = submitList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
     public List<ProblemCategory> getProblemCategoryList() {
         return problemCategoryList;
     }
 
     public void setProblemCategoryList(List<ProblemCategory> problemCategoryList) {
         this.problemCategoryList = problemCategoryList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<ChallengeProblem> getChallengeProblemList() {
-        return challengeProblemList;
-    }
-
-    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
-        this.challengeProblemList = challengeProblemList;
     }
 
     public ComplexityAlgorithm getIdComplexityAlgorithm() {
@@ -225,6 +195,36 @@ public class Problem implements Serializable {
 
     public void setTestCaseProblemList(List<TestCaseProblem> testCaseProblemList) {
         this.testCaseProblemList = testCaseProblemList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<ChallengeProblem> getChallengeProblemList() {
+        return challengeProblemList;
+    }
+
+    public void setChallengeProblemList(List<ChallengeProblem> challengeProblemList) {
+        this.challengeProblemList = challengeProblemList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Attachments> getAttachmentsList() {
+        return attachmentsList;
+    }
+
+    public void setAttachmentsList(List<Attachments> attachmentsList) {
+        this.attachmentsList = attachmentsList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Submit> getSubmitList() {
+        return submitList;
+    }
+
+    public void setSubmitList(List<Submit> submitList) {
+        this.submitList = submitList;
     }
 
     @Override

@@ -82,7 +82,7 @@ public class FormatUtil {
                     if (part.toLowerCase().startsWith("dia")) {
                         outcome *= (60 * 24);
                     } else {
-                        if (isNumber(part)) {
+                        if (isInteger(part)) {
                             outcome = Integer.parseInt(part);
                         }
                     }
@@ -105,7 +105,7 @@ public class FormatUtil {
         return dateChallenge;
     }
 
-    private boolean isNumber(String string) {
+    private boolean isInteger(String string) {
         try {
             int n = Integer.parseInt(string);
         } catch (NumberFormatException ex) {
@@ -122,6 +122,11 @@ public class FormatUtil {
         String oldCharacters = path.contains("/") ? "/" : (path.contains("\\") ? "\\" : "");
         String newCharactes = oldCharacters.compareTo("/") == 0 ? "\\" : (oldCharacters.compareTo("\\") == 0 ? "/" : "");
         return path.replace(oldCharacters, newCharactes);
+    }
+
+    public boolean isValidNumberFloatPoint(final String string) {
+        final String regex = "[+-]?([0-9]*[.])?[0-9]+";
+        return string.matches(regex);
     }
 
 }

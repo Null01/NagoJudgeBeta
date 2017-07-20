@@ -7,7 +7,10 @@ package edu.nagojudge.live.business.entity.facade.dao;
 
 import edu.nagojudge.live.business.entity.ChallengeProblem;
 import edu.nagojudge.live.business.entity.ChallengeSubmit;
+import edu.nagojudge.live.business.entity.Problem;
 import edu.nagojudge.live.business.entity.Submit;
+import edu.nagojudge.live.business.entity.SubmitStatus;
+import edu.nagojudge.live.business.entity.Team;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.InfoScoreMessage;
 import edu.nagojudge.msg.pojo.JudgeMessage;
@@ -19,6 +22,7 @@ import edu.nagojudge.msg.pojo.TeamMessage;
 import edu.nagojudge.msg.pojo.collections.ListMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,7 +40,7 @@ import org.apache.log4j.Logger;
 @Stateless
 public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
 
-    private final Logger logger = Logger.getLogger(ChallengeSubmitDAO.class);
+    private static final Logger logger = Logger.getLogger(ChallengeSubmitDAO.class);
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;
@@ -66,54 +70,53 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
                 InfoScoreMessage infoScoreMessage = new InfoScoreMessage();
                 infoScoreMessage.setIdProblem(challengeProblem.getIdProblem().getIdProblem());
                 infoScoreMessage.setSolved(false);
-                infoScoreMessage.setTime(0);
-                infoScoreMessage.setTries(0);
+                infoScoreMessage.setNumberTries(0);
+                infoScoreMessage.setTimeFirstTrie(0);
                 infoScore.put(infoScoreMessage.getIdProblem(), infoScoreMessage);
             }
-
-            Long penalityTime = Long.parseLong(FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.penality.time"));
 
             StringBuilder sql = new StringBuilder();
             sql.append("(select \n"
                     + " (select t.name_team from team t where t.id_team = cs.id_team) as team,\n"
                     + " s.id_problem as problem,\n"
                     + " (select ss.key_status from submit_status ss where ss.id_status = s.id_status) as status, \n"
-                    + " min(timestampdiff(minute, c.date_start, s.date_submit)) as minutes,\n"
-                    + " count(0) as n\n"
+                    + " timestampdiff(minute, c.date_start, s.date_submit) as minutes\n"
                     + "from challenge_submit cs left join submit s on (cs.id_submit = s.id_submit)\n"
                     + "left join challenge c on(c.id_challenge = cs.id_challenge)\n"
                     + "where cs.id_challenge = " + String.valueOf(challengeId) + "\n"
-                    + "group by cs.id_team, s.id_problem, s.id_status\n"
-                    + "order by s.id_status desc)\n"
+                    + "order by timestampdiff(minute, c.date_start, s.date_submit), s.id_status desc)\n"
                     + "union\n"
-                    + "(select (select t.name_team from team t where t.id_team = ct.id_team) as team, null, null, null, null \n"
+                    + "(select (select t.name_team from team t where t.id_team = ct.id_team) as team, null, null, null \n"
                     + "from challenge_team ct where ct.id_challenge = " + String.valueOf(challengeId) + " and ct.id_team not \n"
                     + "in (select id_team from challenge_submit where id_challenge = " + String.valueOf(challengeId) + " group by id_team)\n"
                     + "group by id_team)");
+            //logger.error(sql.toString());
             List<Object[]> objects = manager.createNativeQuery(sql.toString())
                     .getResultList();
             logger.debug("objects [" + objects.size() + "]");
             try {
                 Map<String, Map<Long, InfoScoreMessage>> map = new HashMap<String, Map<Long, InfoScoreMessage>>();
-                for (Object[] row : objects) {
+                for (Object[] row : objects) { // team, problem, status, minutes
                     if (map.get((String) row[0]) == null) {
-                        map.put((String) row[0], crashCopyStructAllProblemsToChallenge(infoScore));
+                        map.put((String) row[0], crashCopyStructAllProblemsToChallengeFromTeam(infoScore));
                     }
                     if (row[1] != null) {
                         InfoScoreMessage infoScoreMessage = map.get((String) row[0]).get((Long) row[1]);
-                        boolean solved = ((String) row[2]).compareTo(TypeStateJudgeEnum.AC.toString()) == 0;
-                        if (solved && !infoScoreMessage.isSolved()) {
-                            infoScoreMessage.setTime(Long.parseLong(String.valueOf(row[3])) + (infoScoreMessage.getTries() * penalityTime));
-                            infoScoreMessage.setTries(infoScoreMessage.getTries() + 1);
-                        } else {
-                            if (!infoScoreMessage.isSolved()) {
-                                infoScoreMessage.setTries(infoScoreMessage.getTries() + Integer.parseInt(String.valueOf(row[4])));
+                        if (!infoScoreMessage.isSolved()) {
+                            boolean solved = ((String) row[2]).compareTo(TypeStateJudgeEnum.AC.toString()) == 0;
+                            if (infoScoreMessage.getNumberTries() == 0) {
+                                infoScoreMessage.setTimeFirstTrie((Long) row[3]);
                             }
+                            if (solved) {
+                                infoScoreMessage.setSolved(solved);
+                            }
+                            infoScoreMessage.setNumberTries(infoScoreMessage.getNumberTries() + 1);
+                            map.get((String) row[0]).put((Long) row[1], infoScoreMessage);
                         }
-                        infoScoreMessage.setSolved(infoScoreMessage.isSolved() ? true : solved);
-                        map.get((String) row[0]).put((Long) row[1], infoScoreMessage);
                     }
                 }
+
+                Long penalityTime = Long.parseLong(FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.penality.time"));
 
                 for (Map.Entry<String, Map<Long, InfoScoreMessage>> team : map.entrySet()) {
                     TeamMessage teamMessage = new TeamMessage();
@@ -121,13 +124,17 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
 
                     ScoreMessage scoreMessage = new ScoreMessage();
                     scoreMessage.setTeam(teamMessage);
+                    scoreMessage.setTimeTotal(new Long("0"));
 
                     ListMessage<InfoScoreMessage> listTypeMessage = new ListMessage<InfoScoreMessage>();
                     for (Map.Entry<Long, InfoScoreMessage> problemScore : team.getValue().entrySet()) {
                         listTypeMessage.add(problemScore.getValue());
                         InfoScoreMessage infoScoreMessage = problemScore.getValue();
-                        scoreMessage.setTime((scoreMessage.getTime() == null ? 0 : scoreMessage.getTime()) + infoScoreMessage.getTime());
-                        scoreMessage.setSolved((scoreMessage.getSolved() == null ? 0 : scoreMessage.getSolved()) + (infoScoreMessage.isSolved() ? 1 : 0));
+                        if (infoScoreMessage.isSolved()) {
+                            long possibleTotal = infoScoreMessage.getTimeFirstTrie() + ((infoScoreMessage.getNumberTries() != 0 ? infoScoreMessage.getNumberTries() - 1 : 0) * penalityTime);
+                            scoreMessage.setTimeTotal(scoreMessage.getTimeTotal() + ((infoScoreMessage.isSolved()) ? possibleTotal : 0));
+                            scoreMessage.setNumberSolvedProblem(scoreMessage.getNumberSolvedProblem() + 1);
+                        }
                     }
                     scoreMessage.setResumeScore(listTypeMessage);
                     outcome.add(scoreMessage);
@@ -139,10 +146,10 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
             Comparator<ScoreMessage> comparator = new Comparator<ScoreMessage>() {
                 @Override
                 public int compare(ScoreMessage o1, ScoreMessage o2) {
-                    if (o1.getSolved().compareTo(o2.getSolved()) == 0) {
-                        return (int) (o1.getTime() - o2.getTime());
+                    if (o1.getNumberSolvedProblem() == o2.getNumberSolvedProblem()) {
+                        return (int) (o2.getTimeTotal() - o1.getTimeTotal());
                     }
-                    return (int) (o2.getSolved() - o1.getSolved());
+                    return (int) (o2.getNumberSolvedProblem() - o1.getNumberSolvedProblem());
                 }
             };
             Collections.sort(outcome, comparator);
@@ -151,6 +158,19 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
             logger.debug("FIN METODO - findScoreAllTeamFromChallenge()");
         }
         return new ArrayList<ScoreMessage>(outcome);
+    }
+
+    private Map<Long, InfoScoreMessage> crashCopyStructAllProblemsToChallengeFromTeam(HashMap<Long, InfoScoreMessage> temp) {
+        Map<Long, InfoScoreMessage> outcome = new HashMap<Long, InfoScoreMessage>();
+        for (Map.Entry<Long, InfoScoreMessage> entry : temp.entrySet()) {
+            InfoScoreMessage infoScoreMessage = new InfoScoreMessage();
+            infoScoreMessage.setIdProblem(entry.getValue().getIdProblem());
+            infoScoreMessage.setSolved(entry.getValue().isSolved());
+            infoScoreMessage.setNumberTries(entry.getValue().getNumberTries());
+            infoScoreMessage.setTimeFirstTrie(entry.getValue().getTimeFirstTrie());
+            outcome.put(entry.getKey(), infoScoreMessage);
+        }
+        return outcome;
     }
 
     public List<SubmitMessage> findAllSubmitByTeam(Long teamId, Long challengeId) {
@@ -192,6 +212,7 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
 
                 outcome.add(submitMessage);
             }
+            logger.debug("outcome [" + outcome.size() + "]");
         } catch (Exception ex) {
             logger.error(ex);
         } finally {
@@ -200,15 +221,54 @@ public class ChallengeSubmitDAO extends AbstractDAO<ChallengeSubmit> {
         return outcome;
     }
 
-    private Map<Long, InfoScoreMessage> crashCopyStructAllProblemsToChallenge(HashMap<Long, InfoScoreMessage> temp) {
-        Map<Long, InfoScoreMessage> outcome = new HashMap<Long, InfoScoreMessage>();
-        for (Map.Entry<Long, InfoScoreMessage> entry : temp.entrySet()) {
-            InfoScoreMessage infoScoreMessage = new InfoScoreMessage();
-            infoScoreMessage.setIdProblem(entry.getValue().getIdProblem());
-            infoScoreMessage.setSolved(entry.getValue().isSolved());
-            infoScoreMessage.setTime(entry.getValue().getTime());
-            infoScoreMessage.setTries(entry.getValue().getTries());
-            outcome.put(entry.getKey(), infoScoreMessage);
+    public List<SubmitMessage> findAllSubmitByChallenge(Long challengeId) {
+        List<SubmitMessage> outcome = new ArrayList<SubmitMessage>();
+        try {
+            logger.debug("INICIO METODO - findAllSubmitByChallenge()");
+            logger.debug("challengeId [" + challengeId + "]");
+            EntityManager manager = getEntityManager();
+            List<Object[]> submits
+                    = manager.createQuery("SELECT cs.idSubmit, cs.idTeam FROM ChallengeSubmit cs WHERE cs.idChallenge.idChallenge = :idChallenge ORDER BY cs.idSubmit.dateSubmit DESC")
+                            .setParameter("idChallenge", challengeId)
+                            .getResultList();
+            for (Object[] challengeSubmit : submits) {
+
+                SubmitMessage submitMessage = new SubmitMessage();
+
+                Submit submit = (Submit) challengeSubmit[0];
+                submitMessage.setIdSubmit(submit.getIdSubmit());
+                submitMessage.setDateSubmit(submit.getDateSubmit() != null ? submit.getDateSubmit().getTime() : 0);
+                submitMessage.setDateJudge(submit.getDateJudge() != null ? submit.getDateJudge().getTime() : 0);
+
+                ProblemMessage problemMessage = new ProblemMessage();
+                Problem problem = submit.getIdProblem();
+                problemMessage.setIdProblem(problem.getIdProblem());
+                problemMessage.setNameProblem(problem.getNameProblem());
+                submitMessage.setProblemMessage(problemMessage);
+
+                JudgeMessage judgeMessage = new JudgeMessage();
+                SubmitStatus submitStatus = submit.getIdStatus();
+                judgeMessage.setIdStatusName(submitStatus.getIdStatus().longValue());
+                judgeMessage.setKeyStatus(submitStatus.getKeyStatus());
+                judgeMessage.setStatusName(submitStatus.getNameStatus());
+                judgeMessage.setDescriptionStatus(submitStatus.getDescription());
+                judgeMessage.setTimeUsed(submit.getTimeUsed() == null ? 0 : submit.getTimeUsed().longValue());
+                submitMessage.setJudgeMessage(judgeMessage);
+
+                TeamMessage teamMessage = new TeamMessage();
+                Team team = (Team) challengeSubmit[1];
+                teamMessage.setIdTeam(team.getIdTeam());
+                teamMessage.setNameTeam(team.getNameTeam());
+                teamMessage.setNameInstitution(team.getInstitutionTeam());
+                submitMessage.setTeamMessage(teamMessage);
+
+                outcome.add(submitMessage);
+            }
+            logger.debug("outcome [" + outcome.size() + "]");
+        } catch (Exception ex) {
+            logger.error(ex);
+        } finally {
+            logger.debug("FINALIZA METODO - findAllSubmitByChallenge()");
         }
         return outcome;
     }

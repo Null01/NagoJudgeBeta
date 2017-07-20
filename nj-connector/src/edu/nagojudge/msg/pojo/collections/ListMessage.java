@@ -5,6 +5,7 @@
  */
 package edu.nagojudge.msg.pojo.collections;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,10 +15,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  *
  * @author andresfelipegarciaduran
- * @param <T>
+ * @param <E>
  */
 @XmlRootElement
-public class ListMessage<E> {
+public class ListMessage<E> implements Serializable {
 
     @XmlElement
     private List<E> list = new ArrayList<E>();

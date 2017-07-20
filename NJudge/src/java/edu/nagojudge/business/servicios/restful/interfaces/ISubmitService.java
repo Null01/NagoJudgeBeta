@@ -13,7 +13,6 @@ import edu.nagojudge.msg.pojo.collections.ListMessage;
 import java.io.IOException;
 import javax.naming.AuthenticationException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -77,7 +76,7 @@ public interface ISubmitService {
      *
      * @param idChallenge
      * @param idTeam
-     * @param token
+     * @param metadata
      * @return
      * @throws AuthenticationException
      * @throws BusinessException
@@ -87,7 +86,7 @@ public interface ISubmitService {
     public ListMessage<SubmitMessage> getAllJudgmentByTeam(
             @PathParam("idChallenge") String idChallenge,
             @PathParam("idTeam") String idTeam,
-            @QueryParam("token") String token)
+            @QueryParam("") MetadataMessage metadata)
             throws AuthenticationException, BusinessException;
 
     /**
@@ -96,7 +95,7 @@ public interface ISubmitService {
      * según su identificador.
      *
      * @param idSubmit Llave del envio.
-     * @param token Identificador de seguridad.
+     * @param metadata
      * @return Retorna codigo fuente.
      * @throws IOException Se genera, leyendo un archivo o copiandolo.
      * @throws BusinessException Se genera, si la información es incorrecta o no
@@ -108,7 +107,7 @@ public interface ISubmitService {
     @Path("/code/{idSubmit}")
     public StringMessage getCodeSourceBySubmit(
             @PathParam("idSubmit") String idSubmit,
-            @QueryParam("token") String token)
+            @QueryParam("") MetadataMessage metadata)
             throws IOException, AuthenticationException, BusinessException;
 
     /**
@@ -118,7 +117,7 @@ public interface ISubmitService {
      * @param idChallenge
      * @param idProblem
      * @param language
-     * @param token Identificador de seguridad.
+     * @param metadata
      * @return
      * @throws IOException
      * @throws AuthenticationException
@@ -133,6 +132,6 @@ public interface ISubmitService {
             @PathParam("idProblem") String idProblem,
             @QueryParam("idSubmit") String idSubmit,
             @QueryParam("language") String language,
-            @QueryParam("token") String token) throws IOException, AuthenticationException, BusinessException;
+            @QueryParam("") MetadataMessage metadata) throws IOException, AuthenticationException, BusinessException;
 
 }

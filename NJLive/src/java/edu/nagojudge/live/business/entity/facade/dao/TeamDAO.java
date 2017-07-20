@@ -9,6 +9,7 @@ import edu.nagojudge.live.business.entity.Team;
 import edu.nagojudge.live.web.exceptions.NagoJudgeLiveException;
 import edu.nagojudge.live.web.utils.FacesUtil;
 import edu.nagojudge.live.web.utils.constants.IKeysApplication;
+import edu.nagojudge.msg.pojo.ChallengeMessage;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import java.util.List;
 import javax.ejb.EJB;
@@ -26,9 +27,12 @@ import org.apache.log4j.Logger;
 public class TeamDAO extends AbstractDAO<Team> {
 
     @EJB
+    private ChallengeDAO challengeDAO;
+
+    @EJB
     private SecurityDAO securityDAO;
 
-    private final Logger logger = Logger.getLogger(TeamDAO.class);
+    private static final Logger logger = Logger.getLogger(TeamDAO.class);
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;
@@ -47,7 +51,12 @@ public class TeamDAO extends AbstractDAO<Team> {
         if (idTeam == null) {
             throw new NagoJudgeLiveException("Equipo no registrado");
         }
+        List<ChallengeMessage> challengeMessages = challengeDAO.findChallengeAviableByTeam(idTeam.getIdTeam());
+        if (challengeMessages == null) {
+            throw new NagoJudgeLiveException("No esta inscrito a ninguna competencia.");
+        }
         logger.debug("getIdTeam [" + idTeam.getIdTeam() + "]");
+        logger.debug("getNameTeam [" + idTeam.getNameTeam() + "]");
         HttpSession session = FacesUtil.getFacesUtil().getSession(true);
         session.setAttribute(IKeysApplication.KEY_SESSION_TEAM_ID, idTeam.getIdTeam());
         session.setAttribute(IKeysApplication.KEY_SESSION_TEAM_NAME, idTeam.getNameTeam());

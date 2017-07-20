@@ -23,7 +23,7 @@ public class SecurityDAO implements Serializable {
 
     private final String MSG_ERROR_INVALID_KEY_PUB = "Public key corrupt, notify to administrator.";
 
-    private final Logger logger = Logger.getLogger(SecurityDAO.class);
+    private static final Logger logger = Logger.getLogger(SecurityDAO.class);
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;

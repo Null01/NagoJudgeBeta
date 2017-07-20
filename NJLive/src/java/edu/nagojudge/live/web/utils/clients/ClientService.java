@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  */
 public class ClientService {
 
-    private final Logger logger = Logger.getLogger(ClientService.class);
+    private static final Logger logger = Logger.getLogger(ClientService.class);
 
     private static ClientService instance;
 

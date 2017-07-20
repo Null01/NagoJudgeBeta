@@ -30,10 +30,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author andres.garcia
+ * @author andresfelipegarciaduran
  */
 @Entity
-@Table(name = "type_user", catalog = "njlive", schema = "")
+@Table(name = "TYPE_USER", catalog = "njlive", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TypeUser.findAll", query = "SELECT t FROM TypeUser t")})
@@ -50,7 +50,7 @@ public class TypeUser implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "NAME_TYPE")
     private String nameType;
-    @JoinTable(name = "access_user", joinColumns = {
+    @JoinTable(name = "ACCESS_USER", joinColumns = {
         @JoinColumn(name = "ID_TYPE", referencedColumnName = "ID_TYPE")}, inverseJoinColumns = {
         @JoinColumn(name = "ID_FUNCTION", referencedColumnName = "ID_FUNCTION")})
     @ManyToMany(fetch = FetchType.LAZY)

@@ -5,7 +5,7 @@
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     <application>
         <locale-config>
-            <default-locale>es</default-locale>
+            <default-locale>es</default-locale>           
         </locale-config>
         <resource-bundle>
             <base-name>edu.nagojudge.live.web.utils.resources.i18n.general</base-name>

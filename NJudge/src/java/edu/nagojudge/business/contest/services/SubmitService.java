@@ -92,11 +92,11 @@ public class SubmitService implements ISubmitService {
     @Override
     public StringMessage getCodeSourceBySubmit(
             String idSubmit,
-            String token) throws IOException, AuthenticationException, BusinessException {
+            MetadataMessage metadata) throws IOException, AuthenticationException, BusinessException {
         StringMessage outcome = new StringMessage();
         try {
             logger.debug("INICIA SERVICIO - getCodeSourceBySubmit()");
-            authenticationFacade.authorization(token);
+            authenticationFacade.authorization(metadata.getToken());
             StringBuilder codeSource = attachmentsFacade.getCodeSourceFromUser(idSubmit);
             outcome.setString(codeSource.toString());
         } catch (IOException ex) {
@@ -121,10 +121,10 @@ public class SubmitService implements ISubmitService {
             String idProblem,
             String idSubmit,
             String language,
-            String token) throws IOException, AuthenticationException, BusinessException {
+            MetadataMessage metadata) throws IOException, AuthenticationException, BusinessException {
         try {
             logger.debug("INICIA SERVICIO - downloadCodeSourceByTeam()");
-            authenticationFacade.authorization(token);
+            authenticationFacade.authorization(metadata.getToken());
             final String fullPathFileCodeSourceFromTeam = judgeFacade.getPathFileCodeSourceFromTeam(new Long(idChallenge), new Long(idTeam), new Long(idProblem));
             final String fileName = judgeFacade.getNameFileSubmit(new Long(idSubmit), language);
             final String extensionFileName = fileName.substring(fileName.lastIndexOf("."));
@@ -146,11 +146,10 @@ public class SubmitService implements ISubmitService {
     public ListMessage<SubmitMessage> getAllJudgmentByTeam(
             String idChallenge,
             String idTeam,
-            String token) throws AuthenticationException, BusinessException {
+            MetadataMessage metadata) throws AuthenticationException, BusinessException {
         try {
             logger.debug("INICIA SERVICIO - getAllJudgmentByTeam()");
-            authenticationFacade.authorization(token);
-
+            authenticationFacade.authorization(metadata.getToken());
             throw new BusinessException("Codigo fuente seleccionado no existe.");
         } finally {
             logger.debug("FINALIZA SERVICIO - getAllJudgmentByTeam()");

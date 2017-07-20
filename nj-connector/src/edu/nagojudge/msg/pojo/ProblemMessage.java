@@ -25,7 +25,7 @@ public class ProblemMessage implements Serializable {
     private String bestComplexity;
     private int timeLimit;
     private int memoLimit;
-    private int totalStatus;
+    private int statusTotal;
     private int statusAC;
     private int statusCE;
     private int statusCS;
@@ -37,7 +37,7 @@ public class ProblemMessage implements Serializable {
     public ProblemMessage() {
     }
 
-    public ProblemMessage(Long idProblem, String nameProblem, String author, ListMessage<CategoryMessage> listCategoryMessage, String nameDifficulty, String description, String bestComplexity, int timeLimitSeg, int memoLimit, int totalStatus, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
+    public ProblemMessage(Long idProblem, String nameProblem, String author, ListMessage<CategoryMessage> listCategoryMessage, String nameDifficulty, String description, String bestComplexity, int timeLimitSeg, int memoLimit, int statusTotal, int statusAC, int statusCE, int statusCS, int statusIP, int statusRE, int statusTL, int statusWR) {
         this.idProblem = idProblem;
         this.nameProblem = nameProblem;
         this.author = author;
@@ -47,7 +47,7 @@ public class ProblemMessage implements Serializable {
         this.bestComplexity = bestComplexity;
         this.timeLimit = timeLimitSeg;
         this.memoLimit = memoLimit;
-        this.totalStatus = totalStatus;
+        this.statusTotal = statusTotal;
         this.statusAC = statusAC;
         this.statusCE = statusCE;
         this.statusCS = statusCS;
@@ -129,12 +129,12 @@ public class ProblemMessage implements Serializable {
         this.memoLimit = memoLimit;
     }
 
-    public int getTotalStatus() {
-        return totalStatus;
+    public int getStatusTotal() {
+        return statusTotal;
     }
 
-    public void setTotalStatus(int totalStatus) {
-        this.totalStatus = totalStatus;
+    public void setStatusTotal(int statusTotal) {
+        this.statusTotal = statusTotal;
     }
 
     public int getStatusAC() {
@@ -192,7 +192,5 @@ public class ProblemMessage implements Serializable {
     public void setStatusWR(int statusWR) {
         this.statusWR = statusWR;
     }
-
- 
 
 }

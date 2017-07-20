@@ -33,7 +33,7 @@ public class ChallengeProblemDAO extends AbstractDAO<ChallengeProblem> {
 
     private final String TOKEN = "asd";
 
-    private final Logger logger = Logger.getLogger(ChallengeProblemDAO.class);
+    private static final Logger logger = Logger.getLogger(ChallengeProblemDAO.class);
 
     @PersistenceContext(unitName = "NJLivePU")
     private EntityManager em;
@@ -64,6 +64,7 @@ public class ChallengeProblemDAO extends AbstractDAO<ChallengeProblem> {
         problemMessage.setBestComplexity(problem.getIdComplexityAlgorithm().getNameComplexityAlgorithm());
         problemMessage.setMemoLimit(problem.getMemoLimit());
         problemMessage.setTimeLimit(problem.getTimeLimit());
+        problemMessage.setDescription(problem.getDescription());
         List<ProblemCategory> problemCategorys = problem.getProblemCategoryList();
         ListMessage<CategoryMessage> listMessage = new ListMessage<CategoryMessage>();
         for (ProblemCategory category : problemCategorys) {
@@ -78,11 +79,13 @@ public class ChallengeProblemDAO extends AbstractDAO<ChallengeProblem> {
 
     public String getFullPathProblem(final Long idProblem) throws IOException {
         try {
+            logger.debug("INICIA METODO - getFullPathProblem()");
             final String path = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.path.problem.view");
             final String host = FacesUtil.getFacesUtil().getParameterWEBINF("init-config", "judge.nagojudge.url");
+            final Map<String, Object> metadata = FacesUtil.getFacesUtil().getMetadataRest("");
             Object objects[] = {String.valueOf(idProblem)};
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("token", TOKEN);
+            params.putAll(metadata);
             StringMessage objectMessage = (StringMessage) ClientService.getInstance().callRestfulGet(host, path, objects, params, StringMessage.class);
             return String.valueOf(objectMessage.getString());
         } finally {

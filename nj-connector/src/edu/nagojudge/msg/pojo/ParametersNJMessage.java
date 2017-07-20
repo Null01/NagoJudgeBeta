@@ -6,7 +6,6 @@
 package edu.nagojudge.msg.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,18 +13,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author andresfelipegarciaduran
  */
 @XmlRootElement
-public class ParametersNJMessage  implements Serializable{
+public class ParametersNJMessage implements Serializable {
 
     private String idParameter;
     private byte[] contentParameter;
-    private Date dateCreated;
-    private Date dateUpdated;
+    private Long dateCreated;
+    private Long dateUpdated;
     private String description;
 
     public ParametersNJMessage() {
     }
 
-    public ParametersNJMessage(String idParameter, byte[] contentParameter, Date dateCreated, Date dateUpdated, String description) {
+    public ParametersNJMessage(String idParameter, byte[] contentParameter, Long dateCreated, Long dateUpdated, String description) {
         this.idParameter = idParameter;
         this.contentParameter = contentParameter;
         this.dateCreated = dateCreated;
@@ -49,12 +48,20 @@ public class ParametersNJMessage  implements Serializable{
         this.contentParameter = contentParameter;
     }
 
-    public Date getDateCreated() {
+    public Long getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(Long dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
     public String getDescription() {
@@ -63,14 +70,6 @@ public class ParametersNJMessage  implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
     }
 
 }

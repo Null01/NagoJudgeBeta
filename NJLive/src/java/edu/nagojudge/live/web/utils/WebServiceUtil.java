@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  */
 public class WebServiceUtil implements Serializable {
 
-    private final Logger LOGGER = Logger.getLogger(WebServiceUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(WebServiceUtil.class);
 
     private static WebServiceUtil webServiceUtil;
 

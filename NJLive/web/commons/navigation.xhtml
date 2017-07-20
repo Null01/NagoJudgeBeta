@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Navigation</span>
+                            <span class="sr-only">NagoJudge</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
@@ -22,18 +22,19 @@
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <div class="navbar-form navbar-left text-center">
-                            <h:commandLink styleClass="btn btn-default" style="width: 160px;"
+                            <h:commandLink styleClass="btn btn-default" style="width: 140px;"
                                            value="Problemas"
                                            action="#{navegationRoomBean.actionRedirectContentBoard}" />
-                            <h:commandLink styleClass="btn btn-default" style="width: 160px;"
+                            <h:commandLink styleClass="btn btn-default" style="width: 140px;"
                                            value="Puntuación"
                                            action="#{navegationRoomBean.actionRedirectScoreBoard}" />
-                            <h:commandLink styleClass="btn btn-default" style="width: 160px;"
+                            <h:commandLink styleClass="btn btn-default" style="width: 140px;"
                                            value="Mis Envios"
                                            action="#{navegationRoomBean.actionRedirectSubmitsBoard}" />
+                            <h:commandLink styleClass="btn btn-default" style="width: 140px;"
+                                           value="En vivo"
+                                           action="#{navegationRoomBean.actionRedirectContestLiveBoard}" />
                         </div>
-
-
 
                         <ul class="nav navbar-nav navbar-form navbar-right text-center">
                             <li style="margin-top: 8px; margin-right: 10px;">
@@ -57,7 +58,11 @@
                 <div class="col-md-12 text-center">
                     <h3>
                         <pe:timer timeout="#{navegationRoomBean.timeEndingChallenge}"
-                                  format="[Tiempo Restante:] DD [dias] HH:mm:ss" />
+                                  format="[Tiempo Restante:] DD [dias] HH:mm:ss"
+                                  rendered="#{navegationRoomBean.showDaysInTimer}" />
+                        <pe:timer timeout="#{navegationRoomBean.timeEndingChallenge}"
+                                  format="[Tiempo Restante:] HH:mm:ss"
+                                  rendered="#{!navegationRoomBean.showDaysInTimer}" />
                     </h3>
                 </div>
             </nav>

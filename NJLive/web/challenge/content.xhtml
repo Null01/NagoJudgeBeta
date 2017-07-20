@@ -16,29 +16,29 @@
                         <p:messages id="msgs" autoUpdate="true" closable="true"/>
                         <p:dataTable id="table-problems-client"
                                      widgetVar="widgetProblemsClient"
-                                     tableStyleClass="table table-striped table-hover"
+                                     tableStyleClass="table table-striped table-hover text-bold"
                                      value="#{roomContentBean.listProblems}"
                                      var="p"
                                      styleClass="center-block bordersolid"
                                      rowKey="#{p.idProblem}"
                                      rowIndexVar="indexKey"
                                      paginator="false"
+                                     style="width: 90%;"
                                      paginatorPosition="bottom"                                     
                                      emptyMessage="#{msg['general.table.noinfo']}">
-                            <p:column headerText="Id" width="4" styleClass="text-center">
+                            <p:column headerText="Id" width="5" styleClass="text-center">
                                 <h:outputText value="#{roomContentBean.mapLettersGlobs[p.idProblem]}" escape="false"/>
                             </p:column>
-                            <p:column  headerText="" width="4" styleClass="text-center" >
-                                <img src="#{roomContentBean.mapColorsGlogs[p.idProblem]}" class="globe-center"  />
+                            <p:column  headerText="" width="25" styleClass="text-center container-globe" >
+                                <img src="#{roomContentBean.mapColorsGlogs[p.idProblem]}" class="globe img-responsive"   />
                             </p:column>
-                            <p:column headerText="Problema" width="40" styleClass="text-left" >
-                                <h:outputLink 
-                                    target="_blank"
-                                    value="#{roomContentBean.getRealPathOfPDF(p.idProblem)}">
+                            <p:column headerText="Problema" width="100" styleClass="text-left" >
+                                <h:outputLink target="_blank"
+                                              value="#{roomContentBean.getRealPathOfPDF(p.idProblem)}">
                                     #{p.nameProblem}
                                 </h:outputLink> 
                             </p:column>
-                            <p:column headerText="Categoria" width="45" styleClass="text-left" >
+                            <p:column headerText="Categoria" width="80" styleClass="text-left" >
                                 <ui:repeat var="c" value="#{p.listCategoryMessage.list}" varStatus="unitcategory" >
                                     <h:outputText styleClass="label #{c.idCategory eq 1? 'label-success':
                                                                       c.idCategory eq 2? 'label-info':
@@ -46,19 +46,19 @@
                                                                       c.idCategory eq 4? 'label-danger':
                                                                       c.idCategory eq 5? 'label-primary':
                                                                       c.idCategory eq 6? 'label-warning':
-                                                                      'label-info'}" value="#{c.nameCategory} " style="font-size: 14px; font-weight: bold;" /> 
+                                                                      'label-info'}" value="#{c.nameCategory} " style="font-size: 14px; font-weight: bold;" />
                                 </ui:repeat>
                             </p:column>
-                            <p:column headerText="Complejidad" width="8" styleClass="text-center" >
+                            <p:column headerText="Complejidad" width="36" styleClass="text-center" >
                                 <h:outputText value="#{p.bestComplexity} " /> 
                             </p:column>
-                            <p:column headerText="Tiempo Max." width="5" styleClass="text-center" >
+                            <p:column headerText="Tiempo Max." width="25" styleClass="text-center" >
                                 <h:outputText value="#{p.timeLimit} Seg" /> 
                             </p:column>
-                            <p:column headerText="Memoria Max." width="5" styleClass="text-center" >
+                            <p:column headerText="Memoria Max." width="26" styleClass="text-center" >
                                 <h:outputText value="#{p.memoLimit} KB" /> 
                             </p:column>
-                            <p:column headerText="Descripcion." width="60" styleClass="text-center" >
+                            <p:column headerText="Sugerencia" width="120" styleClass="text-center" >
                                 <h:outputText value="#{p.description}" /> 
                             </p:column>
                         </p:dataTable>

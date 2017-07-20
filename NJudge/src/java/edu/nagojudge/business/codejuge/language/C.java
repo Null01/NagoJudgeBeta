@@ -1,10 +1,4 @@
-/*
- * Codejudge
- * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
- * Licensed under MIT License.
- *
- * Codejudge Compiler Server: Compiler for the C language
- */
+
 package edu.nagojudge.business.codejuge.language;
 
 import static edu.nagojudge.business.codejuge.language.AbstractLanguage.i18;
@@ -15,7 +9,6 @@ import edu.nagojudge.msg.pojo.MetadataMessage;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
