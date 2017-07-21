@@ -13,7 +13,7 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
@@ -22,18 +22,16 @@ import org.apache.log4j.Logger;
  * @author andresfelipegarciaduran
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class LogInOutBean implements Serializable {
 
     @EJB
     private UserFacade userFacade;
 
-    private final Logger logger = Logger.getLogger(LogInOutBean.class);
+    private static final Logger logger = Logger.getLogger(LogInOutBean.class);
 
-    private String username = "agarciad1@ucentral.edu.co", password;
-
-    private final String TARGET_PATH_LOGIN = "/go/to/modules/board/score.xhtml";
-    private final String TARGET_PATH_LOGOUT = "/go/";
+    private final String TARGET_PATH_LOGOUT = "/go";
+    private String username, password;
 
     /**
      * Creates a new instance of LogInOutBean
@@ -41,17 +39,15 @@ public class LogInOutBean implements Serializable {
     public LogInOutBean() {
     }
 
-    public void actionLoginUser() {
+    public String actionLoginUser() {
         try {
             userFacade.loginCompleteUser(username, password);
-            FacesUtil.getFacesUtil().redirect(TARGET_PATH_LOGIN);
+            return "/modules/board/score.xhtml?faces-redirect=true&includeViewParams=false";
         } catch (NagoJudgeException ex) {
             logger.error(ex);
             FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
-        } catch (IOException ex) {
-            logger.error(ex);
-            FacesUtil.getFacesUtil().addMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage());
         }
+        return null;
     }
 
     public void actionLogoutUser() {

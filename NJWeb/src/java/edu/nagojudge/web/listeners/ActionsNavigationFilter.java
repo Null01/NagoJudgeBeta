@@ -41,7 +41,7 @@ public class ActionsNavigationFilter implements Filter {
 
         String requestURI = httpRequest.getRequestURI();
         String tokens[] = requestURI.split("/");
-        HttpSession session = httpRequest.getSession(false);
+        HttpSession session = httpRequest.getSession();
         String indexURI = "/go/";
 
         boolean createSession = false;

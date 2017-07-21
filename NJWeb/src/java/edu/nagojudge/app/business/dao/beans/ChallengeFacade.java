@@ -119,9 +119,9 @@ public class ChallengeFacade extends AbstractFacade<Challenge> {
         List<Challenge> challenges = findAll();
         for (Challenge challenge : challenges) {
             ChallengeMessage challengeMessage = new ChallengeMessage();
-            challengeMessage.setDateCreated(challenge.getDateCreated());
-            challengeMessage.setDateEnd(challenge.getDateEnd());
-            challengeMessage.setDateStart(challenge.getDateStart());
+            challengeMessage.setDateCreated(challenge.getDateCreated() != null ? challenge.getDateCreated().getTime() : 0);
+            challengeMessage.setDateEnd(challenge.getDateEnd() != null ? challenge.getDateEnd().getTime() : 0);
+            challengeMessage.setDateStart(challenge.getDateStart() != null ? challenge.getDateStart().getTime() : 0);
             challengeMessage.setDescription(challenge.getDescription());
             challengeMessage.setEmailOrganizer(challenge.getEmailOrganizer());
             challengeMessage.setIdChallenge(challenge.getIdChallenge());

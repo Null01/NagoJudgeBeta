@@ -8,6 +8,7 @@ package edu.nagojudge.app.business.dao.beans;
 import edu.nagojudge.app.business.dao.entities.ParametersNj;
 import edu.nagojudge.msg.pojo.ParametersNJMessage;
 import java.util.Calendar;
+import java.util.Date;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,7 +38,7 @@ public class ParametersNjFacade extends AbstractFacade<ParametersNj> {
     public void updateParametersNJ(ParametersNJMessage parametersNJView) throws Exception {
         try {
             logger.debug("INICIA METODO - updateParametersNJ()");
-            parametersNJView.setDateUpdated(Calendar.getInstance().getTime());
+            parametersNJView.setDateUpdated(Calendar.getInstance().getTime().getTime());
             this.edit(parseMessageToEntity(parametersNJView));
             logger.debug("getIdParameter [" + parametersNJView.getIdParameter() + "]");
         } catch (Exception ex) {
@@ -53,8 +54,8 @@ public class ParametersNjFacade extends AbstractFacade<ParametersNj> {
         ParametersNj parametersNj = new ParametersNj();
         parametersNj.setIdParameter(parametersNJMessage.getIdParameter());
         parametersNj.setDescription(parametersNJMessage.getDescription());
-        parametersNj.setDateCreated(parametersNJMessage.getDateCreated());
-        parametersNj.setDateUpdated(parametersNJMessage.getDateUpdated());
+        parametersNj.setDateCreated(new Date(parametersNJMessage.getDateCreated()));
+        parametersNj.setDateUpdated(new Date(parametersNJMessage.getDateUpdated()));
         parametersNj.setContentParameter(parametersNJMessage.getContentParameter());
         return parametersNj;
     }

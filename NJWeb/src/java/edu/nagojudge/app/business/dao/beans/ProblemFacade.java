@@ -12,7 +12,6 @@ import edu.nagojudge.app.business.dao.entities.ComplexityAlgorithm;
 import edu.nagojudge.app.business.dao.entities.DifficultyLevel;
 import edu.nagojudge.app.business.dao.entities.Problem;
 import edu.nagojudge.app.business.dao.entities.ProblemCategory;
-import edu.nagojudge.app.exceptions.NagoJudgeException;
 import edu.nagojudge.app.exceptions.UtilNagoJudgeException;
 import edu.nagojudge.app.utils.constants.IResourcesPaths;
 import edu.nagojudge.msg.pojo.CategoryMessage;
@@ -142,7 +141,7 @@ public class ProblemFacade extends AbstractFacade<Problem> {
                     if (row.getKey().compareTo(TypeStateJudgeEnum.WR.name()) == 0) {
                         problemMessage.setStatusWR(row.getValue().intValue());
                     }
-                    problemMessage.setTotalStatus(sumTotal);
+                    problemMessage.setStatusTotal(sumTotal);
                 }
             }
             problemMessages.add(problemMessage);

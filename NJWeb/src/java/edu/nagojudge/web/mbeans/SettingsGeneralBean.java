@@ -12,9 +12,7 @@ import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.ParametersNJMessage;
 import edu.nagojudge.tools.security.constants.TypeSHAEnum;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -71,8 +69,8 @@ public class SettingsGeneralBean {
     private ParametersNJMessage parseEntityToMessage(ParametersNj parametersNj) {
         ParametersNJMessage nJMessage = new ParametersNJMessage();
         nJMessage.setContentParameter(parametersNj.getContentParameter());
-        nJMessage.setDateCreated(parametersNj.getDateCreated());
-        nJMessage.setDateUpdated(parametersNj.getDateUpdated());
+        nJMessage.setDateCreated(parametersNj.getDateCreated() != null ? parametersNj.getDateCreated().getTime() : 0);
+        nJMessage.setDateUpdated(parametersNj.getDateUpdated() != null ? parametersNj.getDateUpdated().getTime() : 0);
         nJMessage.setDescription(parametersNj.getDescription());
         nJMessage.setIdParameter(parametersNj.getIdParameter());
         return nJMessage;

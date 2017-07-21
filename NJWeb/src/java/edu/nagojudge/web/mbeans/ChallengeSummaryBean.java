@@ -12,7 +12,6 @@ import edu.nagojudge.msg.pojo.ChallengeMessage;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -40,7 +39,7 @@ public class ChallengeSummaryBean implements Serializable {
 
     public boolean getActionRenderPanelTimerStatusChallenge() {
         Date currentTime = Calendar.getInstance().getTime();
-        return currentTime.after(challengeMessageView.getDateStart()) && currentTime.before(challengeMessageView.getDateEnd());
+        return currentTime.after(new Date(challengeMessageView.getDateStart())) && currentTime.before(new Date(challengeMessageView.getDateEnd()));
     }
 
     public void actionListenerPreRender() {
@@ -58,7 +57,7 @@ public class ChallengeSummaryBean implements Serializable {
     public long getTimeEndingChallenge() {
         Calendar endTimeChallenge = Calendar.getInstance();
         Date currentTime = Calendar.getInstance().getTime();
-        endTimeChallenge.setTimeInMillis(challengeMessageView.getDateEnd().getTime() - currentTime.getTime());
+        endTimeChallenge.setTimeInMillis(challengeMessageView.getDateEnd() - currentTime.getTime());
 
         logger.debug("endChallenge: " + challengeMessageView.getDateEnd());
         logger.debug("currentTime: " + currentTime);
@@ -92,8 +91,8 @@ public class ChallengeSummaryBean implements Serializable {
         ChallengeMessage challengeMessage = new ChallengeMessage();
         challengeMessage.setIdChallenge(find.getIdChallenge());
         challengeMessage.setNameChallenge(find.getNameChallenge());
-        challengeMessage.setDateStart(find.getDateStart());
-        challengeMessage.setDateEnd(find.getDateEnd());
+        challengeMessage.setDateStart(find.getDateStart() != null ? find.getDateStart().getTime() : 0);
+        challengeMessage.setDateEnd(find.getDateEnd() != null ? find.getDateEnd().getTime() : 0);
         return challengeMessage;
     }
 

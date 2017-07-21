@@ -20,7 +20,7 @@ import edu.nagojudge.msg.pojo.LanguageProgrammingMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.constants.TypeFilesEnum;
-import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
+import edu.nagojudge.msg.pojo.constants.TypeStateFileEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import edu.nagojudge.tools.utils.FileUtil;
 import edu.nagojudge.tools.utils.FormatUtil;
@@ -124,13 +124,10 @@ public class SubmitFacade extends AbstractFacade<Submit> {
                     String fullPathLocal = IResourcesPaths.PATH_SAVE_PROBLEMS_LOCAL + java.io.File.separatorChar + nameFile;
                     FileUtil.getInstance().copyFile(fullPathLocal, tempFullPath);
                 }
-                fullPath = IResourcesPaths.PATH_VIEW_PROBLEMS + java.io.File.separatorChar + nameFile;
+                //fullPath = IResourcesPaths.PATH_VIEW_PROBLEMS + java.io.File.separatorChar + nameFile;
             }
             logger.debug("PATH_VIEW_FILE_PUBLIC=" + fullPath);
             return fullPath;
-        } catch (IOException ex) {
-            logger.error(ex);
-            throw ex;
         } finally {
             logger.debug("FINALIZA METODO - getFullPathProblem()");
         }
@@ -145,7 +142,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
                     .setParameter("id_submit", submitMessage.getProblemMessage().getIdProblem())
                     .setParameter("id_account", submitMessage.getAccountMessage().getIdAccount());
             AccountSubmit accountSubmit = (AccountSubmit) query.getSingleResult();
-            accountSubmit.setVisibleWeb((TypeStateEnum.PRIVATE.getType().compareTo(accountSubmit.getVisibleWeb()) == 0) ? TypeStateEnum.PUBLIC.getType() : TypeStateEnum.PRIVATE.getType());
+            accountSubmit.setVisibleWeb((TypeStateFileEnum.PRIVATE.getType().compareTo(accountSubmit.getVisibleWeb()) == 0) ? TypeStateFileEnum.PUBLIC.getType() : TypeStateFileEnum.PRIVATE.getType());
             accountSubmitFacade.edit(accountSubmit);
             logger.debug("editSubmit @ECHO");
         } catch (Exception ex) {
@@ -156,6 +153,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
     }
 
     private SubmitMessage parseAccountSubmitEntityToMessage(AccountSubmit accountSubmit) {
+
         SubmitMessage submitMessage = new SubmitMessage();
 
         Submit submit = accountSubmit.getIdSubmit();
@@ -163,9 +161,6 @@ public class SubmitFacade extends AbstractFacade<Submit> {
         submitMessage.setIdSubmit(submit.getIdSubmit());
         submitMessage.setDateJudge(submit.getDateJudge() == null ? 0 : submit.getDateJudge().getTime());
         submitMessage.setDateSubmit(submit.getDateSubmit() == null ? 0 : submit.getDateSubmit().getTime());
-        submitMessage.setIdStatus(submit.getIdStatus().getKeyStatus());
-        submitMessage.setNameStatus(submit.getIdStatus().getNameStatus());
-        submitMessage.setTimeUsed(submit.getTimeUsed().longValue());
         submitMessage.setVisibleWeb(accountSubmit.getVisibleWeb());
 
         ProblemMessage problemMessage = new ProblemMessage();
@@ -174,6 +169,12 @@ public class SubmitFacade extends AbstractFacade<Submit> {
         submitMessage.setProblemMessage(problemMessage);
 
         JudgeMessage judgeMessage = new JudgeMessage();
+        judgeMessage.setIdStatusName(submit.getIdStatus().getIdStatus().longValue());
+        judgeMessage.setKeyStatus(submit.getIdStatus().getKeyStatus());
+        judgeMessage.setStatusName(submit.getIdStatus().getNameStatus());
+        judgeMessage.setDescriptionStatus(submit.getIdStatus().getDescription());
+        judgeMessage.setTimeUsed(submit.getTimeUsed() == null ? 0 : submit.getTimeUsed().longValue());
+        judgeMessage.setMemoUsed(submit.getMemoUsed() == null ? 0 : submit.getMemoUsed().longValue());
         judgeMessage.setMessageJudge(submit.getMsgJudge());
         submitMessage.setJudgeMessage(judgeMessage);
 
@@ -211,7 +212,7 @@ public class SubmitFacade extends AbstractFacade<Submit> {
             AccountSubmit accountSubmit = new AccountSubmit();
             accountSubmit.setIdAccount((Account) accountObject);
             accountSubmit.setIdSubmit(submit);
-            accountSubmit.setVisibleWeb(TypeStateEnum.PRIVATE.getType());
+            accountSubmit.setVisibleWeb(TypeStateFileEnum.PRIVATE.getType());
             accountSubmitFacade.create(accountSubmit);
 
             String pathFile = IResourcesPaths.PATH_SAVE_CODE_SOURCE_LOCAL + java.io.File.separatorChar

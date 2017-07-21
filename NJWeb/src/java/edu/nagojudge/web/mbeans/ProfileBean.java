@@ -8,17 +8,13 @@ package edu.nagojudge.web.mbeans;
 import edu.nagojudge.app.business.dao.beans.AccountFacade;
 import edu.nagojudge.app.business.dao.beans.ProblemFacade;
 import edu.nagojudge.app.business.dao.beans.SubmitFacade;
-import edu.nagojudge.app.business.dao.beans.UserFacade;
-import edu.nagojudge.app.business.dao.entities.Account;
 import edu.nagojudge.app.business.dao.entities.Problem;
-import edu.nagojudge.app.business.dao.entities.Submit;
-import edu.nagojudge.app.business.dao.entities.User;
 import edu.nagojudge.app.utils.FacesUtil;
 import edu.nagojudge.msg.pojo.AccountMessage;
 import edu.nagojudge.msg.pojo.ProblemMessage;
 import edu.nagojudge.msg.pojo.SubmitMessage;
 import edu.nagojudge.msg.pojo.UserMessage;
-import edu.nagojudge.msg.pojo.constants.TypeStateEnum;
+import edu.nagojudge.msg.pojo.constants.TypeStateFileEnum;
 import edu.nagojudge.msg.pojo.constants.TypeStateJudgeEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,8 +68,8 @@ public class ProfileBean implements Serializable {
     private static final List<String> listStatusVisibleWeb = new ArrayList<String>();
 
     static {
-        listStatusVisibleWeb.add(TypeStateEnum.PUBLIC.name());
-        listStatusVisibleWeb.add(TypeStateEnum.PRIVATE.name());
+        listStatusVisibleWeb.add(TypeStateFileEnum.PUBLIC.name());
+        listStatusVisibleWeb.add(TypeStateFileEnum.PRIVATE.name());
     }
 
     public void actionOnRowSelectProblemTry(SelectEvent event) {
@@ -217,7 +213,7 @@ public class ProfileBean implements Serializable {
     }
 
     public String statusView(String viewWeb) {
-        for (TypeStateEnum v : TypeStateEnum.values()) {
+        for (TypeStateFileEnum v : TypeStateFileEnum.values()) {
             if (v.getType().compareTo(viewWeb) == 0) {
                 return v.name();
             }

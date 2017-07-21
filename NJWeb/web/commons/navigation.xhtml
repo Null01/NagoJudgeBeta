@@ -15,16 +15,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <h:link styleClass="navbar-brand" >
+                <a class="navbar-brand text-center" href="#" >
                     <span class="glyphicon glyphicon-education" aria-hidden="true"/> NagoJudge
-                </h:link>
+                </a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <!--<ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>                   
-                </ul> -->
                 <ul class="nav navbar-nav navbar-right">           
                     <li>
                         <a onclick="PF('dlg-login').show();" class="glyphicon glyphicon-user btn-lg" style="cursor: pointer !important;" />
@@ -33,58 +29,5 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-
-    <h:form id="form-login" styleClass="form-horizontal">
-        <p:dialog id="dlg-login"
-                  widgetVar="dlg-login"
-                  modal="true"
-                  resizable="false"
-                  width="400">
-            <p:ajax event="close" resetValues="true" update="panel-login"/>
-            <p:panel id="panel-login">
-                <div class="well">
-                    <fieldset>
-                        <div class="form-group">
-                            <label for="username" class="col-lg-4 control-label">#{msg['general.appweb.signin.user.label']}</label>
-                            <div class="col-lg-8">
-                                <p:inputText id="username"
-                                             styleClass="form-control"
-                                             placeholder="#{msg['general.appweb.signin.user.placeholder']}"
-                                             required="true"
-                                             value="#{logInOutBean.username}"
-                                             validatorMessage="#{msg['validacion.formato.email']}">
-                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-                                </p:inputText>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="col-lg-4 control-label">#{msg['general.appweb.signin.password.label']}</label>
-                            <div class="col-lg-8">
-                                <p:password id="password"
-                                            styleClass="form-control"
-                                            placeholder="#{msg['general.appweb.signin.password.placeholder']}"
-                                            required="true"
-                                            value="#{logInOutBean.password}">
-                                    <f:validateLength minimum="3" maximum="15" />
-                                </p:password>
-                            </div>
-                        </div>
-                        <div class="form-group text-center">
-                            <p:commandButton id="btn-login"
-                                             styleClass="btn btn-default"
-                                             value="#{msg['general.appweb.signin.btn']}"
-                                             action="#{logInOutBean.actionLoginUser}"
-                                             update="panel-login">
-                                <p:resetInput target="@form" />
-                            </p:commandButton>
-                        </div>
-                        <p:messages autoUpdate="true" closable="true"/>
-                    </fieldset>
-                </div>
-            </p:panel>
-        </p:dialog>
-    </h:form>
-
-
 </ui:composition>
 

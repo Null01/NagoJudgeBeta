@@ -22,14 +22,14 @@
     resize: none;
 }
 .ui-editor-toolbar {
-    background: rgba(0, 0, 0, 0) url("/NagoJudge/faces/javax.faces.resource/editor/images/toolbar.gif?ln=primefaces&v=5.0") repeat scroll 0 0;
+    background: rgba(0, 0, 0, 0) url("/go/to/javax.faces.resource/editor/images/toolbar.gif?ln=primefaces&v=5.0") repeat scroll 0 0;
 }
 .ui-editor-group {
     float: left;
     height: 26px;
 }
 .ui-editor-button {
-    background: rgba(0, 0, 0, 0) url("/NagoJudge/faces/javax.faces.resource/editor/images/buttons.gif?ln=primefaces&v=5.0") repeat scroll 0 0;
+    background: rgba(0, 0, 0, 0) url("/go/to/javax.faces.resource/editor/images/buttons.gif?ln=primefaces&v=5.0") repeat scroll 0 0;
     float: left;
     height: 24px;
     margin: 1px 0;
